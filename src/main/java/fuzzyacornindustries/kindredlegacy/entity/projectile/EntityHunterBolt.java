@@ -1,0 +1,853 @@
+package fuzzyacornindustries.kindredlegacy.entity.projectile;
+
+import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
+import fuzzyacornindustries.kindredlegacy.utility.UtilityTargeting;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SPacketChangeGameState;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+/**
+ * 
+ * Base custom Arrow class, operates exactly as EntityArrow except it provides an easy framework
+ * from which to extend and manipulate, specifically by breaking up the onUpdate method into
+ * multiple overridable steps
+ *
+ * Significantly referenced from Zelda Sword Skills by CoolAlias
+ */
+public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, IEntityAdditionalSpawnData
+{
+	/** Watchable object index for whether this arrow is a homing arrow */
+	//private static final int HOMING_DATAWATCHER_INDEX = 23;
+
+	/** Watchable object index for target entity's id */
+	//private static final int TARGET_DATAWATCHER_INDEX = 24;
+
+    private static final DataParameter<Byte> CRITICAL = EntityDataManager.<Byte>createKey(EntityHunterBolt.class, DataSerializers.BYTE);
+    
+	protected int inData, xTile = -1, yTile = -1, zTile = -1;
+
+	private Block inTile;
+
+	private boolean inGround;
+
+	/** 1 if the player can pick up the arrow */
+	public int canBePickedUp = 0;
+
+	/** Seems to be some sort of timer for animating an arrow. */
+	public int arrowShake;
+
+	/** The owner of this arrow. */
+	public Entity shootingEntity;
+
+	/** Shooter's name, if shooter is a player - based on EntityThrowable's code */
+	private String shooterName = null;
+
+	public int ticksInGround;
+	private int ticksInAir;
+
+	private double damage = 2.0D;
+
+	/** The amount of knockback an arrow applies when it hits a mob. */
+	private int knockbackStrength;
+
+	public EntityHunterBolt(World world)
+	{
+		super(world);
+		this.setSize(0.5F, 0.5F);
+	}
+
+	public EntityHunterBolt(World world, double xPar, double yPar, double zPar)
+	{
+		super(world);
+		this.setSize(0.5F, 0.5F);
+		this.setPosition(xPar, yPar, zPar);
+	}
+
+	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, EntityLivingBase targetEntity, float baseSpeed, float accuracy)
+	{
+		super(world);
+
+		this.shootingEntity = shooterEntity;
+
+		if (shooterEntity instanceof EntityPlayer)
+		{
+			this.canBePickedUp = 0;
+		}
+
+		this.posY = shooterEntity.posY + (double)shooterEntity.getEyeHeight() * 0.95D;
+		double d0 = targetEntity.posX - shooterEntity.posX;
+		double d1 = (targetEntity.getEntityBoundingBox().minY + (double)(targetEntity.height / 3.0F) - this.posY) * 1.1D;
+		double d2 = targetEntity.posZ - shooterEntity.posZ;
+		double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
+
+		if (d3 >= 1.0E-7D)
+		{
+			float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
+			float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
+
+			//double d4 = d0 / d3;
+			//double d5 = d2 / d3;
+
+			this.setPosition(shooterEntity.posX, this.posY, shooterEntity.posZ);
+			this.setLocationAndAngles(shooterEntity.posX, this.posY, shooterEntity.posZ, f2, f3);
+			float f4 = (float)d3 * 0.1F;
+
+			this.shoot(d0, d1 + (double)f4, d2, baseSpeed, accuracy);
+		}
+
+		//setTarget(targetEntity);
+	}
+
+	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, float baseSpeed)
+	{
+		super(world);
+
+		this.shootingEntity = shooterEntity;
+
+		if (shooterEntity instanceof EntityPlayer)
+		{
+			this.canBePickedUp = 0;
+		}
+
+		this.setSize(0.5F, 0.5F);
+		this.setPosition(shooterEntity.posX, shooterEntity.posY + (double)shooterEntity.getEyeHeight() * 0.95D, shooterEntity.posZ);
+		//this.setLocationAndAngles(shooterEntity.posX, shooterEntity.posY + (double)shooterEntity.getEyeHeight(), shooterEntity.posZ, shooterEntity.rotationYaw, shooterEntity.rotationPitch);
+
+		//this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		//this.posY -= 0.10000000149011612D;
+		//this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		//this.setPosition(this.posX, this.posY, this.posZ);
+
+		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+
+		this.shoot(this.motionX, this.motionY, this.motionZ, baseSpeed * 1.5F, 1.0F);
+	}
+
+	@Override
+    protected void entityInit()
+    {
+        this.dataManager.register(CRITICAL, Byte.valueOf((byte)0));
+    }
+
+	@SideOnly(Side.CLIENT)
+	public int getBrightnessForRender(float p_70070_1_)
+	{
+		float f1 = 0.5F;
+
+		if (f1 < 0.0F)
+		{
+			f1 = 0.0F;
+		}
+
+		if (f1 > 1.0F)
+		{
+			f1 = 1.0F;
+		}
+
+		int i = super.getBrightnessForRender();
+		int j = i & 255;
+		int k = i >> 16 & 255;
+		j += (int)(f1 * 15.0F * 16.0F);
+
+		if (j > 240)
+		{
+			j = 240;
+		}
+
+		return j | k << 16;
+	}
+
+	/**
+	 * Checks if the entity is in range to render.
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance)
+	{
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+
+		if (Double.isNaN(d0))
+		{
+			d0 = 1.0D;
+		}
+
+		d0 = d0 * 64.0D * getRenderDistanceWeight();
+		return distance < d0 * d0;
+	}
+
+	/**
+	 * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
+	 */
+	@Override
+	public void shoot(double xDirection, double yDirection, double zDirection, float baseSpeed, float accuracy)
+	{
+		float vectorMagnitude = MathHelper.sqrt(xDirection * xDirection + yDirection * yDirection + zDirection * zDirection);
+
+		xDirection /= (double)vectorMagnitude;
+		yDirection /= (double)vectorMagnitude;
+		zDirection /= (double)vectorMagnitude;
+
+		xDirection += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
+		yDirection += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
+		zDirection += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)accuracy;
+
+		xDirection *= (double)baseSpeed;
+		yDirection *= (double)baseSpeed;
+		zDirection *= (double)baseSpeed;
+
+		this.motionX = xDirection;
+		this.motionY = yDirection;
+		this.motionZ = zDirection;
+
+		float f3 = MathHelper.sqrt(xDirection * xDirection + zDirection * zDirection);
+		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(xDirection, zDirection) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(yDirection, (double)f3) * 180.0D / Math.PI);
+		this.ticksInGround = 0;
+	}
+
+	/**
+	 * Set the position and rotation values directly without any clamping.
+	 */
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
+	{
+		this.setPosition(x, y, z);
+		this.setRotation(yaw, pitch);
+	}
+
+	/**
+	 * Sets the velocity to the args. Args: x, y, z
+	 */
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void setVelocity(double xVelocity, double yVelocity, double zVelocity)
+	{
+		this.motionX = xVelocity;
+		this.motionY = yVelocity;
+		this.motionZ = zVelocity;
+
+		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
+		{
+			float horizontalMagnitude = MathHelper.sqrt(xVelocity * xVelocity + zVelocity * zVelocity);
+			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(xVelocity, zVelocity) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(yVelocity, (double)horizontalMagnitude) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch;
+			this.prevRotationYaw = this.rotationYaw;
+
+			this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+			this.ticksInGround = 0;
+		}
+	}
+
+	/**
+	 * Returns the shootingEntity, or if null, tries to get the shooting player from the world based on shooterName, if available
+	 */
+	public Entity getShooter() 
+	{
+		if (shootingEntity == null && shooterName != null) 
+		{
+			shootingEntity = world.getPlayerEntityByName(shooterName);
+		}
+		return shootingEntity;
+	}
+
+	/**
+	 * Sets this arrow's current target (for homing arrows only)
+	 *//*
+	public void setTarget(EntityLivingBase target) 
+	{
+		dataWatcher.updateObject(TARGET_DATAWATCHER_INDEX, target != null ? target.getEntityId() : -1);
+	}
+
+	/**
+	  * Returns this arrow's current target, if any (for homing arrows only)
+	  *//*
+	protected EntityLivingBase getTarget() 
+	{
+		int id = dataWatcher.getWatchableObjectInt(TARGET_DATAWATCHER_INDEX);
+		return (id > 0 ? (EntityLivingBase) world.getEntityByID(id) : null);
+	}
+
+	/**
+	   * Returns true if this arrow is a homing arrow
+	   *//*
+	protected boolean isHomingArrow() 
+	{
+		return (dataWatcher.getWatchableObjectByte(HOMING_DATAWATCHER_INDEX) & 1) != 0;
+	}
+
+	/**
+	    * Sets whether this arrow is a homing arrow or not
+	    *//*
+	public void setHomingArrow(boolean isHoming) 
+	{
+		dataWatcher.updateObject(HOMING_DATAWATCHER_INDEX, Byte.valueOf((byte)(isHoming ? 1 : 0)));
+	}*/
+
+	@Override
+	public void onUpdate() 
+	{
+		// This calls the Entity class' update method directly, circumventing EntityArrow
+		super.onEntityUpdate();
+
+		updateAngles();
+		checkInGround();
+
+		if (arrowShake > 0) 
+		{
+			--arrowShake;
+		}
+
+		if (inGround) 
+		{
+			BlockPos blockpos = new BlockPos(this.xTile, this.yTile, this.zTile);
+			IBlockState iblockstate = this.world.getBlockState(blockpos);
+			Block block = iblockstate.getBlock();
+			
+			updateInGround(block, iblockstate);
+		} 
+		else 
+		{
+			updateInAir();
+		}
+
+		if (ticksExisted % 2 == 0)
+		{
+			//PokemonMDMain.proxy.generateParticleHunterEssence(this);
+		}
+	}
+
+	/**
+	 * Checks if entity is colliding with a block and if so, sets inGround to true
+	 */
+	protected void checkInGround() 
+	{
+        BlockPos blockpos = new BlockPos(this.xTile, this.yTile, this.zTile);
+        IBlockState iblockstate = this.world.getBlockState(blockpos);
+        Block block = iblockstate.getBlock();
+
+        if (iblockstate.getMaterial() != Material.AIR)
+        {
+            AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.world, blockpos);
+
+            if (axisalignedbb != Block.NULL_AABB && axisalignedbb.offset(blockpos).contains(new Vec3d(this.posX, this.posY, this.posZ)))
+            {
+                this.inGround = true;
+            }
+        }
+	}
+
+	/**
+	 * Adjusts arrow's motion: multiplies each by factor, subtracts adjustY from motionY
+	 */
+	protected void updateMotion(float factor, float adjustY) 
+	{
+		//EntityLivingBase target = getTarget(); 
+		/*
+		if (isHomingArrow() && target != null) 
+		{
+			double d0 = target.posX - this.posX;
+			double d1 = target.boundingBox.minY + (double)(target.height) - this.posY;
+			double d2 = target.posZ - this.posZ;
+			setThrowableHeading(d0, d1, d2, getVelocityFactor() * 2.0F, 1.0F);
+		} 
+		else 
+		{
+			motionX *= (double) factor;
+			motionY *= (double) factor;
+			motionZ *= (double) factor;
+			motionY -= (double) adjustY;
+		}*/
+
+		motionX *= (double) factor;
+		motionY *= (double) factor;
+		motionZ *= (double) factor;
+		motionY -= (double) adjustY;
+	}
+
+	/**
+	 * Updates yaw and pitch based on current motion
+	 */
+	protected void updateAngles() 
+	{
+		if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F) 
+		{
+			float f = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
+			prevRotationYaw = rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
+			prevRotationPitch = rotationPitch = (float)(Math.atan2(motionY, (double) f) * 180.0D / Math.PI);
+		}
+	}
+
+	/**
+	 * Updates the arrow's position and angles
+	 */
+	protected void updatePosition() 
+	{
+		posX += motionX;
+		posY += motionY;
+		posZ += motionZ;
+
+		float f = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
+		rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
+
+		for (rotationPitch = (float)(Math.atan2(motionY, (double) f) * 180.0D / Math.PI); rotationPitch - prevRotationPitch < -180.0F; prevRotationPitch -= 360.0F)
+		{ ; }
+
+		while (rotationPitch - prevRotationPitch >= 180.0F)
+		{ prevRotationPitch += 360.0F; }
+
+		while (rotationYaw - prevRotationYaw < -180.0F)
+		{ prevRotationYaw -= 360.0F; }
+
+		while (rotationYaw - prevRotationYaw >= 180.0F)
+		{ prevRotationYaw += 360.0F; }
+
+		rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
+		rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
+
+		float motionFactor = 0.99F;
+
+		if (isInWater()) 
+		{
+			for (int i = 0; i < 4; ++i) 
+			{
+				float f3 = 0.25F;
+				this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+			}
+
+			motionFactor = 0.8F;
+		}
+
+		updateMotion(motionFactor, getGravityVelocity());
+		setPosition(posX, posY, posZ);
+	}
+
+	/**
+	 * Checks for impacts, spawns trailing particles and updates entity position
+	 */
+	protected void updateInAir() 
+	{
+		++ticksInAir;
+		RayTraceResult raytraceresult = UtilityTargeting.checkForImpact(world, this, getShooter(), 0.3D, ticksInAir >= 5);
+
+		if (raytraceresult != null) 
+		{
+			onImpact(raytraceresult);
+		}
+
+		spawnTrailingParticles();
+		updatePosition();
+		// func_145775_I is doBlockCollisions
+        this.doBlockCollisions();
+	}
+
+	/**
+	 * If entity is in ground, updates ticks in ground or adjusts position if block no longer in world
+	 */
+	protected void updateInGround(Block block, IBlockState iblockstate) 
+	{
+        int j = block.getMetaFromState(iblockstate);
+
+        if ((block != this.inTile || j != this.inData) && !this.world.collidesWithAnyBlock(this.getEntityBoundingBox().expand(0.5D, 0.5D, 0.5D)))
+        {
+            this.inGround = false;
+            this.motionX *= (double)(this.rand.nextFloat() * 0.2F);
+            this.motionY *= (double)(this.rand.nextFloat() * 0.2F);
+            this.motionZ *= (double)(this.rand.nextFloat() * 0.2F);
+            this.ticksInGround = 0;
+            this.ticksInAir = 0;
+        }
+        else
+        {
+            ++this.ticksInGround;
+
+            if (this.ticksInGround >= 1200)
+            {
+                this.setDead();
+            }
+        }
+
+        ++this.timeInGround;
+	}
+
+	/**
+	 * Called when custom arrow impacts an entity or block
+	 */
+	protected void onImpact(RayTraceResult mop) 
+	{
+		if (mop.entityHit != null) 
+		{
+			onImpactEntity(mop);
+		} 
+		else 
+		{
+			onImpactBlock(mop);
+		}
+	}
+
+	/**
+	 * Called when custom arrow impacts a block
+	 */
+	protected void onImpactBlock(RayTraceResult raytraceresult) 
+	{
+        BlockPos blockpos = raytraceresult.getBlockPos();
+        this.xTile = blockpos.getX();
+        this.yTile = blockpos.getY();
+        this.zTile = blockpos.getZ();
+        IBlockState iblockstate = this.world.getBlockState(blockpos);
+        this.inTile = iblockstate.getBlock();
+        this.inData = this.inTile.getMetaFromState(iblockstate);
+        this.motionX = (double)((float)(raytraceresult.hitVec.x - this.posX));
+        this.motionY = (double)((float)(raytraceresult.hitVec.y - this.posY));
+        this.motionZ = (double)((float)(raytraceresult.hitVec.z - this.posZ));
+        float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+        this.posX -= this.motionX / (double)f2 * 0.05000000074505806D;
+        this.posY -= this.motionY / (double)f2 * 0.05000000074505806D;
+        this.posZ -= this.motionZ / (double)f2 * 0.05000000074505806D;
+		this.playSound(KindredLegacySoundEvents.BOW_OF_KINDRED_HIT, 1.25F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+        this.inGround = true;
+        this.arrowShake = 7;
+        this.setIsCritical(false);
+
+        if (iblockstate.getMaterial() != Material.AIR)
+        {
+            this.inTile.onEntityCollidedWithBlock(this.world, blockpos, iblockstate, this);
+        }
+	}
+
+	/**
+	 * Called when custom arrow impacts another entity
+	 */
+	protected void onImpactEntity(RayTraceResult raytraceresult) 
+	{
+		if (raytraceresult.entityHit != null && !(raytraceresult.entityHit instanceof TamablePokemon) && raytraceresult.entityHit != this.shootingEntity) 
+		{
+			// make sure shootingEntity is correct, e.g. if loaded from NBT
+			shootingEntity = getShooter();
+			float dmg = calculateDamage(raytraceresult.entityHit);
+
+			if (dmg > 0) 
+			{
+				if (isBurning() && canTargetEntity(raytraceresult.entityHit)) 
+				{
+					raytraceresult.entityHit.setFire(5);
+				}
+
+				if (raytraceresult.entityHit.attackEntityFrom(getDamageSource(raytraceresult.entityHit), dmg)) 
+				{
+					if (raytraceresult.entityHit instanceof EntityLivingBase) 
+					{
+						handlePostDamageEffects((EntityLivingBase) raytraceresult.entityHit);
+						if (shootingEntity instanceof EntityPlayerMP && raytraceresult.entityHit != shootingEntity && raytraceresult.entityHit instanceof EntityPlayer) 
+						{
+	                        ((EntityPlayerMP)this.shootingEntity).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
+						}
+					}
+
+					this.playSound(KindredLegacySoundEvents.BOW_OF_KINDRED_HIT, 1.25F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+
+					if (canTargetEntity(raytraceresult.entityHit)) 
+					{
+						setDead();
+					}
+				} 
+				else 
+				{
+					setDead();
+					/*
+					motionX *= -0.10000000149011612D;
+					motionY *= -0.10000000149011612D;
+					motionZ *= -0.10000000149011612D;
+					rotationYaw += 180.0F;
+					prevRotationYaw += 180.0F;
+					ticksInAir = 0;*/
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns amount of damage arrow will inflict to entity impacted
+	 */
+	protected float calculateDamage(Entity entityHit) 
+	{
+		float velocity = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+		float dmg = (float)(velocity * getDamage());
+
+		if (getIsCritical()) 
+		{
+			dmg += rand.nextInt(MathHelper.ceil(dmg) / 2 + 2);
+		}
+
+		return dmg;
+	}
+
+	/** Returns whether this arrow can target the entity; normally used for Endermen */
+	protected boolean canTargetEntity(Entity entity) 
+	{
+		return true; //(!(entity instanceof EntityEnderman));
+	}
+
+	/** Returns the damage source this arrow will use against the entity struck */ 
+	protected DamageSource getDamageSource(Entity entity) 
+	{
+		return new EntityDamageSourceIndirect("arrow", this, shootingEntity).setProjectile();
+	}
+
+	/**
+	 * Handles all secondary effects if entity hit was damaged, such as knockback, thorns, etc.
+	 */
+	protected void handlePostDamageEffects(EntityLivingBase entityHit) 
+	{
+		if (!world.isRemote) 
+		{
+			entityHit.setArrowCountInEntity(entityHit.getArrowCountInEntity() + 1);
+		}
+
+		int k = getKnockbackStrength();
+
+		if (k > 0) 
+		{
+			float f3 = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
+
+			if (f3 > 0.0F) 
+			{
+				double knockback = (double) k * 0.6000000238418579D / (double) f3;
+				entityHit.addVelocity(motionX * knockback, 0.1D, motionZ * knockback);
+			}
+		}
+
+		if (shootingEntity instanceof EntityLivingBase) 
+		{
+            EnchantmentHelper.applyThornEnchantments(entityHit, this.shootingEntity);
+            EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.shootingEntity, entityHit);
+		}
+	}
+
+	/** Returns the amount of knockback the arrow applies when it hits a mob */
+	public int getKnockbackStrength() 
+	{
+		return knockbackStrength;
+	}
+
+	/** Sets the amount of knockback the arrow applies when it hits a mob. */
+	public void setKnockbackStrength(int value) 
+	{
+		knockbackStrength = value;
+	}
+
+	/** Returns the arrow's velocity factor */
+	protected float getVelocityFactor() 
+	{
+		return 1.5F;
+	}
+
+	/** Default gravity adjustment for arrows seems to be 0.05F */
+	protected float getGravityVelocity() 
+	{
+		return 0.05F;
+	}
+
+	/** The name of the particle to spawn for trailing particle effects */
+	protected String getParticleName() 
+	{
+		return "crit";
+	}
+
+	/**
+	 * Returns whether trailing particles should spawn (vanilla returns isCritical())
+	 */
+	protected boolean shouldSpawnParticles() 
+	{
+		return (getIsCritical() && getParticleName().length() > 0);
+	}
+
+	/**
+	 * Spawns trailing particles, if any
+	 */
+	protected void spawnTrailingParticles() 
+	{
+		if (shouldSpawnParticles()) 
+		{
+			for (int i = 0; i < 4; ++i) 
+			{
+				//world.spawnParticle(getParticleName(), posX + motionX * (double) i / 4.0D, posY + motionY * (double) i / 4.0D, posZ + motionZ * (double) i / 4.0D, -motionX, -motionY + 0.2D, -motionZ);
+			}
+		}
+	}
+
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+	{
+		nbttagcompound.setShort("xTile", (short)this.xTile);
+		nbttagcompound.setShort("yTile", (short)this.yTile);
+		nbttagcompound.setShort("zTile", (short)this.zTile);
+		nbttagcompound.setShort("life", (short)this.ticksInGround);
+		nbttagcompound.setByte("inTile", (byte)Block.getIdFromBlock(this.inTile));
+		nbttagcompound.setByte("inData", (byte)this.inData);
+		nbttagcompound.setByte("shake", (byte)this.arrowShake);
+		nbttagcompound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
+		nbttagcompound.setByte("pickup", (byte)this.canBePickedUp);
+		nbttagcompound.setDouble("damage", this.damage);
+
+		nbttagcompound.setString("shooter", shooterName == null ? "" : shooterName);
+		//nbttagcompound.setInteger("target", getTarget() == null ? -1 : getTarget().getEntityId());
+	}
+
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+	{
+		this.xTile = nbttagcompound.getShort("xTile");
+		this.yTile = nbttagcompound.getShort("yTile");
+		this.zTile = nbttagcompound.getShort("zTile");
+		this.ticksInGround = nbttagcompound.getShort("life");
+		this.inTile = Block.getBlockById(nbttagcompound.getByte("inTile") & 255);
+		this.inData = nbttagcompound.getByte("inData") & 255;
+		this.arrowShake = nbttagcompound.getByte("shake") & 255;
+		this.inGround = nbttagcompound.getByte("inGround") == 1;
+
+		if (nbttagcompound.hasKey("damage", 99))
+		{
+			this.damage = nbttagcompound.getDouble("damage");
+		}
+
+		if (nbttagcompound.hasKey("pickup", 99))
+		{
+			this.canBePickedUp = nbttagcompound.getByte("pickup");
+		}
+		else if (nbttagcompound.hasKey("player", 99))
+		{
+			this.canBePickedUp = nbttagcompound.getBoolean("player") ? 1 : 0;
+		}
+	}
+
+	/**
+	 * Called by a player entity when they collide with an entity
+	 *//*
+	@Override
+	public void onCollideWithPlayer(EntityPlayer player)
+	{
+		if (!this.world.isRemote && this.inGround && this.arrowShake <= 0)
+		{
+			boolean flag = this.canBePickedUp == 1 || this.canBePickedUp == 2 && player.capabilities.isCreativeMode;
+
+			if (this.canBePickedUp == 1 && !player.inventory.addItemStackToInventory(new ItemStack(Items.arrow, 1)))
+			{
+				flag = false;
+			}
+
+			if (flag)
+			{
+				this.playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+				player.onItemPickup(this, 1);
+				this.setDead();
+			}
+		}
+	}*/
+
+	/**
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+	 * prevent them from trampling crops
+	 */
+	@Override
+	protected boolean canTriggerWalking()
+	{
+		return false;
+	}
+	
+	public void setDamage(double damagePower)
+	{
+		this.damage = damagePower;
+	}
+
+	public double getDamage()
+	{
+		return this.damage;
+	}
+	
+    /**
+     * Whether the arrow has a stream of critical hit particles flying behind it.
+     */
+    public void setIsCritical(boolean critical)
+    {
+        byte b0 = ((Byte)this.dataManager.get(CRITICAL)).byteValue();
+
+        if (critical)
+        {
+            this.dataManager.set(CRITICAL, Byte.valueOf((byte)(b0 | 1)));
+        }
+        else
+        {
+            this.dataManager.set(CRITICAL, Byte.valueOf((byte)(b0 & -2)));
+        }
+    }
+
+    /**
+     * Whether the arrow has a stream of critical hit particles flying behind it.
+     */
+    public boolean getIsCritical()
+    {
+        byte b0 = ((Byte)this.dataManager.get(CRITICAL)).byteValue();
+        return (b0 & 1) != 0;
+    }
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) 
+	{
+		buffer.writeInt(this.shootingEntity != null ? this.shootingEntity.getEntityId() : -1);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer) 
+	{
+		// Replicate EntityArrow's special spawn packet handling from NetClientHandler#handleVehicleSpawn:
+		Entity shooter = world.getEntityByID(buffer.readInt());
+
+		if (shooter instanceof EntityLivingBase) 
+		{
+			this.shootingEntity = (EntityLivingBase) shooter;
+		}
+	}
+
+	@Override
+	protected ItemStack getArrowStack() 
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

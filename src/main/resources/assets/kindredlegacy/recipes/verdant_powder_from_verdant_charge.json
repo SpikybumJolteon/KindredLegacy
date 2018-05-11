@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:verdantizer"
+    },
+    {
+      "item": "kindredlegacy:verdant_charge"
+    }
+  ],
+  "result": {
+    "item": "kindredlegacy:verdant_powder",
+    "count": 8
+  }
+}

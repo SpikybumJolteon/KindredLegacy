@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:verdantizer"
+    },
+    {
+      "item": "kindredlegacy:pechita_berry"
+    }
+  ],
+  "result": {
+    "item": "kindredlegacy:verdant_powder"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "RLR",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "kindredlegacy:water_breathing_powder"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "L": {
+      "item": "kindredlegacy:life_boost"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:waterga_essence"
+  }
+}

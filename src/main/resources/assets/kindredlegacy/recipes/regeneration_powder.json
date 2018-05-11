@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "kindredlegacy:verdantizer"
+        },
+        {
+            "item": "#POTION_OF_STRONG_REGENERATION"
+        }
+    ],
+    "result": {
+        "item": "kindredlegacy:regeneration_powder"
+    }
+}

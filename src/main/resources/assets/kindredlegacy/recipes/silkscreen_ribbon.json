@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS"
+  ],
+  "key": {
+    "S": {
+      "item": "kindredlegacy:silkscreen_mesh"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:silkscreen_ribbon"
+  }
+}

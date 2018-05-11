@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "AWA",
+    "E E"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:writable_book"
+    },
+    "S": {
+      "item": "minecraft:spider_eye"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "A": {
+      "item": "kindredlegacy:aurum_dust"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:will_of_the_ancients"
+  }
+}

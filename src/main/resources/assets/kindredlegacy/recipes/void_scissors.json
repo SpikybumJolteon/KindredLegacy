@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "Q Q",
+    " O "
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "Q": {
+      "item": "minecraft:quartz_block",
+      "data": 0
+    },
+    "X": {
+      "item": "kindredlegacy:xelnaga_circuit"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:void_scissors"
+  }
+}

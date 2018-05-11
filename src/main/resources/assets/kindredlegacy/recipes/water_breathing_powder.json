@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "kindredlegacy:verdantizer"
+        },
+        {
+            "item": "#POTION_OF_LONG_WATER_BREATHING"
+        }
+    ],
+    "result": {
+        "item": "kindredlegacy:water_breathing_powder"
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "kindredlegacy:items/berries/oranian_berry"
+    }
+}

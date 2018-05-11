@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:void_scissors",
+      "data": 32767
+    },
+    {
+      "item": "minecraft:acacia_fence"
+    },
+    {
+      "item": "minecraft:acacia_fence"
+    },
+    {
+      "item": "minecraft:acacia_fence"
+    }
+  ],
+  "result": {
+    "item": "minecraft:planks",
+    "data": 4,
+    "count": 4
+  }
+}

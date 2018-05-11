@@ -1,0 +1,6 @@
+{
+    "parent": "block/cross",
+    "textures": {
+        "cross": "kindredlegacy:blocks/pechita_berry/pechita_berry_stage_2"
+    }
+}

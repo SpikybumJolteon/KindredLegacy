@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "VSV",
+    "IAI",
+    "VSV"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "kindredlegacy:silkscreen_mesh"
+    },
+    "V": {
+      "item": "kindredlegacy:verdant_charge"
+    },
+    "A": {
+      "item": "minecraft:anvil",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "minecraft:anvil",
+    "data": 1
+  }
+}

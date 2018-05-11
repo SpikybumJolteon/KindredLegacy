@@ -1,0 +1,65 @@
+[
+    {
+        "name": "POTION_OF_LONG_FIRE_RESISTANCE",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "long_fire_resistance"
+        }
+    },
+    {
+        "name": "POTION_OF_LONG_INVISIBILITY",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "long_invisibility"
+        }
+    },
+    {
+        "name": "POTION_OF_LONG_WATER_BREATHING",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "long_water_breathing"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_HEALING",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_healing"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_LEAPING",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_leaping"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_POISON",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_poison"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_STRENGTH",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_strength"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_SWIFTNESS",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_swiftness"
+        }
+    },
+    {
+        "name": "POTION_OF_STRONG_REGENERATION",
+        "ingredient": {
+            "type": "kindredlegacy:brewed_potion",
+            "potion": "strong_regeneration"
+        }
+    }
+]

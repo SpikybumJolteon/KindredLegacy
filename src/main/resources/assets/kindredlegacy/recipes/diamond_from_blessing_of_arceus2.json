@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "VAV"
+  ],
+  "key": {
+    "V": {
+      "item": "kindredlegacy:verdant_charge"
+    },
+    "A": {
+      "item": "kindredlegacy:blessing_of_arceus"
+    }
+  },
+  "result": {
+    "item": "minecraft:diamond"
+  }
+}

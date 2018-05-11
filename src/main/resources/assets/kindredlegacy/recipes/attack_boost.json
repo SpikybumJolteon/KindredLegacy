@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "RHR",
+    "YYY"
+  ],
+  "key": {
+    "X": {
+      "item": "kindredlegacy:strength_powder"
+    },
+    "Y": {
+      "item": "kindredlegacy:swiftness_powder"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "H": {
+      "item": "kindredlegacy:hunters_charge"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:attack_boost"
+  }
+}

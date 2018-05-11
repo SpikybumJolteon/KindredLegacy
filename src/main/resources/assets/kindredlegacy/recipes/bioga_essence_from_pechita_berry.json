@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PRP",
+    "RLR",
+    "PRP"
+  ],
+  "key": {
+    "P": {
+      "item": "kindredlegacy:pechita_berry"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "L": {
+      "item": "kindredlegacy:life_boost"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:bioga_essence"
+  }
+}

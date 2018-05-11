@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FHL",
+    "HCL",
+    "FHL"
+  ],
+  "key": {
+    "C": {
+      "item": "kindredlegacy:hunters_charge"
+    },
+    "H": {
+      "item": "kindredlegacy:hunters_charm"
+    },
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "item": "minecraft:dye",
+      "data": 4
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:bow_of_kindred"
+  }
+}

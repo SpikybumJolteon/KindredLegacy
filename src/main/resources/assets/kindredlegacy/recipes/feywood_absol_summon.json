@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WEW",
+    "EAE",
+    "OEO"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:wool",
+      "data": 0
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "A": {
+      "item": "kindredlegacy:blessing_of_arceus"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:feywood_absol_summon"
+  }
+}

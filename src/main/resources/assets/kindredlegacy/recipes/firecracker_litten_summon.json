@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FEF",
+    "GAG",
+    "TBT"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:fireworks"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "T": {
+      "item": "minecraft:tnt"
+    },
+    "B": {
+      "item": "minecraft:blaze_powder"
+    },
+    "A": {
+      "item": "kindredlegacy:blessing_of_arceus"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:firecracker_litten_summon"
+  }
+}

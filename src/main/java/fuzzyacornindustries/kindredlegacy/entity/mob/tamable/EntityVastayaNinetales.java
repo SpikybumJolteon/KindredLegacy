@@ -17,12 +17,8 @@ import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IBoostItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IEssenceItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IPowerUp;
-import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFirecrackerLittenSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemVastayaNinetalesSummon;
-import fuzzyacornindustries.kindredlegacy.reference.ModInfo;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryAhriNinetalesAttackID;
-import fuzzyacornindustries.kindredlegacy.reference.action.LibraryFeywoodAbsolAttackID;
-import fuzzyacornindustries.kindredlegacy.reference.action.LibraryFirecrackerLittenAttackID;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryUniversalAttackID;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -41,14 +37,12 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -81,7 +75,7 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 		super(par1World);
 
 		this.aiSit = new EntityAISit(this);
-		
+
 		this.setSize(0.5F, 1.9F);
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new AIVastayaNinetalesJumpFireball(this));
@@ -267,7 +261,7 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 		toggleHappiness();
 	}
-	
+
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
 	 */
@@ -368,6 +362,15 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 						return true;
 					}
+					else if(KindredLegacyMain.isGalacticraftEnabled)
+					{
+						if(itemstack.getItem() == KindredLegacyItems.COMET_ESSENCE && this.hasSpaceSurvivabilityEssence() != 1)
+						{		
+							applyCometEssence(player, itemstack);
+
+							return true;
+						}
+					}
 				}
 				else if(itemstack.getItem() instanceof IPowerUp)
 				{
@@ -408,7 +411,7 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 				if(attackWeight < 2)
 				{
-				KindredLegacyMain.sendAnimationPacket(this, LibraryAhriNinetalesAttackID.JUMP_FIREBALL);
+					KindredLegacyMain.sendAnimationPacket(this, LibraryAhriNinetalesAttackID.JUMP_FIREBALL);
 				}
 				else
 				{
@@ -431,7 +434,7 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 		double d2 = targetEntity.posZ - spawnFireballPoint.getZ();//this.posZ;
 
 		//float f1 = MathHelper.sqrt(par2) * 0.1F;
-        this.playSound(KindredLegacySoundEvents.FIREBALL_SWOOSH, 0.5F, 0.4F / (this.rand.nextFloat() * 0.4F + 0.8F));
+		this.playSound(KindredLegacySoundEvents.FIREBALL_SWOOSH, 0.5F, 0.4F / (this.rand.nextFloat() * 0.4F + 0.8F));
 
 		EntityVastayaFireball entitysmallfireball = new EntityVastayaFireball(attackingMob.world, attackingMob, 
 				spawnFireballPoint.getX(), attackingMob.posY, spawnFireballPoint.getZ(),

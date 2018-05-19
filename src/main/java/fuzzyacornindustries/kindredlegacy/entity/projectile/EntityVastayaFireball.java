@@ -143,10 +143,14 @@ public class EntityVastayaFireball extends KindredLegacyFireball
 					{
 						result.entityHit.setFire(5);
 					}
+
+					this.setDead();
 				}
 			}
-
-			this.setDead();
+			else
+			{
+				this.setDead();
+			}
 		}
 	}
 }

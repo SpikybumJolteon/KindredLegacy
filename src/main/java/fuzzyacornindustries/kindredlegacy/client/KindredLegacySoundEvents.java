@@ -26,6 +26,13 @@ public class KindredLegacySoundEvents
 	public static final SoundEvent BANDERSNATCH_FENNEKIN_HURT;
 	public static final SoundEvent BANDERSNATCH_FENNEKIN_AMBIENT;
 
+	public static final SoundEvent BLOODMOON_NINETALES_ATTACK;
+	public static final SoundEvent BLOODMOON_NINETALES_DEATH;
+	public static final SoundEvent BLOODMOON_NINETALES_EXERT_SELF;
+	public static final SoundEvent BLOODMOON_NINETALES_GASP;
+	public static final SoundEvent BLOODMOON_NINETALES_HURT;
+	public static final SoundEvent BLOODMOON_NINETALES_LAUGH;
+	
 	public static final SoundEvent CLAY_COMMANDER_DELCATTY_DEATH;
 	public static final SoundEvent CLAY_COMMANDER_DELCATTY_HURT;
 	public static final SoundEvent CLAY_COMMANDER_DELCATTY_AMBIENT;
@@ -136,6 +143,13 @@ public class KindredLegacySoundEvents
 		BANDERSNATCH_FENNEKIN_HURT = registerSound("bandersnatch_fennekin.hurt");
 		BANDERSNATCH_FENNEKIN_AMBIENT = registerSound("bandersnatch_fennekin.ambient");
 
+		BLOODMOON_NINETALES_ATTACK = registerSound("bloodmoon_ninetales.attack");
+		BLOODMOON_NINETALES_DEATH = registerSound("bloodmoon_ninetales.death");
+		BLOODMOON_NINETALES_EXERT_SELF = registerSound("bloodmoon_ninetales.exert_self");
+		BLOODMOON_NINETALES_GASP = registerSound("bloodmoon_ninetales.gasp");
+		BLOODMOON_NINETALES_HURT = registerSound("bloodmoon_ninetales.hurt");
+		BLOODMOON_NINETALES_LAUGH = registerSound("bloodmoon_ninetales.laugh");
+		
 		CLAY_COMMANDER_DELCATTY_DEATH = registerSound("clay_commander_delcatty.death");
 		CLAY_COMMANDER_DELCATTY_HURT = registerSound("clay_commander_delcatty.hurt");
 		CLAY_COMMANDER_DELCATTY_AMBIENT = registerSound("clay_commander_delcatty.ambient");
@@ -272,6 +286,12 @@ public class KindredLegacySoundEvents
 					BANDERSNATCH_FENNEKIN_DEATH,
 					BANDERSNATCH_FENNEKIN_HURT,
 					BANDERSNATCH_FENNEKIN_AMBIENT,
+					BLOODMOON_NINETALES_ATTACK,
+					BLOODMOON_NINETALES_DEATH,
+					BLOODMOON_NINETALES_EXERT_SELF,
+					BLOODMOON_NINETALES_GASP,
+					BLOODMOON_NINETALES_HURT,
+					BLOODMOON_NINETALES_LAUGH,
 					CLAY_COMMANDER_DELCATTY_DEATH,
 					CLAY_COMMANDER_DELCATTY_HURT,
 					CLAY_COMMANDER_DELCATTY_AMBIENT,

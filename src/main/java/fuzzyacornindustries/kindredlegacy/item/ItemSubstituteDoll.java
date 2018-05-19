@@ -63,9 +63,6 @@ public class ItemSubstituteDoll extends ItemBase
 
 			Entity entity = spawnEntity(worldIn, itemstack, (double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D);
 
-			System.out.println( "Test entity summon run, General Class." );
-			System.out.println( "Entity is not null:" + Boolean.toString(entity != null) );
-
 			if (entity != null)
 			{
 				if (!playerIn.capabilities.isCreativeMode)

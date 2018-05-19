@@ -105,9 +105,7 @@ public class EntityBloodmoonFoxfire extends HostilePokemon implements IAnimatedE
             {
                 this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D, new int[0]);
             }
-        }
-
-		incrementPartClocks();		
+        }	
 	}
 
 	@Override
@@ -165,6 +163,7 @@ public class EntityBloodmoonFoxfire extends HostilePokemon implements IAnimatedE
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Override
 	public void incrementPartClocks()
 	{
 		spinIdleAnimationClock.incrementClocks();

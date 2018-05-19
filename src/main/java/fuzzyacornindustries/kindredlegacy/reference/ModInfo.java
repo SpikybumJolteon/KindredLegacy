@@ -7,7 +7,7 @@ public class ModInfo
 {
 	public static final String MOD_ID = "kindredlegacy";
 	public static final String MOD_NAME = "Kindred Legacy";
-	public static final String MOD_VERSION = "1.12.2-Dev-2.6";//"pre-1.2_1";//"Dev-2.2";
+	public static final String MOD_VERSION = "1.12.2-Dev-2.8";//"pre-1.2_1";//"Dev-2.2";
 	
 	public static final String CHANNEL = "kindredlegacy_chan";
 	public static final String CHANNEL2 = "kindredlegacy_chan2";

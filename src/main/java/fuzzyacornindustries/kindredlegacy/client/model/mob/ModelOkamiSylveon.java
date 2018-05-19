@@ -930,6 +930,7 @@ public class ModelOkamiSylveon extends ModelBase
 		this.bodyLftFeeler19[feelerNumber] = new ModelRenderer(this, 4, 59); // bodyLftFeeler19Bot
 		this.bodyLftFeeler19[feelerNumber].setRotationPoint(0.0F, 0.5F, -0.7F);
 		this.bodyLftFeeler19[feelerNumber].addBox(-0.5F, -0.5F, -1.7F, 1, 1, 2, 0.0F);
+		this.setRotateAngle(bodyLftFeeler19[feelerNumber], 0.20471975511965977F, 0.0F, 0.0F);
 		this.bodyLftFeeler19Info[feelerNumber] = new PartInfo(this.bodyLftFeeler19[feelerNumber]);
 
 		feelerNumber = 0;
@@ -1067,7 +1068,7 @@ public class ModelOkamiSylveon extends ModelBase
 		this.bodyRtFeeler[feelerNumber].setRotationPoint(0.0F, 0.0F, -0.7F);
 		this.bodyRtFeeler[feelerNumber].addBox(-0.5F, -1.0F, -0.7F, 1, 2, 1, 0.0F);
 		this.bodyRtFeelerInfo[feelerNumber] = new PartInfo(this.bodyRtFeeler[feelerNumber]);
-		this.setRotateAngle(bodyRtFeeler[feelerNumber], -0.10471975511965977F, 0.0F, 0.0F);
+		this.setRotateAngle(bodyRtFeeler[feelerNumber], 1.20471975511965977F, 0.0F, 0.0F);
 		this.bodyRtFeelerSitInfo[feelerNumber] = new PartInfo(this.bodyRtFeeler[feelerNumber]);
 
 		feelerNumber = 0;
@@ -1079,6 +1080,7 @@ public class ModelOkamiSylveon extends ModelBase
 		this.bodyRtFeeler19[feelerNumber] = new ModelRenderer(this, 0, 61); // bodyRtFeeler19Bot
 		this.bodyRtFeeler19[feelerNumber].setRotationPoint(0.0F, 0.5F, -0.7F);
 		this.bodyRtFeeler19[feelerNumber].addBox(-0.5F, -0.5F, -1.7F, 1, 1, 2, 0.0F);
+		this.setRotateAngle(bodyRtFeeler19[feelerNumber], 0.20471975511965977F, 0.0F, 0.0F);
 		this.bodyRtFeeler19Info[feelerNumber] = new PartInfo(this.bodyRtFeeler19[feelerNumber]);
 
 		this.body.addChild(this.bodyLftFeeler[0]);

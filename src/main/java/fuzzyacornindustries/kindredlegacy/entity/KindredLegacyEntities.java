@@ -6,10 +6,12 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 
 import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
+import fuzzyacornindustries.kindredlegacy.entity.ability.EntityBloodmoonFoxfire;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredShinx;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBandersnatchFennekin;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayEspurr;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayPurrloin;
@@ -32,6 +34,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiSylveon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityVastayaNinetales;
+import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityBloodmoonFireball;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityFireworkMissile;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityHunterBolt;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityVastayaFireball;
@@ -55,6 +58,7 @@ public class KindredLegacyEntities
 	public static float armoredLuxraySpawnRate;
 	public static float armoredShinxSpawnRate;
 	public static float bandersnatchFennekinSpawnRate;
+	public static float bloodmoonNinetalesSpawnRate;
 	public static float clayCommanderDelcattySpawnRate;
 	public static float clayEspurrSpawnRate;
 	public static float clayPurrloinSpawnRate;
@@ -119,6 +123,8 @@ public class KindredLegacyEntities
 		clayCommanderDelcattySpawnRate = config.getFloat("clayCommanderDelcattySpawnRate", category, 1.0F, 0F, 20.0F, "Clay Commander Delcatty Spawn Rate.");
 		voorstMightyenaSpawnRate = config.getFloat("voorstMightyenaSpawnRate", category, 1.0F, 0F, 20.0F, "Voorst Mightyena Spawn Rate.");
 
+		bloodmoonNinetalesSpawnRate = config.getFloat("bloodmoonNinetalesSpawnRate", category, 1.0F, 0F, 30.0F, "Bloodmoon Ninetales Spawn Rate.");
+		
 		clayShinxSpawnRate = config.getFloat("clayShinxSpawnRate", category, 1.0F, 0F, 10.0F, "Clay Shinx Spawn Rate.");
 		cracklingNincadaSpawnRate = config.getFloat("cracklingNincadaSpawnRate", category, 1.0F, 0F, 10.0F, "Crackling Nincada Spawn Rate.");
 
@@ -129,11 +135,11 @@ public class KindredLegacyEntities
 		prop.setComment("List the dimensions regular mod mobs should not spawn in");
 		prop.setRequiresMcRestart(true);
 		dimensionSpawnsDisablerList = prop.getIntList();
-
+/*
 		prop = config.get(category, "Dimensions disabled for mod's space themed mobs", new int[] {});
 		prop.setComment("List the dimensions the mod's space themed mobs should not spawn in");
 		prop.setRequiresMcRestart(true);
-		dimensionSpawnsDisablerSpaceMobs = prop.getIntList();
+		dimensionSpawnsDisablerSpaceMobs = prop.getIntList();*/
 
 		//canFullMoonMobsSpawnOnFirstNight = config.getBoolean("canFullMoonMobsSpawnOnFirstNight", category, false, "Can Full Moon mobs spawn on first night?");
 		//minDaysToSpawnDarknut = 24000 * MathHelper.clamp_int(config.get("Mob Spawns", "Minimum number of days required to pass before Darknuts may spawn [0-30]", 7).getInt(), 0, 30);
@@ -144,14 +150,14 @@ public class KindredLegacyEntities
 				"\n======= Mob Behavior Settings =======");
 		mobsHostileToVanillaMobs = config.getBoolean("mobsHostileToVanillaMobs", category, true, "Mod mobs with hostility to Vanilla mobs enabled?");
 
-		/*================== GALACTICRAFT COMPATIBILITY =====================*/
+		/*================== GALACTICRAFT COMPATIBILITY =====================*//*
 		category = "Galacticraft Compatibility";
 		config.addCustomCategoryComment(category,
 				"\n======= Galacticraft Settings =======");
 		moonID = config.getInt("moonID", category, -28, -256, 256, "Defined Moon Dimension ID for Galacticraft?");
 		marsID = config.getInt("marsID", category, -29, -256, 256, "Defined Mars Dimension ID for Galacticraft?");
 		asteroidsID = config.getInt("asteroidsID", category, -30, -256, 256, "Defined Asteroids Dimension ID for Galacticraft?");
-		venusID = config.getInt("venusID", category, -31, -256, 256, "Defined Venus Dimension ID for Galacticraft?");
+		venusID = config.getInt("venusID", category, -31, -256, 256, "Defined Venus Dimension ID for Galacticraft?");*/
 	}
 
 	public static void registerEntityMob()
@@ -159,6 +165,7 @@ public class KindredLegacyEntities
 		createEntity(EntityArmoredLuxray.class, EntityArmoredLuxray.getMobName(), LibraryEntityID.ARMORED_LUXRAY, 0x062518, 0xd9c225);
 		createEntity(EntityArmoredShinx.class, EntityArmoredShinx.getMobName(), LibraryEntityID.ARMORED_SHINX, 0xdac329, 0x062518);
 		createEntity(EntityBandersnatchFennekin.class, EntityBandersnatchFennekin.getMobName(), LibraryEntityID.BANDERSNATCH_FENNEKIN, 0xccd9da, 0x29494e);
+		createEntity(EntityBloodmoonNinetales.class, EntityBloodmoonNinetales.getMobName(), LibraryEntityID.BLOODMOON_NINETALES, 0x0b0101, 0xeeeeee);
 		createEntity(EntityClayCommanderDelcatty.class, EntityClayCommanderDelcatty.getMobName(), LibraryEntityID.CLAY_COMMANDER_DELCATTY, 0x392f1f, 0x6d6d6d);
 		createEntity(EntityClayEspurr.class, EntityClayEspurr.getMobName(), LibraryEntityID.CLAY_ESPURR, 0x322818, 0xb166da);
 		createEntity(EntityClayPurrloin.class, EntityClayPurrloin.getMobName(), LibraryEntityID.CLAY_PURRLOIN, 0x3d2723, 0xd4a0c8);
@@ -186,6 +193,7 @@ public class KindredLegacyEntities
 	public static void registerEntityAbilities()
 	{
 		createEntity(EntitySubstituteDoll.class, EntitySubstituteDoll.getMobName(), LibraryEntityID.SUBSTITUTE_DOLL);
+		createEntity(EntityBloodmoonFoxfire.class, EntityBloodmoonFoxfire.getMobName(), LibraryEntityID.BLOODMOON_FOXFIRE);
 	}
 
 	public static void registerEntityProjectiles()
@@ -193,6 +201,7 @@ public class KindredLegacyEntities
 		createEntity(EntityFireworkMissile.class, "firework_missile", LibraryEntityID.FIREWORK_MISSILE);
 		createEntity(EntityHunterBolt.class, "hunter_bolt", LibraryEntityID.HUNTER_BOLT);
 		createEntity(EntityVastayaFireball.class, "vastaya_fireball", LibraryEntityID.VASTAYA_FIREBALL);
+		createEntity(EntityBloodmoonFireball.class, "bloodmoon_fireball", LibraryEntityID.BLOODMOON_FIREBALL);
 	}
 
 	public static void addSpawnLocations()
@@ -270,6 +279,25 @@ public class KindredLegacyEntities
 				else if (types.contains(BiomeDictionary.Type.COLD))
 				{
 					addSpawn(biome, EntityBandersnatchFennekin.class, bandersnatchFennekinSpawnRate, 50, 1, 1);
+				}
+			}
+
+			/***************************
+			 * Bloodmoon Ninetales
+			 ***************************/
+			if(!types.contains(BiomeDictionary.Type.END) && !types.contains(BiomeDictionary.Type.NETHER))
+			{
+				if(types.contains(BiomeDictionary.Type.SPARSE))
+				{
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+				}
+				else if (types.contains(BiomeDictionary.Type.PLAINS))
+				{
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+				}
+				else if (types.contains(BiomeDictionary.Type.MESA))
+				{
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
 				}
 			}
 

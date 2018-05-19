@@ -6,6 +6,7 @@ import java.util.List;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemAttackBoost;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemAttackOrderer;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemBiogaEssence;
+import fuzzyacornindustries.kindredlegacy.item.tamable.ItemCometEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemCuragaEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFeywoodAbsolSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFiragaEssence;
@@ -87,7 +88,6 @@ public class KindredLegacyItems
 	
 	public static final Item ATTACK_BOOST = new ItemAttackBoost("attack_boost");
 	public static final Item BIOGA_ESSENCE = new ItemBiogaEssence("bioga_essence");
-	//public static final Item COMET_ESSENCE = new ItemCometEssence("comet_essence");
 	public static final Item CURAGA_ESSENCE = new ItemCuragaEssence("curaga_essence");
 	public static final Item FIRAGA_ESSENCE = new ItemFiragaEssence("firaga_essence");
 	public static final Item GRAVIGA_ESSENCE = new ItemGravigaEssence("graviga_essence");
@@ -95,6 +95,8 @@ public class KindredLegacyItems
 	public static final Item QUAKAGA_ESSENCE = new ItemQuakagaEssence("quakaga_essence");
 	public static final Item SPEED_BOOST = new ItemSpeedBoost("speed_boost");
 	public static final Item WATERGA_ESSENCE = new ItemWatergaEssence("waterga_essence");
+
+	public static final Item COMET_ESSENCE = new ItemCometEssence("comet_essence");
 	
 	public static final Item POKERASER = new ItemPokeraser("pokeraser");
 	public static final Item SUBSTITUTE_DOLL = new ItemSubstituteDoll("substitute_doll");

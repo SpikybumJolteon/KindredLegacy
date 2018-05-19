@@ -356,6 +356,15 @@ public class EntityOkamiUmbreon extends OkamiPokemon implements IRangedAttackMob
 
 						return true;
 					}
+					else if(KindredLegacyMain.isGalacticraftEnabled)
+					{
+						if(itemstack.getItem() == KindredLegacyItems.COMET_ESSENCE && this.hasSpaceSurvivabilityEssence() != 1)
+						{		
+							applyCometEssence(player, itemstack);
+
+							return true;
+						}
+					}
 				}
 				else if(itemstack.getItem() instanceof IPowerUp)
 				{

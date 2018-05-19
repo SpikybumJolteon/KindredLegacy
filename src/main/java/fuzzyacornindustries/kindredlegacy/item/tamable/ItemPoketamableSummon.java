@@ -105,6 +105,7 @@ public class ItemPoketamableSummon extends ItemBase
 		writeCompoundIntegerToItemStack(poketamableStack, "pokemonmd", "blocksuffocationavoidance", poketamableEntity.hasBlockSuffocationAvoidanceEssence());
 		writeCompoundIntegerToItemStack(poketamableStack, "pokemonmd", "toxinimmunity", poketamableEntity.hasToxinImmunityEssence());
 		writeCompoundIntegerToItemStack(poketamableStack, "pokemonmd", "regenlevel", poketamableEntity.getRegenLevel());
+		writeCompoundIntegerToItemStack(poketamableStack, "pokemonmd", "spacesurvivability", poketamableEntity.hasSpaceSurvivabilityEssence());
 		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setFloat("health", poketamableEntity.getHealth());
 		poketamableStack.setItemDamage((int) itemDamageHealthValue(poketamableEntity.getHealth(), poketamableEntity.getMaximumHealth()));
 		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setFloat("maxhealth", poketamableEntity.getMaximumHealth());
@@ -116,6 +117,7 @@ public class ItemPoketamableSummon extends ItemBase
 		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setFloat("blocksuffocationavoidance", poketamableEntity.hasBlockSuffocationAvoidanceEssence());
 		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setFloat("toxinimmunity", poketamableEntity.hasToxinImmunityEssence());
 		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setInteger("regenlevel", poketamableEntity.getRegenLevel());
+		poketamableStack.getTagCompound().getCompoundTag("pokemonmd").setFloat("spacesurvivability", poketamableEntity.hasSpaceSurvivabilityEssence());
 	}
 
 	public static void applyEntityStats(TamablePokemon poketamableEntity, ItemStack poketamableStack, EntityPlayer player)
@@ -135,6 +137,7 @@ public class ItemPoketamableSummon extends ItemBase
 		poketamableEntity.setFallImmunityEssence((poketamableStack.getTagCompound() != null && poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("fallimmunity") == 1) || poketamableEntity.hasFallImmunityEssence() == 1 ? 1 : 0);
 		poketamableEntity.setBlockSuffocationAvoidanceEssence((poketamableStack.getTagCompound() != null  && poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("blocksuffocationavoidance") == 1) || poketamableEntity.hasBlockSuffocationAvoidanceEssence() == 1 ? 1 : 0);
 		poketamableEntity.setToxinImmunityEssence((poketamableStack.getTagCompound() != null && poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("toxinimmunity") == 1) || poketamableEntity.hasToxinImmunityEssence() == 1 ? 1 : 0);
+		poketamableEntity.setSpaceSurvivabilityEssence((poketamableStack.getTagCompound() != null && poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("spacesurvivability") == 1) || poketamableEntity.hasSpaceSurvivabilityEssence() == 1 ? 1 : 0);
 
 		poketamableEntity.setRegenLevel(((poketamableStack.getTagCompound() != null && poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("regenlevel") != 0) ? 
 				poketamableStack.getTagCompound().getCompoundTag("pokemonmd").getInteger("regenlevel") : poketamableEntity.getRegenLevel()));

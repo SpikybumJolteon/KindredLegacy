@@ -9,6 +9,7 @@ import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.EntityAINearestAttackableZombieExcludingPigman;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyLootTables;
+import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -29,11 +30,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityZerglingNincada extends HostilePokemon implements IAnimatedEntity
+@Optional.Interface(iface="micdoodle8.mods.galacticraft.api.entity.IEntityBreathable", modid="galacticraftcore", striprefs=true)
+public class EntityZerglingNincada extends HostilePokemon implements IAnimatedEntity, IEntityBreathable
 {
 	private IdleAnimationClock neckBobbleIdleAnimationClock;
 	private IdleAnimationClock wingsIdleAnimationClock;
@@ -95,6 +98,13 @@ public class EntityZerglingNincada extends HostilePokemon implements IAnimatedEn
 	public EnumCreatureAttribute getCreatureAttribute()
 	{
 		return EnumCreatureAttribute.ARTHROPOD;
+	}
+
+	@Method(modid="galacticraftcore")
+	@Override
+	public boolean canBreath()
+	{
+		return true;
 	}
 
 	@Override
@@ -193,7 +203,7 @@ public class EntityZerglingNincada extends HostilePokemon implements IAnimatedEn
 	{
 		return false;
 	}
-
+/*
 	@Override
 	public boolean cancelOtherDimensionSpawns()
 	{
@@ -207,7 +217,7 @@ public class EntityZerglingNincada extends HostilePokemon implements IAnimatedEn
 		}
 
 		return false;
-	}
+	}*/
 
 	/************************************
 	 * Animation dependent code follows.*

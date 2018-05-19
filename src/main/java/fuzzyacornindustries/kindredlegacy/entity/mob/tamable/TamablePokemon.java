@@ -5,6 +5,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.IGravityTracker;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IMobMotionTracker;
 import fuzzyacornindustries.kindredlegacy.item.BerryItem;
 import io.netty.buffer.ByteBuf;
+import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +18,6 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -33,12 +33,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TamablePokemon extends EntityTameable implements IEntityAdditionalSpawnData, IAnimatedEntity, IMobMotionTracker, IGravityTracker
+@Optional.Interface(iface="micdoodle8.mods.galacticraft.api.entity.IEntityBreathable", modid="galacticraftcore", striprefs=true)
+public class TamablePokemon extends EntityTameable implements IEntityAdditionalSpawnData, IAnimatedEntity, IMobMotionTracker, IGravityTracker, IEntityBreathable
 {	
 	protected static final DataParameter<Float> CURRENT_HEALTH = EntityDataManager.<Float>createKey(TamablePokemon.class, DataSerializers.FLOAT);
 
@@ -59,13 +62,15 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 	protected static final DataParameter<Byte> BOOST_POWER = EntityDataManager.<Byte>createKey(TamablePokemon.class, DataSerializers.BYTE);
 
+	protected static final DataParameter<Byte> SPACE_SURVIVALBILITY = EntityDataManager.<Byte>createKey(TamablePokemon.class, DataSerializers.BYTE);
+	
 	protected static final int NO_BOOST_POWER_ID = 0;
 	protected static final int SPICE_MELANGE_POWER_ID = 1;
 
 	private EntityAINearestAttackableTarget<EntityMob> beserkAIMobs;
 
 	private String poketamableName;
-	
+
 	public double worldGravity;
 
 	@SideOnly(Side.CLIENT)
@@ -149,6 +154,8 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		this.dataManager.register(REGEN_LEVEL, Byte.valueOf(Byte.valueOf((byte)0)));
 
 		this.dataManager.register(BOOST_POWER, Byte.valueOf(Byte.valueOf((byte)0)));
+
+		this.dataManager.register(SPACE_SURVIVALBILITY, Byte.valueOf(Byte.valueOf((byte)0)));
 	}
 
 	public float getMaximumHealth()
@@ -193,7 +200,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	public void setSpeed(float newMaxSpeed)
 	{
 		this.dataManager.set(SPEED, Float.valueOf(newMaxSpeed));
-		
+
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)newMaxSpeed);
 	}
 
@@ -290,6 +297,24 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			this.dataManager.set(TOXIN_IMMUNITY, (byte)0);
 		}
 	}
+	
+	public int hasSpaceSurvivabilityEssence()
+	{
+		return (int)this.dataManager.get(SPACE_SURVIVALBILITY).byteValue();
+	}
+
+	// Set 1 for true; 0 for false
+	public void setSpaceSurvivabilityEssence(int activateSpaceSurvivabilityEssence)
+	{
+		if(activateSpaceSurvivabilityEssence == 1)
+		{
+			this.dataManager.set(SPACE_SURVIVALBILITY, (byte)1);
+		}
+		else
+		{
+			this.dataManager.set(SPACE_SURVIVALBILITY, (byte)0);
+		}
+	}
 
 	public int getRegenLevel()
 	{
@@ -365,6 +390,20 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
+	@Method(modid="galacticraftcore")
+	@Override
+	public boolean canBreath()
+	{
+		if(this.hasSpaceSurvivabilityEssence() == 1)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	@Override
 	public void onUpdate()
 	{
@@ -563,6 +602,12 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			this.setToxinImmunityEssence(b0);
 		}
 
+		if (nbt.hasKey("SpaceSurvivability", 99))
+		{
+			int b0 = nbt.getInteger("SpaceSurvivability");
+			this.setSpaceSurvivabilityEssence(b0);
+		}
+		
 		if (nbt.hasKey("RegenLevel", 99))
 		{
 			int b0 = nbt.getInteger("RegenLevel");
@@ -598,8 +643,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		nbt.setInteger("BlockSuffacationAvoidance", (int)this.hasBlockSuffocationAvoidanceEssence());
 		nbt.setInteger("ToxinImmunity", (int)this.hasToxinImmunityEssence());
 
-		nbt.setInteger("RegenLevel", (int)this.getRegenLevel());
+		nbt.setInteger("SpaceSurvivability", (int)this.hasSpaceSurvivabilityEssence());
 		
+		nbt.setInteger("RegenLevel", (int)this.getRegenLevel());
+
 		nbt.setInteger("BoostPower", (int)this.getBoostPowerType());
 		nbt.setInteger("BoostPowerTime", this.boostPowerTimer);
 	}
@@ -863,6 +910,22 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			spawnHeartParticles(1);
 		}
 	}
+	
+	public void applyCometEssence(EntityPlayer player, ItemStack itemstack)
+	{
+		this.setSpaceSurvivabilityEssence(1);
+
+		isHappy = true;
+
+		decreasePlayerItemStack(player, itemstack);
+
+		if(this.world.isRemote)
+		{
+			spawnPortalParticles(8);
+
+			spawnHeartParticles(1);
+		}
+	}
 
 	public void applyCuragaEssence(EntityPlayer player, ItemStack itemstack)
 	{
@@ -1111,27 +1174,24 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 				this.aiSit.setSitting(false);
 			}
 
-			if (source.getTrueSource() != null && !(source.getImmediateSource() != null))
+			if (source.getTrueSource() != null)
 			{
-				if(!(source.getTrueSource() instanceof EntityPlayer) && !(source.getImmediateSource() instanceof EntityArrow))
+				if(this.isTamed() && this.getOwner() instanceof EntityPlayer)
 				{
-					amount = (amount + 1.0F) / 2.0F;
-				}
-				else if(this.isTamed() && (this.getOwner() == source.getTrueSource() || source.getTrueSource() instanceof TamablePokemon))
-				{
-					if(this.getOwner() instanceof EntityPlayer)
+					if(source.getTrueSource() instanceof EntityPlayer)
 					{
 						EntityPlayer entityPlayer = (EntityPlayer)this.getOwner();
 
 						if(!entityPlayer.capabilities.isCreativeMode)
 						{
-							/*
-							if (damageSource.getSourceOfDamage() instanceof EntityArrow)
-							{
-								return false;
-							}*/
-
-							return true;
+							return false;
+						}
+					}
+					else if(source.getTrueSource() instanceof TamablePokemon)
+					{
+						if(((TamablePokemon)source.getTrueSource()).getOwner() instanceof EntityPlayer)
+						{
+							return false;
 						}
 					}
 				}
@@ -1215,7 +1275,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			return 1F;
 		}
 	}
-	
+
 	/************************************
 	 * Animation dependent code follows.*
 	 ************************************/

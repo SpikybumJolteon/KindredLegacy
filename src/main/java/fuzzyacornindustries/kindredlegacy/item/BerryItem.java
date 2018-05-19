@@ -21,8 +21,6 @@ public class BerryItem extends ItemFoodBase implements IHasModel
 		super(name, healAmount, saturation);
 
 		poketamableHealAmount = pokemonHealAmount;
-
-		KindredLegacyItems.ITEMS.add(this);
 	}
 	
 	public float getPokemonHealAmount()

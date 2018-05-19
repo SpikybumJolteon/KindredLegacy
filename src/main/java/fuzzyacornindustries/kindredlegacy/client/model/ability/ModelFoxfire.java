@@ -29,13 +29,16 @@ public class ModelFoxfire extends ModelBase
         this.foxfireOrbJoint = new ModelRenderer(this, 0, 0);
         this.foxfireOrbJoint.setRotationPoint(0.0F, 18.0F, 0.0F);
         this.foxfireOrbJoint.addBox(0.0F, 0.0F, 0.0F, 0, 0, 0, 0.0F);
+        foxfireOrbJointInfo = new PartInfo(foxfireOrbJoint);
         this.foxfireOrb[0] = new ModelRenderer(this, 0, 0); // foxfireOrb1
         this.foxfireOrb[0].setRotationPoint(0.0F, 0.0F, 0.0F);
         this.foxfireOrb[0].addBox(-3.0F, -3.0F, -3.0F, 6, 6, 6, 0.0F);
+        foxfireOrbInfo[0] = new PartInfo(foxfireOrb[0]);
         this.foxfireOrb[1] = new ModelRenderer(this, 0, 13); // foxfireOrb2
         this.foxfireOrb[1].setRotationPoint(0.0F, 0.0F, 0.0F);
         this.foxfireOrb[1].addBox(-3.0F, -3.0F, -3.0F, 6, 6, 6, 0.0F);
         this.setRotateAngle(foxfireOrb[1], -0.7853981633974483F, -0.7853981633974483F, -0.7853981633974483F);
+        foxfireOrbInfo[1] = new PartInfo(foxfireOrb[1]);
         
         this.foxfireOrbJoint.addChild(this.foxfireOrb[0]);
         this.foxfireOrbJoint.addChild(this.foxfireOrb[1]);
@@ -89,13 +92,13 @@ public class ModelFoxfire extends ModelBase
 		for(int i = 0; i < foxfireOrbInfo.length; i++)
 		{
 			float frequency = 2.0F;
-			float angleChange = -MathHelper.cos(currentIdleAnimationClock.getPhaseDurationCoveredX(0) * 2 * PI * frequency) * 2 * PI;
+			float angleChange = -MathHelper.cos(currentIdleAnimationClock.getPhaseDurationCoveredY(0) * 2 * PI * frequency) * 2 * PI;
 
 			foxfireOrbInfo[i].setNewRotateX(angleChange * (1 - (2 * i)));
 			foxfireOrbInfo[i].setNewRotateY(angleChange * (1 - (2 * i)));
 		}
 
-		float pntChangeZ = (-MathHelper.cos(currentIdleAnimationClock.getPhaseDurationCoveredX(0) * 2 * PI) * idleAmplitudeZ) - idleAmplitudeZ;
+		float pntChangeZ = (-MathHelper.cos(currentIdleAnimationClock.getPhaseDurationCoveredY(0) * 2 * PI) * idleAmplitudeZ) - idleAmplitudeZ;
 
 		foxfireOrbJointInfo.setNewPointZ(foxfireOrbJointInfo.getNewPointZ() + pntChangeZ);
 	}

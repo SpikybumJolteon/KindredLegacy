@@ -7,6 +7,7 @@ import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.handler.ConfigHandler;
+import fuzzyacornindustries.kindredlegacy.handler.GalacticraftEvents;
 import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyEntityEvents;
 import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyItemEvents;
 import fuzzyacornindustries.kindredlegacy.network.NetworkHelper;
@@ -29,7 +30,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.MOD_VERSION, dependencies = "required-after:galacticraftcore;")
+@Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.MOD_VERSION)//, dependencies = "required-after:galacticraftcore;")
 public class KindredLegacyMain 
 {
 	@SidedProxy(clientSide = ModInfo.CLIENT_PROXY, serverSide = ModInfo.COMMON_PROXY)
@@ -100,6 +101,13 @@ public class KindredLegacyMain
 		CraftingManager.registerRecipes();
 
 		KindredLegacyEntities.addSpawnLocations();
+		
+		if (isGalacticraftEnabled) 
+		{
+			KindredLegacyEntities.setGalacticraftSpawns();
+			
+			MinecraftForge.EVENT_BUS.register(new GalacticraftEvents());
+		}
 	}
 
 	public static boolean isClient() 

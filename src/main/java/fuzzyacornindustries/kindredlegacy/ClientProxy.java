@@ -1,6 +1,6 @@
 package fuzzyacornindustries.kindredlegacy;
 
-import fuzzyacornindustries.kindredlegacy.block.KindredLegacyBlocks;
+import fuzzyacornindustries.kindredlegacy.client.model.ability.ModelFoxfire;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelAhriNinetales;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelArmoredShinx;
@@ -25,9 +25,11 @@ import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelSubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelSwordieMienshao;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelVoorstMightyena;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelZerglingNincada;
+import fuzzyacornindustries.kindredlegacy.client.renderer.ability.RenderBloodmoonFoxfire;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderArmoredShinx;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderBandersnatchFennekin;
+import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayEspurr;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayPurrloin;
@@ -51,13 +53,16 @@ import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderSwordieMi
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderVastayaNinetales;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderVoorstMightyena;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderZerglingNincada;
+import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderBloodmoonFireball;
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderFireworkMissile;
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderHunterBolt;
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderVastayaFireball;
+import fuzzyacornindustries.kindredlegacy.entity.ability.EntityBloodmoonFoxfire;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredShinx;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBandersnatchFennekin;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayEspurr;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayPurrloin;
@@ -80,12 +85,12 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiSylveon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityVastayaNinetales;
+import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityBloodmoonFireball;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityFireworkMissile;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityHunterBolt;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityVastayaFireball;
 import fuzzyacornindustries.kindredlegacy.gui.GuiPoketamableRename;
 import fuzzyacornindustries.kindredlegacy.handler.TextureStitcherFX;
-import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
@@ -137,6 +142,15 @@ public class ClientProxy extends CommonProxy
 			public Render<? super EntityBandersnatchFennekin> createRenderFor(RenderManager manager)
 			{
 				return new RenderBandersnatchFennekin(manager, new ModelBandersnatchFennekin(), 0.2F);
+			}
+		});
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityBloodmoonNinetales.class, new IRenderFactory<EntityBloodmoonNinetales>()
+		{
+			@Override
+			public Render<? super EntityBloodmoonNinetales> createRenderFor(RenderManager manager)
+			{
+				return new RenderBloodmoonNinetales(manager, new ModelAhriNinetales(), 0.3F);
 			}
 		});
 
@@ -341,6 +355,15 @@ public class ClientProxy extends CommonProxy
 		/*
 		 * Abilities
 		 */
+		RenderingRegistry.registerEntityRenderingHandler(EntityBloodmoonFoxfire.class, new IRenderFactory<EntityBloodmoonFoxfire>()
+		{
+			@Override
+			public Render<? super EntityBloodmoonFoxfire> createRenderFor(RenderManager manager)
+			{
+				return new RenderBloodmoonFoxfire(manager, new ModelFoxfire(), 0.4F);
+			}
+		});
+
 		RenderingRegistry.registerEntityRenderingHandler(EntitySubstituteDoll.class, new IRenderFactory<EntitySubstituteDoll>()
 		{
 			@Override
@@ -377,6 +400,15 @@ public class ClientProxy extends CommonProxy
 			public Render createRenderFor(RenderManager manager) 
 			{
 				return new RenderVastayaFireball(manager);
+			}
+		});
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityBloodmoonFireball.class, new IRenderFactory() 
+		{
+			@Override
+			public Render createRenderFor(RenderManager manager) 
+			{
+				return new RenderBloodmoonFireball(manager);
 			}
 		});
 

@@ -57,6 +57,7 @@ public class GuiPoketamableRename extends GuiScreen
 		hasFallImmunityEssence = (stack.getTagCompound() != null && stack.getTagCompound().getCompoundTag("pokemonmd").getInteger("fallimmunity") == 1) ? true : false;
 		hasBlockSuffocationAvoidanceEssence = (stack.getTagCompound() != null && stack.getTagCompound().getCompoundTag("pokemonmd").getInteger("blocksuffocationavoidance") == 1) ? true : false;
 		hasToxinImmunityEssence = (stack.getTagCompound() != null && stack.getTagCompound().getCompoundTag("pokemonmd").getInteger("toxinimmunity") == 1) ? true : false;
+		hasSpaceSurvivabilityEssence = (stack.getTagCompound() != null && stack.getTagCompound().getCompoundTag("pokemonmd").getInteger("spacesurvivability") == 1) ? true : false;
 	}
 
 	@Override
@@ -169,6 +170,11 @@ public class GuiPoketamableRename extends GuiScreen
 				drawCenteredString(fontRenderer, ("-Poison & Wither Immunity"), x, y, 0x59cd01);
 			}
 
+			if(this.hasSpaceSurvivabilityEssence)
+			{
+				y += 12;
+				drawCenteredString(fontRenderer, ("-Galacticraft Space Survivability"), x, y, 0xc9f6ff);
+			}
 		}
 
 		GL11.glPushMatrix();

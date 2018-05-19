@@ -351,6 +351,15 @@ public class EntityFeywoodAbsol extends TamablePokemon implements IRangedAttackM
 
 						return true;
 					}
+					else if(KindredLegacyMain.isGalacticraftEnabled)
+					{
+						if(itemstack.getItem() == KindredLegacyItems.COMET_ESSENCE && this.hasSpaceSurvivabilityEssence() != 1)
+						{		
+							applyCometEssence(player, itemstack);
+
+							return true;
+						}
+					}
 				}
 				else if(itemstack.getItem() instanceof IPowerUp)
 				{

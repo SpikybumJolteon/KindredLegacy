@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import fuzzyacornindustries.kindredlegacy.creativetab.KindredLegacyCreativeTabs;
 import fuzzyacornindustries.kindredlegacy.reference.ModInfo;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,9 +29,12 @@ public class KindredLegacyBlocks
 	public static final List<Block> BLOCKS = new ArrayList<Block>();
 	
 	// MATERIALS TAB
-	public static final Block PACKED_AURUM_DUST = new BlockBase("packed_aurum_dust", Material.SAND);
+	public static final Block PACKED_AURUM_DUST = new BlockBase("packed_aurum_dust", Material.SAND, SoundType.SAND).setHardness(0.5F);
 
+	// SPECIAL BLOCKS
+	public static final Block GUARDIAN_FIELD = new BlockGuardianField();
+	
 	// FARM BLOCKS
 	public static final Block ORANIAN_BERRY_PLANT = new BlockOranianBerry("oranian_berry_plant");
-	public static final Block PECHITA_BERRY_PLANT = new BlockOranianBerry("pechita_berry_plant");
+	public static final Block PECHITA_BERRY_PLANT = new BlockPechitaBerry("pechita_berry_plant");
 }

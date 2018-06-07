@@ -9,6 +9,7 @@ import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFeywoodAbsolSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFirecrackerLittenSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxcraftFennekinSummon;
+import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxfireZoruaSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiEspeonSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiSylveonSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiUmbreonSummon;
@@ -65,6 +66,10 @@ public class KindredLegacyEntityEvents
 				{
 					poketamable = ItemFoxcraftFennekinSummon.toPoketamableEntity(itemDropped.world, itemDropped.getItem(), event.getPlayer());
 				}
+				else if(id == KindredLegacyItems.FOXFIRE_ZORUA_SUMMON)
+				{
+					poketamable = ItemFoxfireZoruaSummon.toPoketamableEntity(itemDropped.world, itemDropped.getItem(), event.getPlayer());
+				}
 				else if(id == KindredLegacyItems.FEYWOOD_ABSOL_SUMMON)
 				{
 					poketamable = ItemFeywoodAbsolSummon.toPoketamableEntity(itemDropped.world, itemDropped.getItem(), event.getPlayer());
@@ -114,6 +119,10 @@ public class KindredLegacyEntityEvents
 							else if(foundItem.getItem().getItem() == KindredLegacyItems.FOXCRAFT_FENNEKIN_SUMMON)
 							{
 								poketamable = ItemFoxcraftFennekinSummon.toPoketamableEntity(itemDropped.world, foundItem.getItem(), event.getPlayer());
+							}
+							else if(foundItem.getItem().getItem() == KindredLegacyItems.FOXFIRE_ZORUA_SUMMON)
+							{
+								poketamable = ItemFoxfireZoruaSummon.toPoketamableEntity(itemDropped.world, foundItem.getItem(), event.getPlayer());
 							}
 							else if(foundItem.getItem().getItem() == KindredLegacyItems.FEYWOOD_ABSOL_SUMMON)
 							{

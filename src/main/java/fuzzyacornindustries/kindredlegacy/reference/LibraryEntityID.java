@@ -53,7 +53,7 @@ public class LibraryEntityID
 	//public static final int ENDER_POPPLIO = 42;
 
 	public static final int BLOODMOON_FOXFIRE = 150;
-	public static final int NORMAL_FOXFIRE = 151;
+	public static final int FOXFIRE = 151;
 	public static final int SUBSTITUTE_DOLL = 152;
 	
 	public static final int BLOODMOON_FIREBALL = 200;

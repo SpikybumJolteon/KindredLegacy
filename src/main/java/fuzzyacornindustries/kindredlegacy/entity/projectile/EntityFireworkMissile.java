@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
 import fuzzyacornindustries.kindredlegacy.reference.LibraryDyeColors;
 import fuzzyacornindustries.kindredlegacy.reference.LibraryFireworks;
@@ -46,7 +47,7 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 	private boolean inGround;
 
 	/** The owner of this arrow. */
-	public Entity shootingEntity;
+	public EntityLivingBase shootingEntity;
 
 	/** Shooter's name, if shooter is a player - based on EntityThrowable's code */
 	private String shooterName = null;
@@ -54,6 +55,8 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 	private int ticksInAir;
 
 	private double attackDamage = 2.0D;
+
+	public EntityFirecrackerLitten firecrackerLitten;
 
 	public EntityFireworkMissile(World world)
 	{
@@ -68,11 +71,12 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 		this.setPosition(xPar, yPar, zPar);
 	}
 
-	public EntityFireworkMissile(World world, EntityLivingBase shooterEntity, EntityLivingBase targetEntity, float baseSpeed, float accuracy, float attackDamage)
+	public EntityFireworkMissile(World world, EntityFirecrackerLitten shooterEntity, EntityLivingBase targetEntity, float baseSpeed, float accuracy, float attackDamage)
 	{
 		super(world);
 
 		this.shootingEntity = shooterEntity;
+		this.firecrackerLitten = shooterEntity;
 
 		this.posY = shooterEntity.posY + (double)shooterEntity.getEyeHeight() * 0.95D;
 		double d0 = targetEntity.posX - shooterEntity.posX;
@@ -161,7 +165,7 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 		zDirection *= (double)baseSpeed;
 
 		this.motionX = xDirection;
-		this.motionY = yDirection;
+		this.motionY = yDirection * 0.95F;
 		this.motionZ = zDirection;
 
 		float f3 = MathHelper.sqrt(xDirection * xDirection + zDirection * zDirection);
@@ -228,7 +232,7 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 			//this.world.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, false);
 
 			this.setDead();
-			
+
 			if (!this.world.isRemote)
 			{
 				this.world.setEntityState(this, (byte)17);
@@ -256,7 +260,7 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 				//System.out.println( "Test Firework Missile Run" );
 				//System.out.println( Integer.toString( targetEntity.getEntityId() ) );
 			}
-			
+
 			this.world.makeFireworks(this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ, nbttagcompound5);
 		}
 
@@ -416,27 +420,31 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 	 */
 	protected void onImpactEntity(RayTraceResult raytraceresult) 
 	{
-		if (raytraceresult.entityHit != null && !(raytraceresult.entityHit instanceof TamablePokemon) && raytraceresult.entityHit != this.shootingEntity && !(raytraceresult.entityHit instanceof EntityPlayer)) 
+		if (!this.world.isRemote)
 		{
-			shootingEntity = getShooter();
-
-			if (raytraceresult.entityHit.attackEntityFrom(getDamageSource(raytraceresult.entityHit), (float) this.attackDamage)) 
+			if (raytraceresult.entityHit != null && !(raytraceresult.entityHit instanceof TamablePokemon) && raytraceresult.entityHit != this.shootingEntity && !(raytraceresult.entityHit instanceof EntityPlayer)) 
 			{
-				if (canTargetEntity(raytraceresult.entityHit)) 
+				if(raytraceresult.entityHit instanceof EntityLivingBase && ((EntityLivingBase)raytraceresult.entityHit).getHealth() <= attackDamage)
+				{
+					raytraceresult.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.firecrackerLitten.getOwner()), (float)attackDamage);
+
+					setDead();
+				}
+				else if(raytraceresult.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), (float) attackDamage))
 				{
 					setDead();
 				}
-			} 
-			else 
-			{
-				setDead();
-			}
+				else 
+				{
+					setDead();
+				}
 
-			this.world.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, false);
+				this.world.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, false);
 
-			if (!this.world.isRemote)
-			{
-				this.world.setEntityState(this, (byte)17);
+				if (!this.world.isRemote)
+				{
+					this.world.setEntityState(this, (byte)17);
+				}
 			}
 		}
 	}
@@ -526,7 +534,7 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 	{
 		this.attackDamage = damagePower;
 	}
-	
+
 	public double getDamage()
 	{
 		return this.attackDamage;
@@ -544,9 +552,9 @@ public class EntityFireworkMissile extends Entity implements IProjectile
 		nbttagcompound1 = new NBTTagCompound();
 		NBTTagList nbttaglist = new NBTTagList();
 
-        List<Integer> list1 = Lists.<Integer>newArrayList();
+		List<Integer> list1 = Lists.<Integer>newArrayList();
 
-        list1 = getFireworkColorList();
+		list1 = getFireworkColorList();
 
 		byte explosionStyle = getExplosionStyle();
 

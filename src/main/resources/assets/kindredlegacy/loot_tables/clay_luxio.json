@@ -1,0 +1,166 @@
+{
+    "pools": [
+        {
+            "name": "main",
+            "conditions": [
+                {
+                    "condition": "killed_by_player"
+                }
+            ],
+            "rolls": 3,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "kindredlegacy:aurum_dust",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:hardened_clay",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:quartz",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:glowstone_dust",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:dye",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 0,
+                                "max": 1
+                            }
+                        },
+                        {
+                            "function": "set_data",
+                            "data": 4
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 3
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "kindredlegacy:oranian_berry",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 0,
+                                "max": 2
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "rare_drop",
+            "conditions": [
+                {
+                    "condition": "killed_by_player"
+                },
+                {
+                    "condition": "random_chance_with_looting",
+                    "chance": 0.045,
+                    "looting_multiplier": 0.01
+                }
+            ],
+            "rolls": 2,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:iron_ingot",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

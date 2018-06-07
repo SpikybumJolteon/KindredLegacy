@@ -70,8 +70,6 @@ public class EntityVoorstMightyena extends HostilePokemon implements IAnimatedEn
 		{
 			setClockDefaults();
 		}
-
-		this.setPathPriority(PathNodeType.WATER, -1.0F);
 	}
 
 	public static String getMobName()

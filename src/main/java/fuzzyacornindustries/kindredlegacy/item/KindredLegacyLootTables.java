@@ -11,6 +11,7 @@ public class KindredLegacyLootTables
 	public static final ResourceLocation BANDERSNATCH_FENNEKIN_LOOT_TABLE = register("bandersnatch_fennekin");
 	public static final ResourceLocation CLAY_COMMANDER_DELCATTY_LOOT_TABLE = register("clay_commander_delcatty");
 	public static final ResourceLocation CLAY_ESPURR_LOOT_TABLE = register("clay_espurr");
+	public static final ResourceLocation CLAY_LUXIO_LOOT_TABLE = register("clay_luxio");
 	public static final ResourceLocation CLAY_PURRLOIN_LOOT_TABLE = register("clay_purrloin");
 	public static final ResourceLocation CLAY_SHINX_LOOT_TABLE = register("clay_shinx");
 	public static final ResourceLocation CLAY_SKITTY_LOOT_TABLE = register("clay_skitty");

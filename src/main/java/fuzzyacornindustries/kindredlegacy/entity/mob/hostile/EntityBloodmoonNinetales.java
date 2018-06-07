@@ -18,9 +18,14 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIGeneralIgnite;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIGeneralRangedAttack;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.EntityAINearestAttackableZombieExcludingPigman;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityBloodmoonFireball;
+import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryAhriNinetalesAttackID;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryUniversalAttackID;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCactus;
+import net.minecraft.block.BlockVine;
+import net.minecraft.block.BlockWeb;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -31,8 +36,10 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -259,33 +266,35 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 				}
 			}
 		}
-		/*
-		if(!this.world.isRemote)
+		
+		int currentPosY = MathHelper.floor(this.posY);
+		int currentPoxX = MathHelper.floor(this.posX);
+		int currentPoxZ = MathHelper.floor(this.posZ);
+		boolean flag = false;
+
+		for (int l1 = -1; l1 <= 1; ++l1)
 		{
-			int currentPosY = MathHelper.floor(this.posY);
-			int currentPoxX = MathHelper.floor(this.posX);
-			int currentPoxZ = MathHelper.floor(this.posZ);
-			boolean flag = false;
-
-			for (int l1 = -1; l1 <= 1; ++l1)
+			for (int i2 = -1; i2 <= 1; ++i2)
 			{
-				for (int i2 = -1; i2 <= 1; ++i2)
+				for (int j = 0; j <= 3; ++j)
 				{
-					for (int j = 0; j <= 3; ++j)
-					{
-						int j2 = currentPoxX + l1;
-						int k = currentPosY + j;
-						int l = currentPoxZ + i2;
-						Block block = this.world.getBlock(j2, k, l);
+					int j2 = currentPoxX + l1;
+					int k = currentPosY + j;
+					int l = currentPoxZ + i2;
 
-						if (!block.isAir(world, j2, k, l) && block == Blocks.tallgrass || block instanceof BlockDoublePlant || block instanceof BlockFlower || block instanceof BlockVine || block instanceof BlockWeb || block instanceof BlockCactus)
-						{
-							flag = this.worldObj.func_147480_a(j2, k, l, true) || flag;
-						}
+					BlockPos blockpos = (new BlockPos(j2, k, l));
+					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					Block block = iblockstate.getBlock();
+
+					if (block instanceof BlockVine || block instanceof BlockWeb || block instanceof BlockCactus)
+					{
+			            block.dropBlockAsItem(this.world, blockpos, iblockstate, 0);
+			            this.world.setBlockToAir(blockpos);
+			            //block.breakBlock(this.world, blockpos, iblockstate);
 					}
 				}
 			}
-		}*/
+		}
 	}
 
 	@Override
@@ -400,7 +409,7 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 		EntityBloodmoonFireball entityFireball = new EntityBloodmoonFireball(attackingMob.world, attackingMob, 
 				spawnFireballPoint.getX(), attackingMob.posY, spawnFireballPoint.getZ(),
 				d0 + targetEntity.motionX * 0.5F, d1 + targetEntity.motionY * 0.5F, d2 + targetEntity.motionZ * 0.5F, 
-				1.5F, 8F);
+				1.0F, 8F);
 		entityFireball.posY = attackingMob.posY + (double)(attackingMob.height / 2.0F) + 0.25F;
 
 		this.world.spawnEntity(entityFireball);
@@ -426,7 +435,7 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 		EntityBloodmoonFireball entityFireball = new EntityBloodmoonFireball(attackingMob.world, attackingMob, 
 				spawnFireballPoint.getX(), spawnFireballPoint.getY(), spawnFireballPoint.getZ(),
 				d0 + targetEntity.motionX * 0.5F, d1 + targetEntity.motionY * 0.5F, d2 + targetEntity.motionZ * 0.5F, 
-				1.5F, 8F);
+				1.0F, 8F);
 
 		this.world.spawnEntity(entityFireball);
 
@@ -685,6 +694,12 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 	{
 		this.playSound(KindredLegacySoundEvents.BLOODMOON_NINETALES_LAUGH, 1.0F, 1.0F + this.world.rand.nextFloat() * 0.2F);
 	}
+	
+	@Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+    {
+        EntityItem entityitem = this.dropItem(KindredLegacyItems.BLESSING_OF_ARCEUS, 1);
+    }
 
 	/************************************
 	 * Animation dependent code follows.*

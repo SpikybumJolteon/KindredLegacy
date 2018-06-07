@@ -8,10 +8,12 @@ import fuzzyacornindustries.kindredlegacy.item.tamable.ItemAttackOrderer;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemBiogaEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemCometEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemCuragaEssence;
+import fuzzyacornindustries.kindredlegacy.item.tamable.ItemEssenceRecaller;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFeywoodAbsolSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFiragaEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFirecrackerLittenSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxcraftFennekinSummon;
+import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxfireZoruaSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemGravigaEssence;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemLifeBoost;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiEspeonSummon;
@@ -45,7 +47,7 @@ public class KindredLegacyItems
 	public static final Item VERDANT_POWDER = new ItemBase("verdant_powder");
 	public static final Item VERDANTIZER = new ItemVerdantizer("verdantizer");
 	public static final Item VOID_SCISSORS = new ItemVoidScissors("void_scissors");
-	public static final Item WILL_OF_THE_ANCIENTS = new ItemBase("will_of_the_ancients");
+	public static final Item WILL_OF_THE_ANCIENTS = new ItemBase("will_of_the_ancients").setMaxStackSize(1);
 	public static final Item XELNAGA_CIRCUIT = new ItemBase("xelnaga_circuit");
 	public static final Item XELNAGA_SHARD = new ItemBase("xelnaga_shard");
 	
@@ -72,12 +74,13 @@ public class KindredLegacyItems
 	public static final Item FEYWOOD_ABSOL_SUMMON = new ItemFeywoodAbsolSummon();
 	public static final Item FIRECRACKER_LITTEN_SUMMON = new ItemFirecrackerLittenSummon();
 	public static final Item FOXCRAFT_FENNEKIN_SUMMON = new ItemFoxcraftFennekinSummon();
+	public static final Item FOXFIRE_ZORUA_SUMMON = new ItemFoxfireZoruaSummon();
 	public static final Item OKAMI_ESPEON_SUMMON = new ItemOkamiEspeonSummon();
 	public static final Item OKAMI_SYLVEON_SUMMON = new ItemOkamiSylveonSummon();
 	public static final Item OKAMI_UMBREON_SUMMON = new ItemOkamiUmbreonSummon();
 	public static final Item VASTAYA_NINETALES_SUMMON = new ItemVastayaNinetalesSummon();
 
-	public static final Item ESSENCE_RECALLER = new ItemBase("essence_recaller");
+	public static final Item ESSENCE_RECALLER = new ItemEssenceRecaller("essence_recaller");
 	public static final Item ATTACK_ORDERER = new ItemAttackOrderer("attack_orderer");
 
 	public static final Item BLESSING_OF_ARCEUS = new ItemBlessingOfArceus("blessing_of_arceus");

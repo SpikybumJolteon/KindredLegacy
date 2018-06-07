@@ -41,6 +41,10 @@ public class KindredLegacySoundEvents
 	public static final SoundEvent CLAY_ESPURR_HURT;
 	public static final SoundEvent CLAY_ESPURR_AMBIENT;
 
+	public static final SoundEvent CLAY_LUXIO_DEATH;
+	public static final SoundEvent CLAY_LUXIO_HURT;
+	public static final SoundEvent CLAY_LUXIO_AMBIENT;
+
 	public static final SoundEvent CLAY_PURRLOIN_DEATH;
 	public static final SoundEvent CLAY_PURRLOIN_HURT;
 	public static final SoundEvent CLAY_PURRLOIN_AMBIENT;
@@ -75,6 +79,11 @@ public class KindredLegacySoundEvents
 	public static final SoundEvent FOXCRAFT_FENNEKIN_HURT;
 	public static final SoundEvent FOXCRAFT_FENNEKIN_AMBIENT;
 	public static final SoundEvent FOXCRAFT_FENNEKIN_WHINE;
+
+	public static final SoundEvent FOXFIRE_ZORUA_DEATH;
+	public static final SoundEvent FOXFIRE_ZORUA_HURT;
+	public static final SoundEvent FOXFIRE_ZORUA_AMBIENT;
+	public static final SoundEvent FOXFIRE_ZORUA_WHINE;
 
 	public static final SoundEvent INFESTED_DEERLING_DEATH;
 	public static final SoundEvent INFESTED_DEERLING_HURT;
@@ -158,6 +167,10 @@ public class KindredLegacySoundEvents
 		CLAY_ESPURR_HURT = registerSound("clay_espurr.hurt");
 		CLAY_ESPURR_AMBIENT = registerSound("clay_espurr.ambient");
 
+		CLAY_LUXIO_DEATH = registerSound("clay_luxio.death");
+		CLAY_LUXIO_HURT = registerSound("clay_luxio.hurt");
+		CLAY_LUXIO_AMBIENT = registerSound("clay_luxio.ambient");
+
 		CLAY_PURRLOIN_DEATH = registerSound("clay_purrloin.death");
 		CLAY_PURRLOIN_HURT = registerSound("clay_purrloin.hurt");
 		CLAY_PURRLOIN_AMBIENT = registerSound("clay_purrloin.ambient");
@@ -192,6 +205,11 @@ public class KindredLegacySoundEvents
 		FOXCRAFT_FENNEKIN_HURT = registerSound("foxcraft_fennekin.hurt");
 		FOXCRAFT_FENNEKIN_AMBIENT = registerSound("foxcraft_fennekin.ambient");
 		FOXCRAFT_FENNEKIN_WHINE = registerSound("foxcraft_fennekin.whine");
+
+		FOXFIRE_ZORUA_DEATH = registerSound("foxfire_zorua.death");
+		FOXFIRE_ZORUA_HURT = registerSound("foxfire_zorua.hurt");
+		FOXFIRE_ZORUA_AMBIENT = registerSound("foxfire_zorua.ambient");
+		FOXFIRE_ZORUA_WHINE = registerSound("foxfire_zorua.whine");
 
 		INFESTED_DEERLING_DEATH = registerSound("infested_deerling.death");
 		INFESTED_DEERLING_HURT = registerSound("infested_deerling.hurt");

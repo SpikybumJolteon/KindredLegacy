@@ -1,18 +1,29 @@
 package fuzzyacornindustries.kindredlegacy.entity.projectile;
 
+import fuzzyacornindustries.kindredlegacy.block.BlockGuardianField;
+import fuzzyacornindustries.kindredlegacy.block.KindredLegacyBlocks;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntityBloodmoonFoxfire;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.HostilePokemon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCactus;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockVine;
+import net.minecraft.block.BlockWeb;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -116,6 +127,35 @@ public class EntityBloodmoonFireball extends KindredLegacyFireball
 		}
 
 		setCurrentTexture(currentTextureNumber);
+
+		int currentPosY = MathHelper.floor(this.posY);
+		int currentPoxX = MathHelper.floor(this.posX);
+		int currentPoxZ = MathHelper.floor(this.posZ);
+		boolean flag = false;
+
+		for (int l1 = -1; l1 <= 1; ++l1)
+		{
+			for (int i2 = -1; i2 <= 1; ++i2)
+			{
+				for (int j = 0; j <= 3; ++j)
+				{
+					int j2 = currentPoxX + l1;
+					int k = currentPosY + j;
+					int l = currentPoxZ + i2;
+
+					BlockPos blockpos = (new BlockPos(j2, k, l));
+					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					Block block = iblockstate.getBlock();
+
+					if (block instanceof BlockVine || block instanceof BlockWeb || block instanceof BlockCactus)
+					{
+			            block.dropBlockAsItem(this.world, blockpos, iblockstate, 0);
+			            this.world.setBlockToAir(blockpos);
+			            //block.breakBlock(this.world, blockpos, iblockstate);
+					}
+				}
+			}
+		}
 	}
 
 	/**

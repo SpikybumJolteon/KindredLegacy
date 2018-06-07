@@ -1,0 +1,22 @@
+{
+  "type": "kindredlegacy:conditional",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:verdantizer"
+    },
+    {
+      "item": "twilightforest:ironwood_helmet"
+    }
+  ],
+  "result": {
+    "item": "kindredlegacy:verdant_powder",
+    "count": 40
+  }
+}

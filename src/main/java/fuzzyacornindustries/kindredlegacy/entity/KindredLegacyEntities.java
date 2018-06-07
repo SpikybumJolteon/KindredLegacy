@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 
 import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntityBloodmoonFoxfire;
+import fuzzyacornindustries.kindredlegacy.entity.ability.EntityFoxfire;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredShinx;
@@ -14,6 +15,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBandersnatchF
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayEspurr;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayLuxio;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayPurrloin;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayShinx;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClaySkitty;
@@ -30,6 +32,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityZerglingNinca
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFeywoodAbsol;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxcraftFennekin;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxfireZorua;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiSylveon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
@@ -61,6 +64,7 @@ public class KindredLegacyEntities
 	public static float bloodmoonNinetalesSpawnRate;
 	public static float clayCommanderDelcattySpawnRate;
 	public static float clayEspurrSpawnRate;
+	public static float clayLuxioSpawnRate;
 	public static float clayPurrloinSpawnRate;
 	public static float clayShinxSpawnRate;
 	public static float claySkittySpawnRate;
@@ -84,10 +88,10 @@ public class KindredLegacyEntities
 	public static boolean mobsHostileToVanillaMobs;
 
 	/* ======= GALACTICRAFT COMPATIBILITY ======= */
-	public static int moonID;
-	public static int marsID;
-	public static int asteroidsID;
-	public static int venusID;
+	public static int moonID = -28;
+	public static int marsID = -29;
+	public static int asteroidsID = -30;
+	public static int venusID = -31;
 
 	/**
 	 * Initializes mod item indices from configuration file
@@ -124,7 +128,8 @@ public class KindredLegacyEntities
 		voorstMightyenaSpawnRate = config.getFloat("voorstMightyenaSpawnRate", category, 1.0F, 0F, 20.0F, "Voorst Mightyena Spawn Rate.");
 
 		bloodmoonNinetalesSpawnRate = config.getFloat("bloodmoonNinetalesSpawnRate", category, 1.0F, 0F, 30.0F, "Bloodmoon Ninetales Spawn Rate.");
-		
+
+		clayLuxioSpawnRate = config.getFloat("clayLuxioSpawnRate", category, 1.0F, 0F, 10.0F, "Clay Luxio Spawn Rate.");
 		clayShinxSpawnRate = config.getFloat("clayShinxSpawnRate", category, 1.0F, 0F, 10.0F, "Clay Shinx Spawn Rate.");
 		cracklingNincadaSpawnRate = config.getFloat("cracklingNincadaSpawnRate", category, 1.0F, 0F, 10.0F, "Crackling Nincada Spawn Rate.");
 
@@ -168,6 +173,7 @@ public class KindredLegacyEntities
 		createEntity(EntityBloodmoonNinetales.class, EntityBloodmoonNinetales.getMobName(), LibraryEntityID.BLOODMOON_NINETALES, 0x0b0101, 0xeeeeee);
 		createEntity(EntityClayCommanderDelcatty.class, EntityClayCommanderDelcatty.getMobName(), LibraryEntityID.CLAY_COMMANDER_DELCATTY, 0x392f1f, 0x6d6d6d);
 		createEntity(EntityClayEspurr.class, EntityClayEspurr.getMobName(), LibraryEntityID.CLAY_ESPURR, 0x322818, 0xb166da);
+		createEntity(EntityClayLuxio.class, EntityClayLuxio.getMobName(), LibraryEntityID.CLAY_LUXIO, 0x0eb8ff, 0xf6ff00);
 		createEntity(EntityClayPurrloin.class, EntityClayPurrloin.getMobName(), LibraryEntityID.CLAY_PURRLOIN, 0x3d2723, 0xd4a0c8);
 		createEntity(EntityClayShinx.class, EntityClayShinx.getMobName(), LibraryEntityID.CLAY_SHINX, 0x262640, 0x00b4ff);
 		createEntity(EntityClaySkitty.class, EntityClaySkitty.getMobName(), LibraryEntityID.CLAY_SKITTY, 0x2e2516, 0xe6bbbb);
@@ -177,6 +183,7 @@ public class KindredLegacyEntities
 		createEntity(EntityFirecrackerLitten.class, EntityFirecrackerLitten.getMobName(), LibraryEntityID.FIRECRACKER_LITTEN, 0x000000, 0xe93030);
 		createEntity(EntityForcewindEelektrik.class, EntityForcewindEelektrik.getMobName(), LibraryEntityID.FORCEWIND_EELEKTRIK, 0x282954, 0xdbecff);
 		createEntity(EntityFoxcraftFennekin.class, EntityFoxcraftFennekin.getMobName(), LibraryEntityID.FOXCRAFT_FENNEKIN, 0x351e3b, 0xdf3c1c);
+		createEntity(EntityFoxfireZorua.class, EntityFoxfireZorua.getMobName(), LibraryEntityID.FOXFIRE_ZORUA, 0x000000, 0xcc7900);
 		createEntity(EntityInfestedDeerling.class, EntityInfestedDeerling.getMobName(), LibraryEntityID.INFESTED_DEERLING, 0x857450, 0x8801aa);
 		createEntity(EntityMuBuneary.class, EntityMuBuneary.getMobName(), LibraryEntityID.MU_BUNEARY, 0x3e3833, 0xaaa39c);
 		createEntity(EntityOkamiEspeon.class, EntityOkamiEspeon.getMobName(), LibraryEntityID.OKAMI_ESPEON, 0xcab3d2, 0xff0000);
@@ -194,6 +201,7 @@ public class KindredLegacyEntities
 	{
 		createEntity(EntitySubstituteDoll.class, EntitySubstituteDoll.getMobName(), LibraryEntityID.SUBSTITUTE_DOLL);
 		createEntity(EntityBloodmoonFoxfire.class, EntityBloodmoonFoxfire.getMobName(), LibraryEntityID.BLOODMOON_FOXFIRE);
+		createEntity(EntityFoxfire.class, EntityFoxfire.getMobName(), LibraryEntityID.FOXFIRE);
 	}
 
 	public static void registerEntityProjectiles()
@@ -299,6 +307,14 @@ public class KindredLegacyEntities
 				{
 					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
 				}
+				else if (types.contains(BiomeDictionary.Type.SANDY))
+				{
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+				}
+				else if (types.contains(BiomeDictionary.Type.SAVANNA))
+				{
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+				}
 			}
 
 			/***************************
@@ -310,6 +326,7 @@ public class KindredLegacyEntities
 				{
 					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 12, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
+					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 90, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 120, 3, 6);
 					addSpawn(biome, EntityClayShinx.class, clayShinxSpawnRate, 200, 3, 6);
 					addSpawn(biome, EntityClaySkitty.class, claySkittySpawnRate, 140, 3, 6);
@@ -318,6 +335,7 @@ public class KindredLegacyEntities
 				{
 					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 9, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
+					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 50, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 75, 3, 6);
 					addSpawn(biome, EntityClayShinx.class, clayShinxSpawnRate, 80, 3, 6);
 					addSpawn(biome, EntityClaySkitty.class, claySkittySpawnRate, 100, 3, 6);
@@ -326,6 +344,7 @@ public class KindredLegacyEntities
 				{
 					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 7, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
+					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 80, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 100, 3, 6);
 					addSpawn(biome, EntityClayShinx.class, clayShinxSpawnRate, 170, 3, 6);
 					addSpawn(biome, EntityClaySkitty.class, claySkittySpawnRate, 130, 3, 6);
@@ -334,6 +353,7 @@ public class KindredLegacyEntities
 				{
 					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 7, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
+					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 75, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 120, 3, 6);
 					addSpawn(biome, EntityClayShinx.class, clayShinxSpawnRate, 150, 3, 6);
 					addSpawn(biome, EntityClaySkitty.class, claySkittySpawnRate, 110, 3, 6);

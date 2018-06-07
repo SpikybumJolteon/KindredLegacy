@@ -112,7 +112,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IMobMo
 			for (float d : previousHeight) sum2 += d;
 			float averagePreviousHeight = 1.0F * sum2 / previousHeight.length;
 
-			changeInHeight = (currentHeight - averagePreviousHeight) / 2F;
+			changeInHeight = this.ticksExisted>6?((currentHeight - averagePreviousHeight) / 2F):0;
 
 			for(int i = previousHeight.length - 1; i > 0; i--)
 			{

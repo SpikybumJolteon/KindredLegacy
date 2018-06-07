@@ -5,6 +5,7 @@ import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
 import fuzzyacornindustries.kindredlegacy.block.BlockGuardianField;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
+import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIFirecrackerLittenRocketAttack;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIGeneralRangedAttack;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityFireworkMissile;
 import fuzzyacornindustries.kindredlegacy.item.BerryItem;
@@ -70,6 +71,7 @@ public class EntityFirecrackerLitten extends TamablePokemon implements IRangedAt
 
 		this.setSize(0.5F, 0.95F);
 		this.tasks.addTask(1, new EntityAISwimming(this));
+		this.tasks.addTask(2, new AIFirecrackerLittenRocketAttack(this));
 
 		this.tasks.addTask(3, this.aiSit);
 		this.tasks.addTask(4, new AIGeneralRangedAttack(this, 1.0D, 20, attackRange));
@@ -269,13 +271,7 @@ public class EntityFirecrackerLitten extends TamablePokemon implements IRangedAt
 
 			if (itemstack != null)
 			{
-				if(itemstack.getItem() == KindredLegacyItems.ESSENCE_RECALLER)
-				{	
-					this.returnToItem();
-
-					return true;
-				}
-				else if (itemstack.getItem() instanceof BerryItem)
+				if (itemstack.getItem() instanceof BerryItem)
 				{
 					BerryItem berry = (BerryItem)itemstack.getItem();
 
@@ -389,7 +385,7 @@ public class EntityFirecrackerLitten extends TamablePokemon implements IRangedAt
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase targetEntity, float par2)
 	{
-		if(animationID == LibraryFirecrackerLittenAttackID.NO_ACTION)
+		if(animationID == LibraryUniversalAttackID.NO_ACTION)
 		{
 			BlockPos blockAtCurrentPosition = new BlockPos(this);
 			IBlockState iblockstate = this.world.getBlockState(blockAtCurrentPosition);
@@ -397,12 +393,17 @@ public class EntityFirecrackerLitten extends TamablePokemon implements IRangedAt
 
 			if(!(block instanceof BlockGuardianField))
 			{
-				EntityFireworkMissile entitymissile = new EntityFireworkMissile(this.world, this, targetEntity, 1.6F, (float)(2), this.getAttackDamage());
-
-	            this.playSound(SoundEvents.ENTITY_FIREWORK_LAUNCH, 1.0F, 1.0F);
-				this.world.spawnEntity(entitymissile);
+				KindredLegacyMain.sendAnimationPacket(this, LibraryFirecrackerLittenAttackID.ROCKET_ATTACK);
 			}
 		}
+	}
+
+	public void attackWithRocket(EntityFirecrackerLitten attackingMob, EntityLivingBase targetEntity, float par2)
+	{
+		EntityFireworkMissile entitymissile = new EntityFireworkMissile(this.world, attackingMob, targetEntity, 1.6F, (float)(2), this.getAttackDamage());
+
+		this.playSound(SoundEvents.ENTITY_FIREWORK_LAUNCH, 1.0F, 1.0F);
+		this.world.spawnEntity(entitymissile);
 	}
 
 	@Override

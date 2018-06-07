@@ -1,13 +1,14 @@
 package fuzzyacornindustries.kindredlegacy.entity.projectile;
 
+import fuzzyacornindustries.kindredlegacy.block.KindredLegacyBlocks;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityVastayaNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -25,6 +26,8 @@ public class EntityVastayaFireball extends KindredLegacyFireball
 
 	public float attackDamage;
 
+    public EntityVastayaNinetales vastayaNinetales;
+    
 	public EntityVastayaFireball(World worldPar)
 	{
 		super(worldPar);
@@ -47,12 +50,14 @@ public class EntityVastayaFireball extends KindredLegacyFireball
 		//this.setSize(0.3125F, 0.3125F);
 	}
 
-	public EntityVastayaFireball(World worldPar, EntityLivingBase shootingEntity, double setLocationX, double setLocationY, double setLocationZ,
+	public EntityVastayaFireball(World worldPar, EntityVastayaNinetales shootingEntity, double setLocationX, double setLocationY, double setLocationZ,
 			double accelerationXPar, double accelerationYPar, double accelerationZPar, float fireballSpeedModifier, float attackDamage)
 	{
 		super(worldPar, shootingEntity, setLocationX, setLocationY, setLocationZ, accelerationXPar, accelerationYPar, accelerationZPar, fireballSpeedModifier);
 
 		this.attackDamage = attackDamage;
+		
+		this.vastayaNinetales = shootingEntity;
 		//this.setSize(0.3125F, 0.3125F);
 	}
 
@@ -107,6 +112,15 @@ public class EntityVastayaFireball extends KindredLegacyFireball
 			return;
 		}
 
+		BlockPos blockpos = (new BlockPos(this.posX, this.posY, this.posZ));
+		IBlockState iblockstate = this.world.getBlockState(blockpos);
+		Block block = iblockstate.getBlock();
+
+		if(block == KindredLegacyBlocks.GUARDIAN_FIELD)
+		{
+			this.setDead();
+		}
+
 		if(currentTextureNumber >= 2)
 		{
 			currentTextureNumber = 0;
@@ -129,18 +143,22 @@ public class EntityVastayaFireball extends KindredLegacyFireball
 		{
 			if (result.entityHit != null)
 			{
-				if (!(result.entityHit instanceof EntityTameable) 
-						&& !(result.entityHit instanceof EntityPlayer && !(result.entityHit instanceof EntityVastayaFireball)))
+				if (result.entityHit instanceof EntityLivingBase && (!(result.entityHit instanceof EntityTameable) 
+						&& !(result.entityHit instanceof EntityPlayer && !(result.entityHit instanceof EntityVastayaFireball))))
 				{
-					if(!(result.entityHit instanceof EntityAnimal) && !(result.entityHit.getRidingEntity() instanceof EntityPlayer))
+					if(!(result.entityHit.getRidingEntity() instanceof EntityPlayer))
 					{
-						if (result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), attackDamage))
+						if(((EntityLivingBase) result.entityHit).getHealth() <= attackDamage)
+						{
+							result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.vastayaNinetales.getOwner()), attackDamage);
+						}
+						else if(result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), attackDamage))
 						{
 							result.entityHit.setFire(5);
 						}
 					}
 					else if (result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), attackDamage))
-					{
+					{	
 						result.entityHit.setFire(5);
 					}
 

@@ -170,7 +170,7 @@ public class GuiPoketamableRename extends GuiScreen
 				drawCenteredString(fontRenderer, ("-Poison & Wither Immunity"), x, y, 0x59cd01);
 			}
 
-			if(this.hasSpaceSurvivabilityEssence)
+			if(KindredLegacyMain.isGalacticraftEnabled && this.hasSpaceSurvivabilityEssence)
 			{
 				y += 12;
 				drawCenteredString(fontRenderer, ("-Galacticraft Space Survivability"), x, y, 0xc9f6ff);

@@ -32,25 +32,21 @@ public class ItemEssenceRecaller extends ItemBase
 		tooltip.add("to their summon item form; will not work");
 		tooltip.add("on other players' or ones spawned with eggs.");
 	}
-/*
+
 	@Override
 	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
 	{
-		System.out.println( "Testing code at Essence Recaller" );
-		
 		if (target.world.isRemote)
 		{
 			return false;
 		}
 		else if(target instanceof TamablePokemon && ((TamablePokemon)target).isOwner(player))
 		{
-			System.out.println( "Testing code at Essence Recaller" );
-			
 			((TamablePokemon)target).returnToItem();
 
 			player.inventoryContainer.detectAndSendChanges();
 		}
 
 		return false;
-	}*/
+	}
 }

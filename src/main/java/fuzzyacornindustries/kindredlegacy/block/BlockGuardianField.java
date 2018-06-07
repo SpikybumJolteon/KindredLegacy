@@ -6,8 +6,9 @@ import javax.annotation.Nullable;
 
 import fuzzyacornindustries.kindredlegacy.creativetab.KindredLegacyCreativeTabs;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.IMiniBoss;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.IMinorBoss;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
-import fuzzyacornindustries.kindredlegacy.reference.ModInfo;
+import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityVastayaFireball;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -15,9 +16,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -28,20 +29,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockGuardianField extends Block
+public class BlockGuardianField extends BlockBase
 {
 	public BlockGuardianField()
 	{
-		super(Material.GLASS);
-		setUnlocalizedName(ModInfo.KindredLegacyBlock.GUARIDAN_FIELD.getUnlocalizedName());
-		setRegistryName(ModInfo.KindredLegacyBlock.GUARIDAN_FIELD.getRegistryName());
+		super("guardian_field", Material.GLASS);
 
-		setHardness(15.0F);
-		setSoundType(SoundType.GLASS);
-
-		this.setCreativeTab(KindredLegacyCreativeTabs.tabMain);
+		this.setHardness(15.0F);
+		this.setResistance(0.1F);
+		this.setSoundType(SoundType.GLASS);
 
 		this.translucent = true;
+
+		setCreativeTab(null);
 	}
 
 	/**
@@ -54,21 +54,15 @@ public class BlockGuardianField extends Block
 		{		
 			entity.setInWeb();
 		}
-		else if(entity instanceof EntityArrow)
+		else if(!entity.isNonBoss())
 		{
-			if(((EntityArrow)entity).shootingEntity instanceof EntityPlayer)
-			{
-				entity.setDead();
-			}
-			else if(((EntityArrow)entity).shootingEntity instanceof EntityTameable)
-			{
-				if(((EntityTameable)((EntityArrow)entity).shootingEntity).getOwner() != null)
-				{
-					entity.setDead();
-				}
-			}
+			this.breakBlock(worldIn, pos, state);
 		}
-		else if(entity instanceof EntityLiving && !(entity instanceof TamablePokemon) && !(entity instanceof IMiniBoss))
+		else if(entity instanceof IProjectile || entity instanceof EntityVastayaFireball)
+		{
+			entity.setDead();
+		}
+		else if(entity instanceof EntityLiving && !(entity instanceof TamablePokemon) && !(entity instanceof IMiniBoss) && !(entity instanceof IMinorBoss))
 		{
 			((EntityLiving)entity).getNavigator().clearPath();
 		}
@@ -77,7 +71,7 @@ public class BlockGuardianField extends Block
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity, boolean p_185477_7_)
 	{
-		if(!(entity instanceof TamablePokemon) && !(entity instanceof EntityPlayer) && !(entity instanceof IMiniBoss))
+		if(!(entity instanceof TamablePokemon) && !(entity instanceof EntityPlayer) && !(entity instanceof IMiniBoss) && !(entity instanceof IMinorBoss) && (entity instanceof Entity && !entity.isNonBoss()))
 		{
 			AxisAlignedBB axisalignedbb = state.getBoundingBox(worldIn, pos).offset(pos);
 
@@ -87,7 +81,7 @@ public class BlockGuardianField extends Block
 			}
 		}
 	}
-	
+
 	/**
 	 * Triggered whenever an entity collides with this block (enters into the block)
 	 */
@@ -95,7 +89,7 @@ public class BlockGuardianField extends Block
 	{
 		if(entity instanceof EntityLiving)
 		{
-			if(!(entity instanceof TamablePokemon) && !(entity instanceof EntityPlayer) && !(entity instanceof IMiniBoss))
+			if(!(entity instanceof TamablePokemon) && !(entity instanceof EntityPlayer) && !(entity instanceof IMiniBoss) && !(entity instanceof IMinorBoss) && !entity.isNonBoss())
 			{
 				double maxTeleportDistance = 32D;
 
@@ -139,11 +133,11 @@ public class BlockGuardianField extends Block
 		return EnumPushReaction.BLOCK;
 	}
 
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.TRANSLUCENT;
+	}
 
 	@Override
 	public boolean isFullCube(IBlockState state)

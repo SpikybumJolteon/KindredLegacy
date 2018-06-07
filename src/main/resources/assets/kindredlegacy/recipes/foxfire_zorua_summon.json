@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BMB",
+    "MAM",
+    "BWB"
+  ],
+  "key": {
+    "W": {
+      "item": "kindredlegacy:will_of_the_ancients"
+    },
+    "M": {
+      "item": "minecraft:magma_cream"
+    },
+    "B": {
+      "item": "minecraft:blaze_powder"
+    },
+    "A": {
+      "item": "kindredlegacy:blessing_of_arceus"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:foxfire_zorua_summon"
+  }
+}

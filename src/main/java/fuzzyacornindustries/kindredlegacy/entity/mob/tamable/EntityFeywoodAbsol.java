@@ -37,6 +37,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,7 +58,7 @@ public class EntityFeywoodAbsol extends TamablePokemon implements IRangedAttackM
 
 	public static final int defaultRegenLevel = 2;
 
-	public static final float defaultMaximumAttackBoost = 17F;
+	public static final float defaultMaximumAttackBoost = 20F;
 	public static final float defaultmaximumHealthBoost = 80F;
 	public static final float defaultmaximumSpeedBoost = 0.43F;
 
@@ -268,13 +270,7 @@ public class EntityFeywoodAbsol extends TamablePokemon implements IRangedAttackM
 
 			if (itemstack != null)
 			{
-				if(itemstack.getItem() == KindredLegacyItems.ESSENCE_RECALLER)
-				{	
-					this.returnToItem();
-
-					return true;
-				}
-				else if (itemstack.getItem() instanceof BerryItem)
+				if (itemstack.getItem() instanceof BerryItem)
 				{
 					BerryItem berry = (BerryItem)itemstack.getItem();
 

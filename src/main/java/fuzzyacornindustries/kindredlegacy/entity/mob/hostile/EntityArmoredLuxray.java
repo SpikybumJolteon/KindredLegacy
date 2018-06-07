@@ -23,6 +23,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -64,6 +65,8 @@ public class EntityArmoredLuxray extends HostilePokemon implements IAnimatedEnti
 		{
 			setClockDefaults();
 		}
+
+		this.setPathPriority(PathNodeType.WATER, -1.0F);
 	}
 
 	public static String getMobName()

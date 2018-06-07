@@ -1,0 +1,23 @@
+{
+  "type": "kindredlegacy:conditional",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:void_scissors",
+      "data": 32767
+    },
+    {
+      "item": "twilightforest:steeleaf_chestplate"
+    }
+  ],
+  "result": {
+    "item": "twilightforest:steeleaf_ingot",
+    "count": 7
+  }
+}

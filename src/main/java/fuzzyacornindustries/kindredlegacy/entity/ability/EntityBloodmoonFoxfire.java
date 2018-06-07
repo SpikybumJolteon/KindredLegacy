@@ -7,6 +7,11 @@ import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AILeapAttack;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.EntityAINearestAttackableZombieExcludingPigman;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.HostilePokemon;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCactus;
+import net.minecraft.block.BlockVine;
+import net.minecraft.block.BlockWeb;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -19,6 +24,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -105,7 +112,36 @@ public class EntityBloodmoonFoxfire extends HostilePokemon implements IAnimatedE
             {
                 this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D, new int[0]);
             }
-        }	
+        }
+        
+		int currentPosY = MathHelper.floor(this.posY);
+		int currentPoxX = MathHelper.floor(this.posX);
+		int currentPoxZ = MathHelper.floor(this.posZ);
+		boolean flag = false;
+
+		for (int l1 = -1; l1 <= 1; ++l1)
+		{
+			for (int i2 = -1; i2 <= 1; ++i2)
+			{
+				for (int j = 0; j <= 3; ++j)
+				{
+					int j2 = currentPoxX + l1;
+					int k = currentPosY + j;
+					int l = currentPoxZ + i2;
+
+					BlockPos blockpos = (new BlockPos(j2, k, l));
+					IBlockState iblockstate = this.world.getBlockState(blockpos);
+					Block block = iblockstate.getBlock();
+
+					if (block instanceof BlockVine || block instanceof BlockWeb || block instanceof BlockCactus)
+					{
+			            block.dropBlockAsItem(this.world, blockpos, iblockstate, 0);
+			            this.world.setBlockToAir(blockpos);
+			            //block.breakBlock(this.world, blockpos, iblockstate);
+					}
+				}
+			}
+		}
 	}
 
 	@Override

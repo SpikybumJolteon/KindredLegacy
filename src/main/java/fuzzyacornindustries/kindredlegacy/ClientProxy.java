@@ -7,6 +7,7 @@ import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelArmoredShinx;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelBandersnatchFennekin;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClayEspurr;
+import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClayLuxio;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClayPurrloin;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClayShinx;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelClaySkitty;
@@ -15,6 +16,7 @@ import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelFeywoodAbsol;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelForcewindEelektrik;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelFoxcraftFennekin;
+import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelFoxfireZorua;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelInfestedDeerling;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelMuBuneary;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelOkamiEspeon;
@@ -26,12 +28,14 @@ import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelSwordieMienshao;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelVoorstMightyena;
 import fuzzyacornindustries.kindredlegacy.client.model.mob.ModelZerglingNincada;
 import fuzzyacornindustries.kindredlegacy.client.renderer.ability.RenderBloodmoonFoxfire;
+import fuzzyacornindustries.kindredlegacy.client.renderer.ability.RenderFoxfire;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderArmoredShinx;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderBandersnatchFennekin;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayEspurr;
+import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayLuxio;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayPurrloin;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClayShinx;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderClaySkitty;
@@ -41,6 +45,7 @@ import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderFeywoodAb
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderForcewindEelektrik;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderFoxcraftFennekin;
+import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderFoxfireZorua;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderInfestedDeerling;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderMuBuneary;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.RenderOkamiEspeon;
@@ -58,6 +63,7 @@ import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderFirew
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderHunterBolt;
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.RenderVastayaFireball;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntityBloodmoonFoxfire;
+import fuzzyacornindustries.kindredlegacy.entity.ability.EntityFoxfire;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredLuxray;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityArmoredShinx;
@@ -65,6 +71,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBandersnatchF
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayCommanderDelcatty;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayEspurr;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayLuxio;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayPurrloin;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClayShinx;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityClaySkitty;
@@ -81,6 +88,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityZerglingNinca
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFeywoodAbsol;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxcraftFennekin;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxfireZorua;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiSylveon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
@@ -172,6 +180,15 @@ public class ClientProxy extends CommonProxy
 			}
 		});
 
+		RenderingRegistry.registerEntityRenderingHandler(EntityClayLuxio.class, new IRenderFactory<EntityClayLuxio>()
+		{
+			@Override
+			public Render<? super EntityClayLuxio> createRenderFor(RenderManager manager)
+			{
+				return new RenderClayLuxio(manager, new ModelClayLuxio(), 0.4F);
+			}
+		});
+
 		RenderingRegistry.registerEntityRenderingHandler(EntityClayPurrloin.class, new IRenderFactory<EntityClayPurrloin>()
 		{
 			@Override
@@ -250,6 +267,15 @@ public class ClientProxy extends CommonProxy
 			public Render<? super EntityFoxcraftFennekin> createRenderFor(RenderManager manager)
 			{
 				return new RenderFoxcraftFennekin(manager, new ModelFoxcraftFennekin(), 0.2F);
+			}
+		});
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxfireZorua.class, new IRenderFactory<EntityFoxfireZorua>()
+		{
+			@Override
+			public Render<? super EntityFoxfireZorua> createRenderFor(RenderManager manager)
+			{
+				return new RenderFoxfireZorua(manager, new ModelFoxfireZorua(), 0.2F);
 			}
 		});
 
@@ -355,6 +381,15 @@ public class ClientProxy extends CommonProxy
 		/*
 		 * Abilities
 		 */
+		RenderingRegistry.registerEntityRenderingHandler(EntityFoxfire.class, new IRenderFactory<EntityFoxfire>()
+		{
+			@Override
+			public Render<? super EntityFoxfire> createRenderFor(RenderManager manager)
+			{
+				return new RenderFoxfire(manager, new ModelFoxfire(), 0.4F);
+			}
+		});
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityBloodmoonFoxfire.class, new IRenderFactory<EntityBloodmoonFoxfire>()
 		{
 			@Override

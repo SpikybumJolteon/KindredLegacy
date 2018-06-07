@@ -279,13 +279,7 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 			if (itemstack != null)
 			{
-				if(itemstack.getItem() == KindredLegacyItems.ESSENCE_RECALLER)
-				{	
-					this.returnToItem();
-
-					return true;
-				}
-				else if (itemstack.getItem() instanceof BerryItem)
+				if (itemstack.getItem() instanceof BerryItem)
 				{
 					BerryItem berry = (BerryItem)itemstack.getItem();
 

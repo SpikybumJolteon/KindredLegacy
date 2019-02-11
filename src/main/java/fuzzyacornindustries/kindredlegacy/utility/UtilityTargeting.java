@@ -104,6 +104,8 @@ public class UtilityTargeting
 	 * 
 	 * Modified by Spikybum Jolteon
 	 */
+	//CHANGE: deprecated
+	/*
 	public static final List<EntityMob> acquireAllLookMobTargets(EntityLivingBase seeker, int distance, double radius) 
 	{
 		if (distance < 0 || distance > MAX_DISTANCE) 
@@ -118,7 +120,7 @@ public class UtilityTargeting
 		double targetZ = seeker.posZ;
 		double distanceTraveled = 0;
 
-		while ((int) distanceTraveled < distance) 
+		while ((int) distanceTraveled < distance)
 		{
 			targetX += vec3.x;
 			targetY += vec3.y;
@@ -128,12 +130,42 @@ public class UtilityTargeting
 			List<EntityMob> list = seeker.world.getEntitiesWithinAABB(EntityMob.class,
 					new AxisAlignedBB(targetX-radius, targetY-radius, targetZ-radius, targetX+radius, targetY+radius, targetZ+radius));
 
-			for (EntityMob target : list) 
+			for (EntityMob target : list)
 			{
-				if (target != seeker && target.canBeCollidedWith() && isTargetInSight(vec3, seeker, target)) 
+				if (target != seeker && target.canBeCollidedWith() && isTargetInSight(vec3, seeker, target))
 				{
-					if (!targets.contains(target)) 
+					if (!targets.contains(target))
 					{
+						targets.add(target);
+					}
+				}
+			}
+		}
+
+		return targets;
+	}
+	 */
+
+	//CHANGE: altered searching method
+	public static final List<EntityMob> acquireAllLookMobTargetsAltered(EntityLivingBase seeker, double range, double radius)
+	{
+		List<EntityMob> targets = new ArrayList<EntityMob>();
+
+		List<EntityMob> list = seeker.world.getEntitiesWithinAABB(EntityMob.class,
+				new AxisAlignedBB(seeker.posX-range, seeker.posY-range, seeker.posZ-range,
+						seeker.posX+range, seeker.posY+range, seeker.posZ+range));
+
+		for (EntityMob target : list)
+		{
+			Vec3d relativePos = getRelativePos(seeker, target);
+			double distance = relativePos.lengthVector();
+			if (target != seeker && target.canBeCollidedWith())
+			{
+				if (!targets.contains(target))
+				{
+					if (isTargetInSight(seeker.getLookVec(), seeker, target, 30) && distance <= range) {
+						targets.add(target);
+					} else if (isTargetInSight(seeker.getLookVec(), seeker, target, 180) && distance <= radius) {
 						targets.add(target);
 					}
 				}
@@ -152,6 +184,8 @@ public class UtilityTargeting
 	 * 
 	 * Modified by Spikybum Jolteon
 	 */
+	//CHANGE: deprecated
+	/*
 	public static final List<EntityMob> acquireNearestLookMobTargetList(EntityLivingBase seeker, int distance, double radius, int numberOfTargets) 
 	{
 		List<EntityMob> targets = new ArrayList<EntityMob>();
@@ -200,11 +234,64 @@ public class UtilityTargeting
 
 		return closestMobsArray;
 	}
+	 */
+
+	//CHANGE: altered searching method
+	public static final List<EntityMob> acquireNearestLookMobTargetListAltered(EntityLivingBase seeker, double range, double radius, int numberOfTargets)
+	{
+		List<EntityMob> targets = new ArrayList<EntityMob>();
+
+		targets = acquireAllLookMobTargetsAltered(seeker, range, radius);
+
+		List<EntityMob> closestMobsArray = new ArrayList<EntityMob>();
+
+		int counter = 0;
+		boolean isListExhausted = false;
+
+		while(counter < numberOfTargets && !isListExhausted)
+		{
+			double currentDistance = MAX_DISTANCE_SQ;
+
+			EntityMob currentTarget = null;
+
+			for (EntityMob target : targets)
+			{
+				if(!closestMobsArray.contains(target))
+				{
+					double newDistance = target.getDistanceSq(seeker);
+
+					if (newDistance < currentDistance)
+					{
+						currentTarget = target;
+						currentDistance = newDistance;
+
+						//System.out.println( "Test Entity Detected By Dance of Arrows" );
+						//System.out.println( "Target Found " + Integer.toString( target.getEntityId() ) );
+					}
+				}
+			}
+
+			if(currentTarget != null)
+			{
+				closestMobsArray.add(currentTarget);
+			}
+			else
+			{
+				isListExhausted = true;
+			}
+
+			counter++;
+		}
+
+		return closestMobsArray;
+	}
 
 	/**
 	 * Returns whether the target is in the seeker's field of view based on relative position
 	 * @param fov seeker's field of view; a wider angle returns true more often
 	 */
+	//CHANGE: deprecated
+	/*
 	public static final boolean isTargetInFrontOf(Entity seeker, Entity target, float fov) 
 	{
 		// thanks again to Battlegear2 for the following code snippet
@@ -227,21 +314,51 @@ public class UtilityTargeting
 
 		return yaw < fov && yaw > -fov;
 	}
+	 */
 
 	/**
 	 * Returns true if the target's position is within the area that the seeker is facing and the target can be seen
 	 */
+	//CHANGE: deprecated
+	/*
 	public static final boolean isTargetInSight(EntityLivingBase seeker, Entity target) 
 	{
 		return isTargetInSight(seeker.getLookVec(), seeker, target);
 	}
+	 */
 
 	/**
 	 * Returns true if the target's position is within the area that the seeker is facing and the target can be seen
 	 */
+	//CHANGE: deprecated
+	/*
 	private static final boolean isTargetInSight(Vec3d vec3, EntityLivingBase seeker, Entity target) 
 	{
 		return seeker.canEntityBeSeen(target) && isTargetInFrontOf(seeker, target, 60);
+	}
+	 */
+
+	//CHANGE: another searching method
+	private static final boolean isTargetInSight(Vec3d seekerLook, EntityLivingBase seeker, Entity target, float fov)
+	{
+		if (!seeker.canEntityBeSeen(target)) {
+			return false;
+		}
+		Vec3d relativePos = getRelativePos(seeker, target);
+		Vec3d seekerLookNormalized = seekerLook.normalize();
+		Vec3d relativePosNormalized = relativePos.normalize();
+		if (relativePosNormalized.dotProduct(seekerLookNormalized)>=Math.cos(fov * Math.PI / 180.0F)) {
+			return true;
+		}
+		return false;
+	}
+
+	//CHANGE: get relative position
+	public static final Vec3d getRelativePos(Entity seeker, Entity target) {
+		Vec3d seekerPos = new Vec3d(seeker.posX, seeker.posY + seeker.getEyeHeight(), seeker.posZ);
+		Vec3d targetPos = new Vec3d(target.posX, target.posY + target.getEyeHeight(), target.posZ);
+		Vec3d relativePos = targetPos.subtract(seekerPos);
+		return relativePos;
 	}
 
 	public static final void applyHunterBoltSettings(EntityHunterBolt bolt, ItemStack bow, float charge) 
@@ -256,11 +373,13 @@ public class UtilityTargeting
 
 		if (charge == 1.0F) { bolt.setIsCritical(true); }
 
-		int k = Math.round(EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, bow) * modifier);
+		//CHANGE: no more enchantment
+		/*
+		int k = (int)Math.floor(EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, bow) * modifier);
 
-		if (k > 0) { bolt.setDamage(bolt.getDamage() + (double) k * 0.5D + 0.5D); }
+		if (k > 0) { bolt.setDamage(bolt.getDamage() + ((double) k * 0.5D + 0.5D)); }
 
-		int l = Math.round(EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, bow) * modifier);
+		int l = (int)Math.floor(EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, bow) * modifier);
 
 		if (l > 0) { bolt.setKnockbackStrength(l); }
 
@@ -268,5 +387,6 @@ public class UtilityTargeting
 		{
 			bolt.setFire(100);
 		}
+		*/
 	}
 }

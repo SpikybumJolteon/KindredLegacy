@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderHunterBolt extends RenderArrow<EntityHunterBolt> 
 {
-	public static final ResourceLocation hunterbolt = new ResourceLocation(ModInfo.MOD_ID, "textures/projectiles/hunter_bolt.png");
+	public static final ResourceLocation hunterbolt = new ResourceLocation(ModInfo.MOD_ID, "textures/projectiles/hunter_bolt_arrow.png");
 
 	public RenderHunterBolt(RenderManager rm) 
 	{

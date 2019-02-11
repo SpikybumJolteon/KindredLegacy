@@ -21,6 +21,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,7 +51,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	//private static final int TARGET_DATAWATCHER_INDEX = 24;
 
     private static final DataParameter<Byte> CRITICAL = EntityDataManager.<Byte>createKey(EntityHunterBolt.class, DataSerializers.BYTE);
-    
+
 	protected int inData, xTile = -1, yTile = -1, zTile = -1;
 
 	private Block inTile;
@@ -77,10 +78,14 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	/** The amount of knockback an arrow applies when it hits a mob. */
 	private int knockbackStrength;
 
+	//CHANGE: added the target entity to avoid unnecessary mis hunt
+	public Entity targetingEntity;
+
 	public EntityHunterBolt(World world)
 	{
 		super(world);
 		this.setSize(0.5F, 0.5F);
+		this.targetingEntity = null;
 	}
 
 	public EntityHunterBolt(World world, double xPar, double yPar, double zPar)
@@ -88,22 +93,28 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		super(world);
 		this.setSize(0.5F, 0.5F);
 		this.setPosition(xPar, yPar, zPar);
+		this.targetingEntity = null;
 	}
 
-	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, EntityLivingBase targetEntity, float baseSpeed, float accuracy)
+	//CHANGE: changed the name of variable accuracy to inaccuracy, adjusted the calculation
+	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, EntityLivingBase targetEntity, float baseSpeed, float inaccuracy)
 	{
 		super(world);
 
 		this.shootingEntity = shooterEntity;
+
+		//CHANGE: added target entity
+		this.targetingEntity = targetEntity;
 
 		if (shooterEntity instanceof EntityPlayer)
 		{
 			this.canBePickedUp = 0;
 		}
 
+		//CHANGE: adjusted the calculation
 		this.posY = shooterEntity.posY + (double)shooterEntity.getEyeHeight() * 0.95D;
 		double d0 = targetEntity.posX - shooterEntity.posX;
-		double d1 = (targetEntity.getEntityBoundingBox().minY + (double)(targetEntity.height / 3.0F) - this.posY) * 1.1D;
+		double d1 = targetEntity.posY + (double)targetEntity.getEyeHeight() * 0.95D - this.posY;
 		double d2 = targetEntity.posZ - shooterEntity.posZ;
 		double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
 
@@ -117,19 +128,25 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 
 			this.setPosition(shooterEntity.posX, this.posY, shooterEntity.posZ);
 			this.setLocationAndAngles(shooterEntity.posX, this.posY, shooterEntity.posZ, f2, f3);
-			float f4 = (float)d3 * 0.1F;
+			//CHANGE: adjusted the calculation
+			//float f4 = (float)d3 * 0.1F;
 
-			this.shoot(d0, d1 + (double)f4, d2, baseSpeed, accuracy);
+			//CHANGE: adjusted the calculation
+			//this.shoot(d0, d1 + (double)f4, d2, baseSpeed, inaccuracy);
+			this.shoot(d0, d1, d2, baseSpeed, inaccuracy);
 		}
 
 		//setTarget(targetEntity);
 	}
 
-	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, float baseSpeed)
+	//CHANGE: add inaccuracy, changed the calculation
+	public EntityHunterBolt(World world, EntityLivingBase shooterEntity, float baseSpeed, float inaccuracy)
 	{
 		super(world);
 
 		this.shootingEntity = shooterEntity;
+
+		this.targetingEntity = null;
 
 		if (shooterEntity instanceof EntityPlayer)
 		{
@@ -145,11 +162,16 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		//this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 		//this.setPosition(this.posX, this.posY, this.posZ);
 
-		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		//CHANGE: changed the calculation
+		Vec3d vec3 = this.shootingEntity.getLookVec();
+		//this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
+		//this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
+		//this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionX=vec3.x;
+		this.motionY=vec3.y;
+		this.motionZ=vec3.z;
 
-		this.shoot(this.motionX, this.motionY, this.motionZ, baseSpeed * 1.5F, 1.0F);
+		this.shoot(this.motionX, this.motionY, this.motionZ, baseSpeed * getVelocityFactor(), inaccuracy);
 	}
 
 	@Override
@@ -189,6 +211,8 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	/**
 	 * Checks if the entity is in range to render.
 	 */
+	//CHANGE:unnecessary override
+	/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double distance)
@@ -203,10 +227,13 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		d0 = d0 * 64.0D * getRenderDistanceWeight();
 		return distance < d0 * d0;
 	}
+	*/
 
 	/**
 	 * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
 	 */
+	//CHANGE: seems that this override is unnecessary
+	/*
 	@Override
 	public void shoot(double xDirection, double yDirection, double zDirection, float baseSpeed, float accuracy)
 	{
@@ -233,20 +260,26 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(yDirection, (double)f3) * 180.0D / Math.PI);
 		this.ticksInGround = 0;
 	}
+	*/
 
 	/**
 	 * Set the position and rotation values directly without any clamping.
 	 */
+	//CHANGE:unnecessary override
+	/*
 	@SideOnly(Side.CLIENT)
 	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
 	{
 		this.setPosition(x, y, z);
 		this.setRotation(yaw, pitch);
 	}
+	*/
 
 	/**
 	 * Sets the velocity to the args. Args: x, y, z
 	 */
+	//CHANGE:unnecessary override
+	/*
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void setVelocity(double xVelocity, double yVelocity, double zVelocity)
@@ -267,6 +300,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 			this.ticksInGround = 0;
 		}
 	}
+	*/
 
 	/**
 	 * Returns the shootingEntity, or if null, tries to get the shooting player from the world based on shooterName, if available
@@ -371,7 +405,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	 */
 	protected void updateMotion(float factor, float adjustY) 
 	{
-		//EntityLivingBase target = getTarget(); 
+		//EntityLivingBase target = getTarget();
 		/*
 		if (isHomingArrow() && target != null) 
 		{
@@ -473,6 +507,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	/**
 	 * If entity is in ground, updates ticks in ground or adjusts position if block no longer in world
 	 */
+	//CHANGE: reduced survival time in ground to reduce lag
 	protected void updateInGround(Block block, IBlockState iblockstate) 
 	{
         int j = block.getMetaFromState(iblockstate);
@@ -490,7 +525,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
         {
             ++this.ticksInGround;
 
-            if (this.ticksInGround >= 1200)
+            if (this.ticksInGround >= 60)
             {
                 this.setDead();
             }
@@ -551,6 +586,10 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	{
 		if (raytraceresult.entityHit != null && !(raytraceresult.entityHit instanceof TamablePokemon) && raytraceresult.entityHit != this.shootingEntity) 
 		{
+			//CHANGE: make sure those targeted arrows won't harm others
+			if (this.targetingEntity != null && raytraceresult.entityHit != this.targetingEntity) {
+				return;
+			}
 			// make sure shootingEntity is correct, e.g. if loaded from NBT
 			shootingEntity = getShooter();
 			float dmg = calculateDamage(raytraceresult.entityHit);
@@ -591,6 +630,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 					prevRotationYaw += 180.0F;
 					ticksInAir = 0;*/
 				}
+				raytraceresult.entityHit.hurtResistantTime = 0;
 			}
 		}
 	}
@@ -617,10 +657,13 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		return true; //(!(entity instanceof EntityEnderman));
 	}
 
-	/** Returns the damage source this arrow will use against the entity struck */ 
+	/** Returns the damage source this arrow will use against the entity struck */
+	//CHANGE: changed damage type
 	protected DamageSource getDamageSource(Entity entity) 
 	{
-		return new EntityDamageSourceIndirect("arrow", this, shootingEntity).setProjectile();
+		//return new EntityDamageSourceIndirect("arrow", this, shootingEntity).setProjectile();
+		return new EntityDamageSource("kindred", shootingEntity)
+				.setDamageBypassesArmor().setDamageIsAbsolute();
 	}
 
 	/**
@@ -668,13 +711,14 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	/** Returns the arrow's velocity factor */
 	protected float getVelocityFactor() 
 	{
-		return 1.5F;
+		return 2.0F;
 	}
 
 	/** Default gravity adjustment for arrows seems to be 0.05F */
+	//CHANGE: lighter
 	protected float getGravityVelocity() 
 	{
-		return 0.05F;
+		return 0.01F;
 	}
 
 	/** The name of the particle to spawn for trailing particle effects */
@@ -688,7 +732,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 	 */
 	protected boolean shouldSpawnParticles() 
 	{
-		return (getIsCritical() && getParticleName().length() > 0);
+		return getIsCritical();
 	}
 
 	/**
@@ -700,7 +744,7 @@ public class EntityHunterBolt extends EntityTippedArrow implements IProjectile, 
 		{
 			for (int i = 0; i < 4; ++i) 
 			{
-				//world.spawnParticle(getParticleName(), posX + motionX * (double) i / 4.0D, posY + motionY * (double) i / 4.0D, posZ + motionZ * (double) i / 4.0D, -motionX, -motionY + 0.2D, -motionZ);
+				this.world.spawnParticle(EnumParticleTypes.CRIT_MAGIC, posX + motionX * (double) i / 4.0D, posY + motionY * (double) i / 4.0D, posZ + motionZ * (double) i / 4.0D, -motionX, -motionY + 0.2D, -motionZ);
 			}
 		}
 	}

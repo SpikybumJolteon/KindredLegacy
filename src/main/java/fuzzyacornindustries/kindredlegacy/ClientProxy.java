@@ -99,6 +99,7 @@ import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityHunterBolt;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityVastayaFireball;
 import fuzzyacornindustries.kindredlegacy.gui.GuiPoketamableRename;
 import fuzzyacornindustries.kindredlegacy.handler.TextureStitcherFX;
+import fuzzyacornindustries.kindredlegacy.keybind.Keybinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
@@ -122,6 +123,8 @@ public class ClientProxy extends CommonProxy
 	public void preInit() 
 	{
 		super.preInit();
+
+		Keybinds.register();
 
 		/*
 		 * Mobs

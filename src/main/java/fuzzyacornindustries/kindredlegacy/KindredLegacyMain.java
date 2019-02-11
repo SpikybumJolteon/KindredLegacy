@@ -1,18 +1,13 @@
 package fuzzyacornindustries.kindredlegacy;
 
+import fuzzyacornindustries.kindredlegacy.handler.*;
+import fuzzyacornindustries.kindredlegacy.network.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
-import fuzzyacornindustries.kindredlegacy.handler.ConfigHandler;
-import fuzzyacornindustries.kindredlegacy.handler.GalacticraftEvents;
-import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyEntityEvents;
-import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyItemEvents;
-import fuzzyacornindustries.kindredlegacy.network.NetworkHelper;
-import fuzzyacornindustries.kindredlegacy.network.PacketAnimation;
-import fuzzyacornindustries.kindredlegacy.network.PoketamableNamePacket;
 import fuzzyacornindustries.kindredlegacy.recipe.CraftingManager;
 import fuzzyacornindustries.kindredlegacy.reference.ModInfo;
 import net.minecraft.entity.Entity;
@@ -46,6 +41,8 @@ public class KindredLegacyMain
 	public static boolean isGalacticraftEnabled;
 
 	public static final int packetIDActionAnimation = 0;
+	public static final int packetIDBowOfKindredModeSwitch = 1;
+	public static final int packetIDBowOfKindredAutoFire = 2;
 
 	public static final String[] fTimer;
 
@@ -88,9 +85,12 @@ public class KindredLegacyMain
 
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.CHANNEL);
 		network.registerMessage(PacketAnimation.Handler.class, PacketAnimation.class, packetIDActionAnimation, Side.CLIENT);
+		network.registerMessage(BowOfKindredModeSwitch.Handler.class, BowOfKindredModeSwitch.class, packetIDBowOfKindredModeSwitch, Side.SERVER);
+		network.registerMessage(BowOfKindredAutoFire.Handler.class, BowOfKindredAutoFire.class, packetIDBowOfKindredAutoFire, Side.SERVER);
 
 		MinecraftForge.EVENT_BUS.register(new KindredLegacyEntityEvents());
 		MinecraftForge.EVENT_BUS.register(new KindredLegacyItemEvents());
+		MinecraftForge.EVENT_BUS.register(new BowOfKindredEvents());
 	}
 
 	@EventHandler

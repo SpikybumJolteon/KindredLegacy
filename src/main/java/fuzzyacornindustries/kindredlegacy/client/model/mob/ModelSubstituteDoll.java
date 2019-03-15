@@ -75,7 +75,7 @@ public class ModelSubstituteDoll extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+    public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
     { 
         this.body.render(modelSize);
     }

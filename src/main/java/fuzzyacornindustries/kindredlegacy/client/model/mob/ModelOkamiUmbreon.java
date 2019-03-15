@@ -689,8 +689,6 @@ public class ModelOkamiUmbreon extends ModelBase
 
 	public void animate(Entity entity, float par1, float par2, float par3, float par4, float par5, float par6)
 	{	
-		/* Static references to array lengths in Entity class from Model class
-		 * makes the glow/normal models not animate in sync. */
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
 

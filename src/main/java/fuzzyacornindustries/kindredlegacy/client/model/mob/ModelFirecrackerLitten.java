@@ -486,9 +486,9 @@ public class ModelFirecrackerLitten extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -500,7 +500,7 @@ public class ModelFirecrackerLitten extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		/* Static references to array lengths in Entity class from Model class
 		 * makes the glow/normal models not animate in sync. */
@@ -516,14 +516,14 @@ public class ModelFirecrackerLitten extends ModelBase
 		{
 			if(animationDeployer.getEntity().getAnimationID() == LibraryFoxfireZoruaAttackID.SUMMON_FOXFIRE)
 			{
-				idleDampener = animateSummonFoxfire(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+				idleDampener = animateSummonFoxfire(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 			}
 		}
 		 */
-		animateBody((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateHead((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateLegs((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateTail((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateBody((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateHead((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateLegs((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateTail((EntityFirecrackerLitten)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -575,7 +575,7 @@ public class ModelFirecrackerLitten extends ModelBase
 		}
 	}
 
-	public void animateBody(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateBody(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -613,7 +613,7 @@ public class ModelFirecrackerLitten extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateHead(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -722,7 +722,7 @@ public class ModelFirecrackerLitten extends ModelBase
 		}
 	}
 
-	public void animateLegs(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateLegs(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -825,7 +825,7 @@ public class ModelFirecrackerLitten extends ModelBase
 		}
 	}
 
-	public void animateTail(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateTail(EntityFirecrackerLitten entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 

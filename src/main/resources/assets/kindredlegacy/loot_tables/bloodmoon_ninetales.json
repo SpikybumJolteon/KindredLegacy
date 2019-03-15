@@ -11,14 +11,60 @@
             "entries": [
                 {
                     "type": "item",
-                    "name": "minecraft:ender_pearl",
+                    "name": "kindredlegacy:blessing_of_arceus",
                     "weight": 1,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 3
+                                "max": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "secondary",
+            "conditions": [
+                {
+                    "condition": "killed_by_player"
+                }
+            ],
+            "rolls": 4,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:ender_pearl",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:nether_wart",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
                             }
                         },
                         {
@@ -33,20 +79,20 @@
                 {
                     "type": "item",
                     "name": "kindredlegacy:aurum_dust",
-                    "weight": 1,
+                    "weight": 2,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
-                                "min": 10,
-                                "max": 25
+                                "min": 8,
+                                "max": 12
                             }
                         },
                         {
                             "function": "looting_enchant",
                             "count": {
-                                "min": 5,
-                                "max": 10
+                                "min": 1,
+                                "max": 2
                             }
                         }
                     ]
@@ -54,41 +100,20 @@
                 {
                     "type": "item",
                     "name": "minecraft:blaze_rod",
-                    "weight": 1,
+                    "weight": 2,
                     "functions": [
                         {
                             "function": "set_count",
                             "count": {
                                 "min": 1,
-                                "max": 3
+                                "max": 4
                             }
                         },
                         {
                             "function": "looting_enchant",
                             "count": {
                                 "min": 1,
-                                "max": 3
-                            }
-                        }
-                    ]
-                },
-                {
-                    "type": "item",
-                    "name": "minecraft:nether_wart",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 1,
-                                "max": 3
-                            }
-                        },
-                        {
-                            "function": "looting_enchant",
-                            "count": {
-                                "min": 1,
-                                "max": 3
+                                "max": 2
                             }
                         }
                     ]
@@ -103,7 +128,7 @@
                 },
                 {
                     "condition": "random_chance_with_looting",
-                    "chance": 0.050,
+                    "chance": 0.025,
                     "looting_multiplier": 0.01
                 }
             ],
@@ -112,19 +137,25 @@
                 {
                     "type": "item",
                     "name": "kindredlegacy:will_of_the_ancients",
-                    "weight": 1
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_data",
+                            "data": 1
+                        }
+                    ]
                 }
             ]
         },
         {
-            "name": "golden_apple",
+            "name": "rare_drop_2",
             "conditions": [
                 {
                     "condition": "killed_by_player"
                 },
                 {
                     "condition": "random_chance_with_looting",
-                    "chance": 0.030,
+                    "chance": 0.025,
                     "looting_multiplier": 0.01
                 }
             ],

@@ -9,11 +9,11 @@ public class JointAnimation
 		partInfo.setNewRotateZ(partInfo.getNewRotateZ() - jointInfo.getRotateChangeZ());
 	}
 
-	public static void reverseJointRotatesChangeWithIdleDampener(PartInfo jointInfo, PartInfo partInfo, float idleDampener)
+	public static void reverseJointRotatesChangeWithDampener(PartInfo jointInfo, PartInfo partInfo, float dampener)
 	{
-		partInfo.setNewRotateX(partInfo.getNewRotateX() - jointInfo.getRotateChangeX() * idleDampener);
-		partInfo.setNewRotateY(partInfo.getNewRotateY() - jointInfo.getRotateChangeY() * idleDampener);
-		partInfo.setNewRotateZ(partInfo.getNewRotateZ() - jointInfo.getRotateChangeZ() * idleDampener);
+		partInfo.setNewRotateX(partInfo.getNewRotateX() - jointInfo.getRotateChangeX() * dampener);
+		partInfo.setNewRotateY(partInfo.getNewRotateY() - jointInfo.getRotateChangeY() * dampener);
+		partInfo.setNewRotateZ(partInfo.getNewRotateZ() - jointInfo.getRotateChangeZ() * dampener);
 	}
 
 	public static void reverseJointRotatesChangeX(PartInfo jointInfo, PartInfo partInfo)

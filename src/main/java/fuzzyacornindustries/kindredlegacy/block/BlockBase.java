@@ -21,7 +21,6 @@ public class BlockBase extends Block implements IHasModel
 		setCreativeTab(KindredLegacyCreativeTabs.tabMain);
 
 		KindredLegacyBlocks.BLOCKS.add(this);
-		KindredLegacyItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 
 	public BlockBase(String name, Material material, SoundType sound)
@@ -35,7 +34,6 @@ public class BlockBase extends Block implements IHasModel
 		this.setSoundType(sound);
 
 		KindredLegacyBlocks.BLOCKS.add(this);
-		KindredLegacyItems.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 
 	@Override

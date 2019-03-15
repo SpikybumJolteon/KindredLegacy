@@ -291,9 +291,9 @@ public class ModelForcewindEelektrik extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{ 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.mouth.render(modelSize);
 	}
@@ -305,7 +305,7 @@ public class ModelForcewindEelektrik extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -313,8 +313,8 @@ public class ModelForcewindEelektrik extends ModelBase
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticleVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
 
-		animateFangs((EntityForcewindEelektrik)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateBody((EntityForcewindEelektrik)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, angularVelocity, verticleVelocity);
+		animateFangs((EntityForcewindEelektrik)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateBody((EntityForcewindEelektrik)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -335,7 +335,7 @@ public class ModelForcewindEelektrik extends ModelBase
 		}
 	}
 
-	public void animateFangs(EntityForcewindEelektrik entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateFangs(EntityForcewindEelektrik entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		IdleAnimationClock currentIdleAnimationClock = entity.getIdleAnimationClockFangs();
 
@@ -362,7 +362,7 @@ public class ModelForcewindEelektrik extends ModelBase
 		mouthFangTopInfo.setNewRotateX(mouthFangTopInfo.getNewRotateX() + angleChange);
 	}
 
-	public void animateBody(EntityForcewindEelektrik entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float angularVelocity, float verticalVelocity)
+	public void animateBody(EntityForcewindEelektrik entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float angularVelocity, float verticalVelocity)
 	{
 		applyIdleBodyAnimation(entity.getIdleAnimationClockBody(0), mouthInfo, 0, distanceMoved, horzVelocity, angularVelocity, verticalVelocity);
 

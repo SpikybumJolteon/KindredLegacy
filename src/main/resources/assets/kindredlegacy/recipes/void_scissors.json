@@ -9,10 +9,15 @@
     "O": {
       "item": "minecraft:obsidian"
     },
-    "Q": {
-      "item": "minecraft:quartz_block",
-      "data": 0
-    },
+    "Q": [
+       {
+          "item": "minecraft:quartz_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:tiberium_casing"
+       }
+    ],
     "X": {
       "item": "kindredlegacy:xelnaga_circuit"
     }

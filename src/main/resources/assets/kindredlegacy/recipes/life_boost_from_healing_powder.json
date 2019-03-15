@@ -9,9 +9,15 @@
     "X": {
       "item": "kindredlegacy:healing_powder"
     },
-    "R": {
-      "item": "minecraft:redstone_block"
-    },
+    "R": [
+       {
+          "item": "minecraft:redstone_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ],
     "V": {
       "item": "kindredlegacy:verdant_charge"
     }

@@ -234,9 +234,9 @@ public class ModelInfestedDeerling extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+    public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
     {
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
         this.body.render(modelSize);
     }
@@ -248,7 +248,7 @@ public class ModelInfestedDeerling extends ModelBase
         modelRenderer.rotateAngleZ = z;
     }
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -256,10 +256,10 @@ public class ModelInfestedDeerling extends ModelBase
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticalVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
 
-		animateBody((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateHead((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateLegs((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateTail((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
+		animateBody((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateHead((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateLegs((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateTail((EntityInfestedDeerling)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
 
 		deployAnimations();
 	}
@@ -285,7 +285,7 @@ public class ModelInfestedDeerling extends ModelBase
 		tailInfo.resetNewAngles();
 	}
     
-	public void animateBody(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateBody(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
 		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
@@ -312,7 +312,7 @@ public class ModelInfestedDeerling extends ModelBase
 				+ bodyJumpAngle * newVerticalVelocity);
 	}
 
-	public void animateHead(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateHead(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -366,7 +366,7 @@ public class ModelInfestedDeerling extends ModelBase
 
 	}
 
-	public void animateLegs(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateLegs(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float amplitude = 0.6F;
 
@@ -437,7 +437,7 @@ public class ModelInfestedDeerling extends ModelBase
 		//System.out.println( "Velocity = " + Float.toString( velocity ) );
 	}
 
-	public void animateTail(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
+	public void animateTail(EntityInfestedDeerling entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailJointInfo);
 

@@ -160,6 +160,13 @@ public class PartAnimate
 		part.rotateAngleY = partInfo.getNewRotateY() + yRotate;
 		part.rotateAngleZ = partInfo.getNewRotateZ();
 	}
+	
+	public static void headAnimateHorzInfoOnlyWithModifier(PartInfo partInfo, float netHeadYaw, float modifier)
+	{
+		float yRotate = netHeadYaw / (180F / (float)Math.PI) * modifier;
+
+		partInfo.setNewRotateY(partInfo.getNewRotateY() + yRotate);
+	}
 
 	public static void headAnimateHorzWithAngleModifiers(ModelRenderer part, PartInfo partInfo, float par4, float par5, float yModifier)
 	{
@@ -177,6 +184,20 @@ public class PartAnimate
 		part.rotateAngleX = partInfo.getNewRotateX() + xRotate;
 		part.rotateAngleY = partInfo.getNewRotateY();
 		part.rotateAngleZ = partInfo.getNewRotateZ();
+	}
+
+	public static void headAnimateVertInfoOnly(PartInfo partInfo, float headPitch)
+	{
+		float xRotate = headPitch / (180F / (float)Math.PI);
+
+		partInfo.setNewRotateX(partInfo.getNewRotateX() + xRotate);
+	}
+	
+	public static void headAnimateVertInfoOnlyWithModifier(PartInfo partInfo, float headPitch, float modifier)
+	{
+		float xRotate = headPitch / (180F / (float)Math.PI) * modifier;
+
+		partInfo.setNewRotateX(partInfo.getNewRotateX() + xRotate);
 	}
 
 	public static void mirrorPartRotatesInfoChangesToSlavePart(PartInfo mainPartInfo, ModelRenderer slavePart, PartInfo slavePartInfo)

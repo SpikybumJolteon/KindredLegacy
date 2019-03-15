@@ -7,14 +7,10 @@ import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AILeapAttack;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyLootTables;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Biomes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 
 public class EntityCracklingNincada extends EntityZerglingNincada
 {

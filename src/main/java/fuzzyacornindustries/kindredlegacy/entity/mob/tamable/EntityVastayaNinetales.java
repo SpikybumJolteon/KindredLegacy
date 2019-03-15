@@ -70,13 +70,16 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 	public float attackRange = 14.0F;
 
+	public float defaultHeight = 1.9F;
+	public float defaultWidth = 0.5F;
+	
 	public EntityVastayaNinetales(World par1World)
 	{
 		super(par1World);
 
 		this.aiSit = new EntityAISit(this);
 
-		this.setSize(0.5F, 1.9F);
+		this.setSize(defaultWidth, defaultHeight);
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new AIVastayaNinetalesJumpFireball(this));
 		this.tasks.addTask(2, new AIVastayaNinetalesFireball(this));
@@ -378,6 +381,12 @@ public class EntityVastayaNinetales extends TamablePokemon implements IRangedAtt
 
 						return true;
 					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
 				}
 			}
 

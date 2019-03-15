@@ -736,9 +736,9 @@ public class ModelOkamiEspeon extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -750,10 +750,8 @@ public class ModelOkamiEspeon extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
-		/* Static references to array lengths in Entity class from Model class
-		 * makes the glow/normal models not animate in sync. */
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
 
@@ -770,14 +768,16 @@ public class ModelOkamiEspeon extends ModelBase
 			if(animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH || 
 					animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH_REVERSE)
 			{
-				idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+				idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 			}
 		}
+		
+		float sizeModifier = (float) Math.sqrt(((EntityOkamiEspeon) entity).defaultHeight / entity.height);
 
-		animateBody((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateHead((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateLegs((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateTail((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateBody((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticleVelocity);
+		animateHead((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticleVelocity);
+		animateLegs((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticleVelocity);
+		animateTail((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -831,7 +831,7 @@ public class ModelOkamiEspeon extends ModelBase
 		}
 	}
 
-	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -969,12 +969,12 @@ public class ModelOkamiEspeon extends ModelBase
 		return idleDampener;
 	}
 
-	public void animateBody(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateBody(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
 			float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
-			float runCycleInterval = (RUN_FREQUENCY * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
+			float runCycleInterval = (RUN_FREQUENCY * modelSize * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
 
 			float bodyWalkAngle = (float)Math.toRadians(13);
 			float bodyRunAngle = (float)Math.toRadians(20);
@@ -1001,7 +1001,7 @@ public class ModelOkamiEspeon extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateHead(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -1018,7 +1018,7 @@ public class ModelOkamiEspeon extends ModelBase
 		else
 		{
 			float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
-			float runCycleInterval = (RUN_FREQUENCY * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
+			float runCycleInterval = (RUN_FREQUENCY * modelSize * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
 
 			float walkAngle = (float)Math.toRadians(4);
 			float runAngle = (float)Math.toRadians(8);
@@ -1113,11 +1113,11 @@ public class ModelOkamiEspeon extends ModelBase
 		}
 	}
 
-	public void animateLegs(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateLegs(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
-			float frequency = this.RUN_FREQUENCY * entity.getGravityFactor();
+			float frequency = this.RUN_FREQUENCY * modelSize * entity.getGravityFactor();
 			float amplitude = 0.6F;
 
 			// Run constants
@@ -1198,7 +1198,7 @@ public class ModelOkamiEspeon extends ModelBase
 		}
 	}
 
-	public void animateTail(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateTail(EntityOkamiEspeon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 
@@ -1244,7 +1244,7 @@ public class ModelOkamiEspeon extends ModelBase
 					* (1F - absoluteMoveVelocity) * (1F - Math.abs(angularVelocity) * 0.5F);
 
 			// Movement Animations
-			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(distanceMoved - PI/4F * (float)i, horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
+			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(modelSize * distanceMoved - PI/4F * (float)i, horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
 			angleChangeY += angularVelocity * yawChangeAngle;
 
 			// Tamable Animation
@@ -1284,7 +1284,7 @@ public class ModelOkamiEspeon extends ModelBase
 					* (1F - absoluteMoveVelocity) * (1F - Math.abs(angularVelocity) * 0.5F);
 
 			// Movement Animations
-			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(distanceMoved - PI/4F * (float)(i + tail.length), horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
+			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(modelSize * distanceMoved - PI/4F * (float)(i + tail.length), horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
 			angleChangeY += angularVelocity * yawChangeAngle;
 
 			// Fall/Jump Animations
@@ -1311,7 +1311,7 @@ public class ModelOkamiEspeon extends ModelBase
 					* (1F - absoluteMoveVelocity) * (1F - Math.abs(angularVelocity) * 0.8F);
 
 			// Movement Animations
-			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(distanceMoved - PI/4F * (float)(i + tail.length), horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
+			angleChangeX += PartAnimate.negCosRotateAnimationAdjusted(modelSize * distanceMoved - PI/4F * (float)(i + tail.length), horzVelocity, this.RUN_FREQUENCY * entity.getGravityFactor(), moveAmplitudeX) * (1F - Math.abs(newVerticalVelocity));
 			angleChangeY += angularVelocity * yawChangeAngle;
 
 			// Fall/Jump Animations

@@ -1,0 +1,13 @@
+{
+    "variants": 
+    {
+        "active=false,facing=north": { "model": "kindredlegacy:vespene_condenser" },
+        "active=false,facing=east": { "model": "kindredlegacy:vespene_condenser", "y": 90 },
+        "active=false,facing=south": { "model": "kindredlegacy:vespene_condenser", "y": 180 },
+        "active=false,facing=west": { "model": "kindredlegacy:vespene_condenser", "y": 270 },
+        "active=true,facing=north": { "model": "kindredlegacy:vespene_condenser" },
+        "active=true,facing=east": { "model": "kindredlegacy:vespene_condenser", "y": 90 },
+        "active=true,facing=south": { "model": "kindredlegacy:vespene_condenser", "y": 180 },
+        "active=true,facing=west": { "model": "kindredlegacy:vespene_condenser", "y":270  }
+    }
+}

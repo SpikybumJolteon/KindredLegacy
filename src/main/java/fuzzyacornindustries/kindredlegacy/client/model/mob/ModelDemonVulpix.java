@@ -386,9 +386,9 @@ public class ModelDemonVulpix extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{ 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -400,7 +400,7 @@ public class ModelDemonVulpix extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -408,10 +408,10 @@ public class ModelDemonVulpix extends ModelBase
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticalVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
 
-		animateBody((EntityDemonVulpix)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateHead((EntityDemonVulpix)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateLegs((EntityDemonVulpix)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateTails((EntityDemonVulpix)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
+		animateBody((EntityDemonVulpix)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateHead((EntityDemonVulpix)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateLegs((EntityDemonVulpix)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateTails((EntityDemonVulpix)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
 
 		deployAnimations();
 	}
@@ -444,7 +444,7 @@ public class ModelDemonVulpix extends ModelBase
 		}
 	}
 
-	public void animateBody(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateBody(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{		
 		float walkCycleInterval = ((WALK_FREQUENCY * distanceMoved + PI) % (2 * PI))/(2 * PI);
 		float runCycleInterval = ((RUN_FREQUENCY * distanceMoved + PI) % (2 * PI))/(2 * PI);
@@ -474,7 +474,7 @@ public class ModelDemonVulpix extends ModelBase
 		bodyInfo.setNewPointY(bodyInfo.getNewPointY() + runCyclePointChange * horzVelocity * (1F - Math.abs(newVerticalVelocity)));
 	}
 
-	public void animateHead(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateHead(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float walkCycleInterval = ((WALK_FREQUENCY * distanceMoved + PI/2F) % (2 * PI))/(2 * PI);
 		float runCycleInterval = ((RUN_FREQUENCY * distanceMoved + PI/2F) % (2 * PI))/(2 * PI);
@@ -537,7 +537,7 @@ public class ModelDemonVulpix extends ModelBase
 		earLftInfo.setNewRotateZ(earLftInfo.getNewRotateZ() + earAngleChangeZ);
 	}
 
-	public void animateLegs(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateLegs(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float amplitude = 0.8F;
 
@@ -603,7 +603,7 @@ public class ModelDemonVulpix extends ModelBase
 		legBckLftInfo.setNewRotateX(legBckLftInfo.getNewRotateX() + PartAnimate.posCosRotateAnimationAdjusted(distanceMoved + legBckLftModifier + PI, newHorizontalVelocity, this.RUN_FREQUENCY, amplitude) * (1F - Math.abs(newVerticalVelocity)));
 	}
 
-	public void animateTails(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
+	public void animateTails(EntityDemonVulpix entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
 	{
 		for(int i = 0; i < tail.length; i++)
 		{

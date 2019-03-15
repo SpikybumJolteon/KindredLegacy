@@ -7,6 +7,7 @@ import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
 import fuzzyacornindustries.kindredlegacy.animation.PartAnimate;
 import fuzzyacornindustries.kindredlegacy.animation.PartInfo;
 import fuzzyacornindustries.kindredlegacy.animation.Vector3f;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.OkamiPokemon;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryOkamiPokemonAttackID;
 import net.minecraft.client.model.ModelBase;
@@ -251,13 +252,13 @@ public class ModelOkamiSunGlaive extends ModelBase
 
 		animationDeployer = new AnimationDeployer(this);
 	}
-
+	
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, f, f1, f2, f3, f4, f5);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
-		this.body.render(f5);
+		this.body.render(modelSize);
 	}
 
 	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) 
@@ -267,7 +268,7 @@ public class ModelOkamiSunGlaive extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float par1, float par2, float par3, float par4, float par5, float par6)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -280,11 +281,13 @@ public class ModelOkamiSunGlaive extends ModelBase
 		if(animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH || 
 				animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH_REVERSE)
 		{
-			idleDampener = animateSlash(animationDeployer.getEntity(), par1, par2, par3, par4, par5, par6);
+			idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
+		
+		float sizeModifier = ((EntityOkamiEspeon) entity).defaultHeight / entity.height;
 
-		animateBody((OkamiPokemon)entity, par1, par2, par3, par4, par5, par6, idleDampener, verticleVelocity);
-		animateGlaive((OkamiPokemon)entity, par1, par2, par3, par4, par5, par6, idleDampener);
+		animateBody((EntityOkamiEspeon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticleVelocity);
+		animateGlaive((OkamiPokemon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener);
 
 		deployAnimations();
 	}
@@ -304,7 +307,7 @@ public class ModelOkamiSunGlaive extends ModelBase
 		glaiveCoreJointInfo.resetNewPnt();
 	}
 
-	public float animateSlash(IAnimatedEntity entity, float par1, float par2, float par3, float par4, float par5, float par6)
+	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float directionModifier = 1.0F;
 
@@ -382,17 +385,17 @@ public class ModelOkamiSunGlaive extends ModelBase
 		PartAnimate.applyRotationChangeVectorToInfo(glaiveJointSwingPointInfo, glaiveJointSwingPointChanges);
 		PartAnimate.applyRotationChangeVectorToInfo(glaiveJointMainInfo, glaiveJointMainChanges);
 
-		PartAnimate.headAnimateInfoOnlyWithAngleModifiers(glaiveJointBaseInfo, par4, par5, (1 - idleDampener) * 1.2F, 0);
+		PartAnimate.headAnimateInfoOnlyWithAngleModifiers(glaiveJointBaseInfo, yawHeadOffsetDifference, pitchRotation, (1 - idleDampener) * 1.2F, 0);
 
 		return idleDampener;
 	}
 
-	public void animateBody(OkamiPokemon entity, float distanceMoved, float horzVelocity, float par3, float par4, float par5, float par6, float idleDampener, float verticalVelocity)
+	public void animateBody(OkamiPokemon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
-			float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
-			float runCycleInterval = (RUN_FREQUENCY * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
+			float walkCycleInterval = (WALK_FREQUENCY * modelSize * distanceMoved % (2 * PI))/(2 * PI);
+			float runCycleInterval = (RUN_FREQUENCY * modelSize * entity.getGravityFactor() * distanceMoved % (2 * PI))/(2 * PI);
 
 			float bodyWalkAngle = (float)Math.toRadians(10);
 			float bodyRunAngle = (float)Math.toRadians(18);
@@ -413,11 +416,11 @@ public class ModelOkamiSunGlaive extends ModelBase
 			bodyInfo.setNewRotateX(bodyInfo.getNewRotateX() + (walkCycleAngleChange + runCycleAngleChange) * horzVelocity * idleDampener * (1F - Math.abs(newVerticalVelocity)) 
 					+ bodyJumpAngle * newVerticalVelocity);
 
-			walkCycleInterval = (WALK_FREQUENCY * (distanceMoved - PI/2) % (2 * PI))/(2 * PI);
-			runCycleInterval = (RUN_FREQUENCY * entity.getGravityFactor() * (distanceMoved - PI/2) % (2 * PI))/(2 * PI);
+			walkCycleInterval = (WALK_FREQUENCY * modelSize * (distanceMoved - PI/2) % (2 * PI))/(2 * PI);
+			runCycleInterval = (RUN_FREQUENCY * modelSize * entity.getGravityFactor() * (distanceMoved - PI/2) % (2 * PI))/(2 * PI);
 
-			bodyWalkAngle *= 2F;
-			bodyRunAngle *= 2F;
+			//bodyWalkAngle *= 2F;
+			//bodyRunAngle *= 2F;
 
 			walkCycleAngleChange = MathHelper.cos(walkCycleInterval * 2 * PI + PI/2) * bodyWalkAngle * (1 - horzVelocity)
 					+ bodyWalkAngle * (1 - horzVelocity);
@@ -443,7 +446,7 @@ public class ModelOkamiSunGlaive extends ModelBase
 		}
 	}
 
-	public void animateGlaive(OkamiPokemon entity, float distanceMoved, float horzVelocity, float par3, float par4, float par5, float par6, float idleDampener)
+	public void animateGlaive(OkamiPokemon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		glaiveJointSwingPointInfo.setNewRotateY(glaiveJointSwingPointInfo.getNewRotateY() + (float)Math.toRadians(-10));
 		glaiveJointMainInfo.setNewRotateY(glaiveJointMainInfo.getNewRotateY() + (float)Math.toRadians(50));

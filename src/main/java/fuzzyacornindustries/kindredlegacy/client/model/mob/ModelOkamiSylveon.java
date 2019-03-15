@@ -1068,7 +1068,7 @@ public class ModelOkamiSylveon extends ModelBase
 		this.bodyRtFeeler[feelerNumber].setRotationPoint(0.0F, 0.0F, -0.7F);
 		this.bodyRtFeeler[feelerNumber].addBox(-0.5F, -1.0F, -0.7F, 1, 2, 1, 0.0F);
 		this.bodyRtFeelerInfo[feelerNumber] = new PartInfo(this.bodyRtFeeler[feelerNumber]);
-		this.setRotateAngle(bodyRtFeeler[feelerNumber], 1.20471975511965977F, 0.0F, 0.0F);
+		this.setRotateAngle(bodyRtFeeler[feelerNumber], -0.10471975511965977F, 0.0F, 0.0F);
 		this.bodyRtFeelerSitInfo[feelerNumber] = new PartInfo(this.bodyRtFeeler[feelerNumber]);
 
 		feelerNumber = 0;
@@ -1190,9 +1190,9 @@ public class ModelOkamiSylveon extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -1204,7 +1204,7 @@ public class ModelOkamiSylveon extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -1219,14 +1219,14 @@ public class ModelOkamiSylveon extends ModelBase
 			if(animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH || 
 					animationDeployer.getEntity().getAnimationID() == LibraryOkamiPokemonAttackID.GLAIVE_SLASH_REVERSE)
 			{
-				idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+				idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 			}
 		}
 
-		animateBody((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
-		animateHead((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateLegs((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateTail((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateBody((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateHead((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateLegs((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateTail((EntityOkamiSylveon)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -1278,7 +1278,7 @@ public class ModelOkamiSylveon extends ModelBase
 		}
 	}
 
-	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -1416,7 +1416,7 @@ public class ModelOkamiSylveon extends ModelBase
 		return idleDampener;
 	}
 
-	public void animateBody(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateBody(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -1529,7 +1529,7 @@ public class ModelOkamiSylveon extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateHead(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -1683,7 +1683,7 @@ public class ModelOkamiSylveon extends ModelBase
 		}
 	}
 
-	public void animateLegs(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateLegs(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -1768,7 +1768,7 @@ public class ModelOkamiSylveon extends ModelBase
 		}
 	}
 
-	public void animateTail(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateTail(EntityOkamiSylveon entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 

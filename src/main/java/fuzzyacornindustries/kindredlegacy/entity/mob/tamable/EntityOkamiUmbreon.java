@@ -8,6 +8,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIGeneralRangedAttack;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIOkamiGlaiveSlash;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIOkamiGlaiveSlashReverse;
 import fuzzyacornindustries.kindredlegacy.item.BerryItem;
+import fuzzyacornindustries.kindredlegacy.item.ItemRegenCream;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IBoostItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IEssenceItem;
@@ -57,6 +58,8 @@ public class EntityOkamiUmbreon extends OkamiPokemon implements IRangedAttackMob
 	public static final float defaultMaximumAttackBoost = 8F;
 	public static final float defaultmaximumHealthBoost = 100F;
 	public static final float defaultmaximumSpeedBoost = 0.36F;
+	
+	public static final int defaultArmor = 10;
 
 	public EntityOkamiUmbreon(World par1World)
 	{
@@ -106,7 +109,7 @@ public class EntityOkamiUmbreon extends OkamiPokemon implements IRangedAttackMob
 	@Override
 	public int getTotalArmorValue()
 	{
-		return 10;
+		return defaultArmor;
 	}
 
 	@Override
@@ -373,6 +376,12 @@ public class EntityOkamiUmbreon extends OkamiPokemon implements IRangedAttackMob
 
 						return true;
 					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
 				}
 			}
 

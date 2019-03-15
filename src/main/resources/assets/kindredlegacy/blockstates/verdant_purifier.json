@@ -1,0 +1,13 @@
+{
+    "variants": 
+    {
+        "active=false,facing=north": { "model": "kindredlegacy:verdant_purifier" },
+        "active=false,facing=east": { "model": "kindredlegacy:verdant_purifier", "y": 90 },
+        "active=false,facing=south": { "model": "kindredlegacy:verdant_purifier", "y": 180 },
+        "active=false,facing=west": { "model": "kindredlegacy:verdant_purifier", "y": 270 },
+        "active=true,facing=north": { "model": "kindredlegacy:verdant_purifier" },
+        "active=true,facing=east": { "model": "kindredlegacy:verdant_purifier", "y": 90 },
+        "active=true,facing=south": { "model": "kindredlegacy:verdant_purifier", "y": 180 },
+        "active=true,facing=west": { "model": "kindredlegacy:verdant_purifier", "y":270  }
+    }
+}

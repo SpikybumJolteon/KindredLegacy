@@ -113,7 +113,7 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 	{
 		boolean canFireBow = false;
 
-		if(this.getDamage(bow) < this.getMaxDamage(bow) || player.inventory.hasItemStack(new ItemStack(KindredLegacyItems.HUNTERS_CHARGE)))
+		if(this.getDamage(bow) < this.maximumDurability || player.inventory.hasItemStack(new ItemStack(KindredLegacyItems.HUNTERS_CHARGE)))
 		{
 			canFireBow = true;
 		}
@@ -130,20 +130,20 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 		if (player instanceof EntityPlayer)
 		{
 			EntityPlayer entityplayer = (EntityPlayer)player;
-			boolean flag = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, bow) > 0;
+			boolean flag = entityplayer.capabilities.isCreativeMode;// || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, bow) > 0;
 			ItemStack ammoItemstack = this.findAmmo(entityplayer);
 
 			int drawbackTimer = this.getMaxItemUseDuration(bow) - timeLeft + 10;
 			drawbackTimer = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, world, (EntityPlayer)player, drawbackTimer, ammoItemstack != null || flag);
 			if (drawbackTimer < 0) return;
-
-			if (!ammoItemstack.isEmpty() || flag)
-			{
+			
+			if (this.getDamage(bow) < this.maximumDurability || !ammoItemstack.isEmpty() || flag)
+			{/*
 				if (ammoItemstack.isEmpty())
 				{
 					ammoItemstack = new ItemStack(KindredLegacyItems.HUNTERS_CHARGE);
-				}
-
+				}*/
+				
 				float drawbackCharge = (float)drawbackTimer / 20.0F;
 				drawbackCharge = (drawbackCharge * drawbackCharge + drawbackCharge * 2.0F) / 3.0F;
 
@@ -173,7 +173,7 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 						{
 							for (EntityMob target : nearestThreeTargetMobs) 
 							{
-								if(entityplayer.capabilities.isCreativeMode || this.getDamage(bow) < this.maximumDurability || ammoItemstack != null)
+								if(entityplayer.capabilities.isCreativeMode || this.getDamage(bow) < this.maximumDurability || !ammoItemstack.isEmpty())
 								{
 									applyHunterCharge(bow, entityplayer);
 									bow.damageItem(1, player);
@@ -200,7 +200,7 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 					}
 					else
 					{
-						boolean flag1 = entityplayer.capabilities.isCreativeMode || this.getDamage(bow) < this.maximumDurability || ammoItemstack != null;
+						boolean flag1 = entityplayer.capabilities.isCreativeMode || this.getDamage(bow) < this.maximumDurability || !ammoItemstack.isEmpty();
 
 						if (!world.isRemote && flag1 == true)
 						{
@@ -243,7 +243,7 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 	{
 		ItemStack itemstack = this.findAmmo(player);
 
-		if(this.getDamage(bow) >= this.maximumDurability - 1 && itemstack != null)
+		if(this.getDamage(bow) >= this.maximumDurability - 1 && !itemstack.isEmpty())
 		{
 			bow.setItemDamage(0);
 
@@ -294,7 +294,7 @@ public class ItemBowOfKindred extends ItemBow implements IHasModel
 	public ActionResult<ItemStack> onItemRightClick(World itemStackIn, EntityPlayer worldIn, EnumHand playerIn)
 	{
 		ItemStack itemstack = worldIn.getHeldItem(playerIn);
-		boolean flag = !this.findAmmo(worldIn).isEmpty();
+		boolean flag = !this.findAmmo(worldIn).isEmpty() || this.getDamage(itemstack) < this.maximumDurability;
 
 		ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, itemStackIn, worldIn, playerIn, flag);
 		if (ret != null) return ret;

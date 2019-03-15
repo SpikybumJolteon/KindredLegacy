@@ -49,6 +49,7 @@ public class LibraryEntityID
 	public static final int CRACKLING_NINCADA = 44;
 	public static final int FOXCRAFT_FENNEKIN = 45;
 	public static final int FEYWOOD_ABSOL = 46;
+	public static final int IMMORTAL_ARCANINE = 47;
 	//public static final int RAGE_BOMBER_ROWLET = 41;
 	//public static final int ENDER_POPPLIO = 42;
 

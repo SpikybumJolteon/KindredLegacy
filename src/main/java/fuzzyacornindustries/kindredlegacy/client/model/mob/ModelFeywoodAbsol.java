@@ -525,9 +525,9 @@ public class ModelFeywoodAbsol extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.bodyJoint.render(modelSize);
 	}
@@ -539,7 +539,7 @@ public class ModelFeywoodAbsol extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -553,14 +553,14 @@ public class ModelFeywoodAbsol extends ModelBase
 		{
 			if(animationDeployer.getEntity().getAnimationID() == LibraryFeywoodAbsolAttackID.MEGAHORN)
 			{
-				idleDampener = animateMegahorn(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+				idleDampener = animateMegahorn(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 			}
 		}
 
-		animateBody((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
-		animateHead((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateLegs((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateTail((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateBody((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateHead((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateLegs((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateTail((EntityFeywoodAbsol)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -600,7 +600,7 @@ public class ModelFeywoodAbsol extends ModelBase
 		}
 	}
 
-	public float animateMegahorn(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateMegahorn(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -900,7 +900,7 @@ public class ModelFeywoodAbsol extends ModelBase
 		return idleDampener;
 	}
 
-	public void animateBody(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateBody(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -933,9 +933,9 @@ public class ModelFeywoodAbsol extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateHead(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
-		JointAnimation.reverseJointRotatesChangeWithIdleDampener(bodyInfo, neckJointInfo, idleDampener);
+		JointAnimation.reverseJointRotatesChangeWithDampener(bodyInfo, neckJointInfo, idleDampener);
 
 		PartAnimate.headAnimateInfoOnlyWithAngleModifiersAndIdleDampener(neckInfo, yawHeadOffsetDifference, pitchRotation, 0.2F, 0.2F, idleDampener);
 
@@ -977,19 +977,19 @@ public class ModelFeywoodAbsol extends ModelBase
 
 		neckInfo.setNewRotateX(neckInfo.getNewRotateX() + angleChangeX * idleDampener);
 
-		JointAnimation.reverseJointRotatesChangeWithIdleDampener(neckInfo, headJointInfo, idleDampener);
+		JointAnimation.reverseJointRotatesChangeWithDampener(neckInfo, headJointInfo, idleDampener);
 
 		PartAnimate.headAnimateInfoOnlyWithAngleModifiersAndIdleDampener(headInfo, yawHeadOffsetDifference, pitchRotation, 0.9F, 0.9F, idleDampener);
 	}
 
-	public void animateLegs(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateLegs(EntityFeywoodAbsol entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{	
-			JointAnimation.reverseJointRotatesChangeWithIdleDampener(bodyInfo, legFntRtInfo[0][0], idleDampener);
-			JointAnimation.reverseJointRotatesChangeWithIdleDampener(bodyInfo, legFntLftInfo[0][0], idleDampener);
-			JointAnimation.reverseJointRotatesChangeWithIdleDampener(bodyInfo, legBckRtInfo[0][0], idleDampener);
-			JointAnimation.reverseJointRotatesChangeWithIdleDampener(bodyInfo, legBckLftInfo[0][0], idleDampener);
+			JointAnimation.reverseJointRotatesChangeWithDampener(bodyInfo, legFntRtInfo[0][0], idleDampener);
+			JointAnimation.reverseJointRotatesChangeWithDampener(bodyInfo, legFntLftInfo[0][0], idleDampener);
+			JointAnimation.reverseJointRotatesChangeWithDampener(bodyInfo, legBckRtInfo[0][0], idleDampener);
+			JointAnimation.reverseJointRotatesChangeWithDampener(bodyInfo, legBckLftInfo[0][0], idleDampener);
 
 			/* ******* Relative Angles/Absolute Commented Out ******* */
 			float legFntWalkStartAngles[] = new float[2];

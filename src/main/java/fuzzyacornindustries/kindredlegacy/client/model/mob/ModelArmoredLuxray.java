@@ -517,9 +517,9 @@ public class ModelArmoredLuxray extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+    public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
     { 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		
         this.body.render(modelSize);
     }
@@ -531,7 +531,7 @@ public class ModelArmoredLuxray extends ModelBase
         modelRenderer.rotateAngleZ = z;
     }
 
-    public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+    public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -539,10 +539,10 @@ public class ModelArmoredLuxray extends ModelBase
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticalVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
 
-		animateBody((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateHead((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateLegs((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateTail((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
+		animateBody((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateHead((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateLegs((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateTail((EntityArmoredLuxray)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
 
 		deployAnimations();
 	}
@@ -571,7 +571,7 @@ public class ModelArmoredLuxray extends ModelBase
 		}
 	}
 	
-	public void animateBody(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateBody(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
 		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
@@ -614,7 +614,7 @@ public class ModelArmoredLuxray extends ModelBase
 		amplitude = 0.10F;
 }
 	
-	public void animateHead(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateHead(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -672,7 +672,7 @@ public class ModelArmoredLuxray extends ModelBase
 		cheekFurLftInfo.setNewRotateZ(cheekFurLftInfo.getNewRotateX() - angleChangeX * 1.2F);
 	}
 
-	public void animateLegs(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateLegs(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float amplitude = 0.55F;
 
@@ -743,7 +743,7 @@ public class ModelArmoredLuxray extends ModelBase
 		this.bodyArmorFntFlapRt.rotateAngleZ = PartAnimate.negCosRotateAnimationAdjusted(distanceMoved, horzVelocity, this.RUN_FREQUENCY, amplitude * 0.5F);
 	}
 
-	public void animateTail(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
+	public void animateTail(EntityArmoredLuxray entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 

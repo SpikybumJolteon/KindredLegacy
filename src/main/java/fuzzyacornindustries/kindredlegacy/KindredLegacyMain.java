@@ -4,14 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
-import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.handler.ConfigHandler;
 import fuzzyacornindustries.kindredlegacy.handler.GalacticraftEvents;
 import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyEntityEvents;
 import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyItemEvents;
+import fuzzyacornindustries.kindredlegacy.handler.RegistryHandler;
 import fuzzyacornindustries.kindredlegacy.network.NetworkHelper;
 import fuzzyacornindustries.kindredlegacy.network.PacketAnimation;
+import fuzzyacornindustries.kindredlegacy.network.PokemonExplorationKitPacket;
 import fuzzyacornindustries.kindredlegacy.network.PoketamableNamePacket;
 import fuzzyacornindustries.kindredlegacy.recipe.CraftingManager;
 import fuzzyacornindustries.kindredlegacy.reference.ModInfo;
@@ -44,8 +45,7 @@ public class KindredLegacyMain
 	/** Whether mods are loaded */
 	public static boolean isBiomesOPlentyEnabled;
 	public static boolean isGalacticraftEnabled;
-
-	public static final int packetIDActionAnimation = 0;
+	public static boolean isTwilightForestEnabled;
 
 	public static final String[] fTimer;
 
@@ -58,7 +58,8 @@ public class KindredLegacyMain
 	@Instance(ModInfo.MOD_ID)
 	public static KindredLegacyMain modInstance;
 	 */
-	public NetworkHelper networkHelper;
+	public NetworkHelper networkPoketamableName;
+	public NetworkHelper networkExplorationKit;
 
 	public static final Logger logger = LogManager.getLogger(ModInfo.MOD_ID);
 
@@ -69,14 +70,15 @@ public class KindredLegacyMain
 
 		isBiomesOPlentyEnabled = Loader.isModLoaded("biomesoplenty");
 		isGalacticraftEnabled = Loader.isModLoaded("galacticraftcore");
+		isTwilightForestEnabled = Loader.isModLoaded("twilightforest");
 
-		KindredLegacySoundEvents.registerSounds();
+		networkPoketamableName = new NetworkHelper(ModInfo.CHANNEL2, PoketamableNamePacket.class);
+		networkExplorationKit = new NetworkHelper(ModInfo.CHANNEL_POKEMON_EXPLORATION_KIT, PokemonExplorationKitPacket.class);
 
-		networkHelper = new NetworkHelper(ModInfo.CHANNEL2, PoketamableNamePacket.class);
-
-		KindredLegacyEntities.registerEntityMob();
-		KindredLegacyEntities.registerEntityAbilities();
-		KindredLegacyEntities.registerEntityProjectiles();
+		RegistryHandler.preInitRegistries();
+		//KindredLegacyEntities.registerEntityMob();
+		//KindredLegacyEntities.registerEntityAbilities();
+		//KindredLegacyEntities.registerEntityProjectiles();
 
 		proxy.preInit();
 	}
@@ -84,13 +86,17 @@ public class KindredLegacyMain
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		proxy.registerRenderers();
-
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.CHANNEL);
-		network.registerMessage(PacketAnimation.Handler.class, PacketAnimation.class, packetIDActionAnimation, Side.CLIENT);
+		
+		int packetID = 0;
+		network.registerMessage(PacketAnimation.Handler.class, PacketAnimation.class, packetID, Side.CLIENT);
 
+		RegistryHandler.initRegistries();
+		
 		MinecraftForge.EVENT_BUS.register(new KindredLegacyEntityEvents());
 		MinecraftForge.EVENT_BUS.register(new KindredLegacyItemEvents());
+
+		//proxy.registerRenderers();
 	}
 
 	@EventHandler
@@ -98,6 +104,8 @@ public class KindredLegacyMain
 	{
 		proxy.initTimer();
 
+		RegistryHandler.postInitRegistries();
+		
 		CraftingManager.registerRecipes();
 
 		KindredLegacyEntities.addSpawnLocations();

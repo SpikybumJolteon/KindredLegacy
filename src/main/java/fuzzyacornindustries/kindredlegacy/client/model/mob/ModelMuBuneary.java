@@ -499,9 +499,9 @@ public class ModelMuBuneary extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.bodyJoint.render(modelSize);
 	}
@@ -513,7 +513,7 @@ public class ModelMuBuneary extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -529,14 +529,14 @@ public class ModelMuBuneary extends ModelBase
 
 		if(animationDeployer.getEntity().getAnimationID() == EntityMuBuneary.actionIDSpinAttack)
 		{
-			idleDampener = animateSpin(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, tick);
+			idleDampener = animateSpin(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, tick);
 		}
 
-		animateBody((EntityMuBuneary)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
-		animateHead((EntityMuBuneary)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
-		animateArms((EntityMuBuneary)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
-		animateLegs((EntityMuBuneary)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
-		animateTail((EntityMuBuneary)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
+		animateBody((EntityMuBuneary)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
+		animateHead((EntityMuBuneary)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
+		animateArms((EntityMuBuneary)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
+		animateLegs((EntityMuBuneary)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
+		animateTail((EntityMuBuneary)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity, velocityPercentChangeApplied);
 
 		deployAnimations();
 	}
@@ -578,7 +578,7 @@ public class ModelMuBuneary extends ModelBase
 		}
 	}
 
-	public float animateSpin(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float tick)
+	public float animateSpin(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float tick)
 	{
 		float idleDampener = 1F;
 
@@ -731,7 +731,7 @@ public class ModelMuBuneary extends ModelBase
 		return appliedPercentage;
 	}
 
-	public void animateBody(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
+	public void animateBody(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
 	{
 		IdleAnimationClock currentIdleAnimationClock = entity.getIdleAnimationClockBody();
 
@@ -771,7 +771,7 @@ public class ModelMuBuneary extends ModelBase
 		bodyJointInfo.setNewPointY(bodyJointInfo.getNewPointY() + runPointChangeY * velocityPercentChangeApplied * idleDampener);
 	}
 
-	public void animateHead(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
+	public void animateHead(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
 	{
 		neckInfo.setNewRotateX((float)Math.toRadians(-35) * velocityPercentChangeApplied * idleDampener);
 
@@ -883,7 +883,7 @@ public class ModelMuBuneary extends ModelBase
 		}
 	}
 
-	public void animateArms(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
+	public void animateArms(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
 	{
 		float idleAmplitudeX = 0.15F * (1F - velocityPercentChangeApplied);
 		float idleAmplitudeY = 0.10F * (1F - velocityPercentChangeApplied);
@@ -936,7 +936,7 @@ public class ModelMuBuneary extends ModelBase
 		armRtInfo.setNewRotateY((armRtInfo.getNewRotateY() + angleChangeY) * (1F - velocityPercentChangeApplied * idleDampener));
 	}
 
-	public void animateLegs(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
+	public void animateLegs(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
 	{
 		float moveAmplitude = 0.8F;
 
@@ -981,7 +981,7 @@ public class ModelMuBuneary extends ModelBase
 		legLftInfo.setNewPointZ(legLftInfo.getNewPointZ() + runPointChangeZ * velocityPercentChangeApplied);
 	}
 
-	public void animateTail(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
+	public void animateTail(EntityMuBuneary entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float velocityPercentChangeApplied)
 	{
 		float tailRunAdjustmentX = (float)Math.toRadians(-110) * velocityPercentChangeApplied;
 

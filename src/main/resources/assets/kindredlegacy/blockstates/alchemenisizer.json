@@ -1,0 +1,13 @@
+{
+    "variants": 
+    {
+        "active=false,facing=north": { "model": "kindredlegacy:alchemenisizer" },
+        "active=false,facing=east": { "model": "kindredlegacy:alchemenisizer", "y": 90 },
+        "active=false,facing=south": { "model": "kindredlegacy:alchemenisizer", "y": 180 },
+        "active=false,facing=west": { "model": "kindredlegacy:alchemenisizer", "y": 270 },
+        "active=true,facing=north": { "model": "kindredlegacy:alchemenisizer" },
+        "active=true,facing=east": { "model": "kindredlegacy:alchemenisizer", "y": 90 },
+        "active=true,facing=south": { "model": "kindredlegacy:alchemenisizer", "y": 180 },
+        "active=true,facing=west": { "model": "kindredlegacy:alchemenisizer", "y":270  }
+    }
+}

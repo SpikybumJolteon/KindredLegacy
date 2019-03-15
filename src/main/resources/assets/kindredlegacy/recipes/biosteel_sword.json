@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "X",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "kindredlegacy:regenerative_biosteel"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:biosteel_sword"
+  }
+}

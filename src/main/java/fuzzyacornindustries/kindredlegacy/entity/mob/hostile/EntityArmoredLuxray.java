@@ -7,6 +7,7 @@ import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyLootTables;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -126,7 +127,7 @@ public class EntityArmoredLuxray extends HostilePokemon implements IAnimatedEnti
 
 		BlockPos blockpos = new BlockPos(targetEntity.posX, (double)Math.round(targetEntity.posY), targetEntity.posZ);
 
-		if (this.world.canSeeSky(blockpos) && !(targetEntity instanceof EntityZombie))
+		if (this.world.canSeeSky(blockpos) && !(targetEntity instanceof EntityZombie) && !(targetEntity instanceof EntityOkamiUmbreon))
 		{
 			this.world.addWeatherEffect(new EntityLightningBolt(world, (int)targetEntity.posX, (int)targetEntity.posY, (int)targetEntity.posZ, false));
 		}

@@ -12,9 +12,15 @@
     "Y": {
       "item": "kindredlegacy:swiftness_powder"
     },
-    "R": {
-      "item": "minecraft:redstone_block"
-    },
+    "R": [
+       {
+          "item": "minecraft:redstone_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ],
     "H": {
       "item": "kindredlegacy:hunters_charge"
     }

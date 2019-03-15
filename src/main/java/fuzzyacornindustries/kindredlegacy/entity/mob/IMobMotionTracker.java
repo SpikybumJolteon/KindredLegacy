@@ -10,4 +10,7 @@ public interface IMobMotionTracker
 
 	@SideOnly(Side.CLIENT)
 	public float getHeightVelocity();
+
+	@SideOnly(Side.CLIENT)
+	public float getTotalAngularChange();
 }

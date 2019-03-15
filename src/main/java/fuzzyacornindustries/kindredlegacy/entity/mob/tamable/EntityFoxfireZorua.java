@@ -61,8 +61,6 @@ public class EntityFoxfireZorua extends TamablePokemon implements IRangedAttackM
 	public static final float defaultmaximumHealthBoost = 50F;
 	public static final float defaultmaximumSpeedBoost = 0.43F;
 
-	public static final int actionIDNone = 0;
-
 	public EntityFoxfireZorua(World par1World)
 	{
 		super(par1World);
@@ -364,6 +362,12 @@ public class EntityFoxfireZorua extends TamablePokemon implements IRangedAttackM
 
 						return true;
 					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
 				}
 			}
 

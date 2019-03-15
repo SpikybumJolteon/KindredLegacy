@@ -177,9 +177,9 @@ public class ModelClaySkitty extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -191,7 +191,7 @@ public class ModelClaySkitty extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -199,10 +199,10 @@ public class ModelClaySkitty extends ModelBase
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticalVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
 
-		animateBody((EntityClaySkitty)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateHead((EntityClaySkitty)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateLegs((EntityClaySkitty)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
-		animateTail((EntityClaySkitty)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
+		animateBody((EntityClaySkitty)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateHead((EntityClaySkitty)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateLegs((EntityClaySkitty)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity);
+		animateTail((EntityClaySkitty)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, verticalVelocity, angularVelocity);
 
 		deployAnimations();
 	}
@@ -232,7 +232,7 @@ public class ModelClaySkitty extends ModelBase
 		}
 	}
 	
-	public void animateBody(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateBody(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
 		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
@@ -269,7 +269,7 @@ public class ModelClaySkitty extends ModelBase
 				+ bodyJumpAngle * newVerticalVelocity);
 	}
 	
-	public void animateHead(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateHead(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, neckJointInfo);
 
@@ -308,7 +308,7 @@ public class ModelClaySkitty extends ModelBase
 		earLftInfo.setNewRotateZ(earLftInfo.getNewRotateZ() + angleChangeZ);
 	}
 
-	public void animateLegs(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
+	public void animateLegs(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity)
 	{
 		float amplitude = 0.6F;
 
@@ -374,7 +374,7 @@ public class ModelClaySkitty extends ModelBase
 		legBckLftInfo.setNewRotateX(legBckLftInfo.getNewRotateX() + PartAnimate.posCosRotateAnimationAdjusted(distanceMoved + legBckLftModifier, newHorizontalVelocity, this.RUN_FREQUENCY, amplitude) * (1F - Math.abs(newVerticalVelocity)));
 	}
 
-	public void animateTail(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
+	public void animateTail(EntityClaySkitty entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float verticalVelocity, float angularVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 

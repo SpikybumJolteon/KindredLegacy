@@ -2,6 +2,8 @@ package fuzzyacornindustries.kindredlegacy.handler;
 
 import java.util.List;
 
+import fuzzyacornindustries.kindredlegacy.capabilities.CapabilityPlayerStartingGear;
+import fuzzyacornindustries.kindredlegacy.capabilities.PlayerStartingGear;
 import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityRaptorZerglingNincada;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
@@ -10,12 +12,12 @@ import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFeywoodAbsolSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFirecrackerLittenSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxcraftFennekinSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemFoxfireZoruaSummon;
+import fuzzyacornindustries.kindredlegacy.item.tamable.ItemImmortalArcanineSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiEspeonSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiSylveonSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemOkamiUmbreonSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemPoketamableSummon;
 import fuzzyacornindustries.kindredlegacy.item.tamable.ItemVastayaNinetalesSummon;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,10 +30,25 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class KindredLegacyEntityEvents 
 {
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerLoggedInEvent event) 
+	{
+		if(!event.player.world.isRemote)
+		{
+			final PlayerStartingGear playerStartingGear = (PlayerStartingGear) CapabilityPlayerStartingGear.getPlayerStartingGear(event.player);
+
+			playerStartingGear.verifyStartingGear();
+		}
+		/*
+		if (event.player instanceof EntityPlayerMP) {
+			//PacketDispatcher.sendTo(new SyncConfigPacket(), (EntityPlayerMP) event.player);
+		}*/
+	}
+
 	@SubscribeEvent
 	public void onItemToss(ItemTossEvent event)
 	{
@@ -77,6 +94,10 @@ public class KindredLegacyEntityEvents
 				else if(id == KindredLegacyItems.VASTAYA_NINETALES_SUMMON)
 				{
 					poketamable = ItemVastayaNinetalesSummon.toPoketamableEntity(itemDropped.world, itemDropped.getItem(), event.getPlayer());
+				}
+				else if(id == KindredLegacyItems.IMMORTAL_ARCANINE_SUMMON)
+				{
+					poketamable = ItemImmortalArcanineSummon.toPoketamableEntity(itemDropped.world, itemDropped.getItem(), event.getPlayer());
 				}
 
 				if(poketamable != null)
@@ -132,6 +153,10 @@ public class KindredLegacyEntityEvents
 							{
 								poketamable = ItemVastayaNinetalesSummon.toPoketamableEntity(itemDropped.world, foundItem.getItem(), event.getPlayer());
 							}
+							else if(foundItem.getItem().getItem() == KindredLegacyItems.IMMORTAL_ARCANINE_SUMMON)
+							{
+								poketamable = ItemImmortalArcanineSummon.toPoketamableEntity(itemDropped.world, foundItem.getItem(), event.getPlayer());
+							}
 
 							if(poketamable != null)
 							{
@@ -158,19 +183,19 @@ public class KindredLegacyEntityEvents
 
 		for (Object o : nearEnts)
 		{
-			System.out.println( "Testing code at EntityEvents" );
-			System.out.println( "List length? " + (nearEnts.size()));
-			System.out.println( "EntityItem? " + (o instanceof EntityItem));
-			System.out.println( "Item? " + (o instanceof Item));
-			System.out.println( "ItemStack? " + (o instanceof ItemStack));
-			System.out.println( "EntityPlayer? " + (o instanceof EntityPlayer));
-			
+			//System.out.println( "Testing code at EntityEvents" );
+			//System.out.println( "List length? " + (nearEnts.size()));
+			//System.out.println( "EntityItem? " + (o instanceof EntityItem));
+			//System.out.println( "Item? " + (o instanceof Item));
+			//System.out.println( "ItemStack? " + (o instanceof ItemStack));
+			//System.out.println( "EntityPlayer? " + (o instanceof EntityPlayer));
+
 			if (o instanceof EntityItem)
 			{
 				EntityItem foundItem;
 
 				foundItem = (EntityItem) o;
-				
+
 				if (foundItem.getItem().getItem() == KindredLegacyItems.REVIVE_SEED)
 				{
 					poketamable.setPosition(itemDropped.posX, itemDropped.posY, itemDropped.posZ);

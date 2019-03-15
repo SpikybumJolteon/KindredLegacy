@@ -509,9 +509,9 @@ public class ModelSnowSorceressBraixen extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.bodyLowerJoint.render(modelSize);
 	}
@@ -523,7 +523,7 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -532,14 +532,14 @@ public class ModelSnowSorceressBraixen extends ModelBase
 
 		if(animationDeployer.getEntity().getAnimationID() == EntitySnowSorceressBraixen.actionIDSpell)
 		{
-			//idleDampener = animateSpell(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			//idleDampener = animateSpell(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
 
-		animateBody((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
-		animateHead((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateArms((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
-		animateLegs((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
-		animateTail((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateBody((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
+		animateHead((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateArms((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
+		animateLegs((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
+		animateTail((EntitySnowSorceressBraixen)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		deployAnimations();
 	}
@@ -615,14 +615,14 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		}
 	}
 
-	public float animateSpell(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateSpell(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
 		return idleDampener;
 	}
 
-	public void animateBody(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
+	public void animateBody(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
 		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
@@ -683,7 +683,7 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		neckInfo.setNewRotateZ(neckInfo.getNewRotateZ() + angleChangeZ);
 	}
 	
-	public void animateArms(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
+	public void animateArms(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyLowerJointInfo, armRtBaseJointInfo);
 		JointAnimation.reverseJointRotatesChange(bodyLowerJointInfo, armLftBaseJointInfo);
@@ -742,7 +742,7 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		armLftEndInfo.setNewRotateY(armLftEndInfo.getNewRotateY() - angleChangeY);
 	}
 
-	public void animateHead(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateHead(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyLowerInfo, headJointInfo);
 		JointAnimation.reverseJointRotatesChangeZ(bodyUpperInfo, headJointInfo);
@@ -798,7 +798,7 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		cheekTuffRtInfo.setNewRotateZ(cheekTuffRtInfo.getNewRotateZ() + angleChangeZ);
 	}
 
-	public void animateLegs(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
+	public void animateLegs(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		float moveAmplitude = 0.8F;
 
@@ -806,7 +806,7 @@ public class ModelSnowSorceressBraixen extends ModelBase
 		legLftInfo.setNewRotateX(legLftInfo.getNewRotateX() + PartAnimate.posCosRotateAnimationAdjusted(distanceMoved, horzVelocity, WALK_FREQUENCY, moveAmplitude) * idleDampener);
 	}
 
-	public void animateTail(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateTail(EntitySnowSorceressBraixen entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyLowerInfo, tailInfo[0][0]);
 		

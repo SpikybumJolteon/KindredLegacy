@@ -498,9 +498,9 @@ public class ModelSwordieMienshao extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{ 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.hips.render(modelSize);
 	}
@@ -512,7 +512,7 @@ public class ModelSwordieMienshao extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -521,13 +521,13 @@ public class ModelSwordieMienshao extends ModelBase
 
 		if(animationDeployer.getEntity().getAnimationID() == EntitySwordieMienshao.actionIDSlash)
 		{
-			idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			idleDampener = animateSlash(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
 
-		animateHead((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateBody((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
-		animateLegs((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateTail((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateHead((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateBody((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
+		animateLegs((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateTail((EntitySwordieMienshao)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		deployAnimations();
 	}
@@ -574,7 +574,7 @@ public class ModelSwordieMienshao extends ModelBase
 		}
 	}
 
-	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateSlash(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -770,7 +770,7 @@ public class ModelSwordieMienshao extends ModelBase
 		return idleDampener;
 	}
 
-	public void animateHead(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateHead(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		PartAnimate.headAnimateInfoOnlyWithAngleModifiers(neckInfo, yawHeadOffsetDifference, pitchRotation, 0.4F, 0.4F);
 
@@ -813,7 +813,7 @@ public class ModelSwordieMienshao extends ModelBase
 		whiskerRtInfo.setNewRotateZ(whiskerRtInfo.getNewRotateZ() - angleChangeZ * 1.2F);
 	}
 
-	public void animateBody(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
+	public void animateBody(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		float moveAmplitude = 0.3F;
 
@@ -833,7 +833,7 @@ public class ModelSwordieMienshao extends ModelBase
 		armRtForearmJointInfo.setNewRotateZ(armRtForearmJointInfo.getNewRotateZ() + PartAnimate.negCosRotateAnimationAdjusted(distanceMoved, horzVelocity, movementFrequency, moveAmplitude * 2F) - angleChangeZ * 1.5F);
 	}
 
-	public void animateLegs(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateLegs(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float moveAmplitude = 0.6F;
 
@@ -841,7 +841,7 @@ public class ModelSwordieMienshao extends ModelBase
 		this.legLft.rotateAngleX = legLftInfo.getNewRotateX() + PartAnimate.posCosRotateAnimationAdjusted(distanceMoved, horzVelocity, movementFrequency, moveAmplitude);
 	}
 
-	public void animateTail(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateTail(EntitySwordieMienshao entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		for(int i = 0; i < tail.length; i++)
 		{

@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CQC",
+    "QEQ",
+    "ODO"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:emerald_block"
+    },
+    "C": {
+      "item": "kindredlegacy:xelnaga_circuit"
+    },
+    "Q": [
+       {
+          "item": "minecraft:quartz_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:tiberium_casing"
+       }
+    ],
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "kindredlegacy:xelnaga_dynamo"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:vespene_condenser"
+  }
+}

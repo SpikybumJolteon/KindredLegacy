@@ -59,6 +59,11 @@ public class EntityOkamiEspeon extends OkamiPokemon implements IRangedAttackMob
 	public static final float defaultMaximumAttackBoost = 12F;
 	public static final float defaultmaximumHealthBoost = 60F;
 	public static final float defaultmaximumSpeedBoost = 0.43F;
+	
+	public static final int defaultArmor = 0;
+
+	public float defaultHeight = 0.95F;
+	public float defaultWidth = 0.5F;
 
 	public EntityOkamiEspeon(World par1World)
 	{
@@ -66,7 +71,7 @@ public class EntityOkamiEspeon extends OkamiPokemon implements IRangedAttackMob
 
 		this.aiSit = new EntityAISit(this);
 
-		this.setSize(0.5F, 0.95F);
+		this.setSize(defaultWidth, defaultHeight);
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new AIOkamiGlaiveSlash(this, meleeRange));
 		this.tasks.addTask(2, new AIOkamiGlaiveSlashReverse(this, meleeRange));
@@ -367,6 +372,12 @@ public class EntityOkamiEspeon extends OkamiPokemon implements IRangedAttackMob
 						
 						return true;
 					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
 				}
 			}
 

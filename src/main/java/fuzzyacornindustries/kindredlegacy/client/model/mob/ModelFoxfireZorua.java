@@ -330,9 +330,9 @@ public class ModelFoxfireZorua extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{ 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -344,7 +344,7 @@ public class ModelFoxfireZorua extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
@@ -358,14 +358,14 @@ public class ModelFoxfireZorua extends ModelBase
 		{
 			if(animationDeployer.getEntity().getAnimationID() == LibraryFoxfireZoruaAttackID.SUMMON_FOXFIRE)
 			{
-				idleDampener = animateSummonFoxfire(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+				idleDampener = animateSummonFoxfire(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 			}
 		}
 
-		animateBody((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateHead((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateLegs((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
-		animateTail((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
+		animateBody((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateHead((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateLegs((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticleVelocity);
+		animateTail((EntityFoxfireZorua)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, angularVelocity, verticleVelocity);
 
 		deployAnimations();
 	}
@@ -410,7 +410,7 @@ public class ModelFoxfireZorua extends ModelBase
 		}
 	}
 
-	public float animateSummonFoxfire(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateSummonFoxfire(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -539,7 +539,7 @@ public class ModelFoxfireZorua extends ModelBase
 		return idleDampener;
 	}
 
-	public void animateBody(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateBody(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -571,7 +571,7 @@ public class ModelFoxfireZorua extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateHead(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, maneJointInfo);
 
@@ -648,7 +648,7 @@ public class ModelFoxfireZorua extends ModelBase
 		}
 	}
 
-	public void animateLegs(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+	public void animateLegs(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
 	{
 		if(!entity.isSitting())
 		{
@@ -726,7 +726,7 @@ public class ModelFoxfireZorua extends ModelBase
 		}
 	}
 
-	public void animateTail(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
+	public void animateTail(EntityFoxfireZorua entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float angularVelocity, float verticalVelocity)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, tailInfo[0][0]);
 

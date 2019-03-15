@@ -371,6 +371,12 @@ public class EntityFirecrackerLitten extends TamablePokemon implements IRangedAt
 						return true;
 					}
 				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
+				}
 			}
 
 			if (this.isOwner(player) && !this.world.isRemote && !player.isSneaking() && itemstack.getItem() != KindredLegacyItems.ATTACK_ORDERER)

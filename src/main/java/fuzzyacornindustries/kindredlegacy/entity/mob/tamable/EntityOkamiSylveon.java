@@ -58,6 +58,8 @@ public class EntityOkamiSylveon extends OkamiPokemon implements IRangedAttackMob
 	public static final float defaultMaximumAttackBoost = 10F;
 	public static final float defaultmaximumHealthBoost = 80F;
 	public static final float defaultmaximumSpeedBoost = 0.40F;
+	
+	public static final int defaultArmor = 3;
 
 	public EntityOkamiSylveon(World par1World)
 	{
@@ -107,7 +109,7 @@ public class EntityOkamiSylveon extends OkamiPokemon implements IRangedAttackMob
 	@Override
 	public int getTotalArmorValue()
 	{
-		return 3;
+		return defaultArmor;
 	}
 
 	@Override
@@ -373,6 +375,12 @@ public class EntityOkamiSylveon extends OkamiPokemon implements IRangedAttackMob
 						
 						return true;
 					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
 				}
 			}
 

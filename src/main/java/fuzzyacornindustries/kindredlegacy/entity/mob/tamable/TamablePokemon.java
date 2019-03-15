@@ -1,5 +1,6 @@
 package fuzzyacornindustries.kindredlegacy.entity.mob.tamable;
 
+import fuzzyacornindustries.kindredlegacy.animation.IAdvAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IGravityTracker;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IMobMotionTracker;
@@ -41,7 +42,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Optional.Interface(iface="micdoodle8.mods.galacticraft.api.entity.IEntityBreathable", modid="galacticraftcore", striprefs=true)
-public class TamablePokemon extends EntityTameable implements IEntityAdditionalSpawnData, IAnimatedEntity, IMobMotionTracker, IGravityTracker, IEntityBreathable
+public class TamablePokemon extends EntityTameable implements IEntityAdditionalSpawnData, IAnimatedEntity, IAdvAnimatedEntity, IMobMotionTracker, IGravityTracker, IEntityBreathable
 {	
 	protected static final DataParameter<Float> CURRENT_HEALTH = EntityDataManager.<Float>createKey(TamablePokemon.class, DataSerializers.FLOAT);
 
@@ -63,7 +64,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	protected static final DataParameter<Byte> BOOST_POWER = EntityDataManager.<Byte>createKey(TamablePokemon.class, DataSerializers.BYTE);
 
 	protected static final DataParameter<Byte> SPACE_SURVIVALBILITY = EntityDataManager.<Byte>createKey(TamablePokemon.class, DataSerializers.BYTE);
-	
+
+	protected static final DataParameter<Boolean> IS_AGGROED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> IS_MOUNTED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
+
 	protected static final int NO_BOOST_POWER_ID = 0;
 	protected static final int SPICE_MELANGE_POWER_ID = 1;
 
@@ -73,20 +77,22 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 	public double worldGravity;
 
-	@SideOnly(Side.CLIENT)
 	public float previousYaw[] = new float[6];
-	@SideOnly(Side.CLIENT)
 	public float changeInYaw;
+	public float totalChangeInYaw;
 
-	@SideOnly(Side.CLIENT)
 	public float previousHeight[] = new float[6];
-	@SideOnly(Side.CLIENT)
 	public float changeInHeight;
 
 	public static final int actionIDNone = 0;
 
 	protected int animationID;
 	protected int animationTick;
+
+	public boolean isAggroed = false;
+	public float targetingAggroValue = 0F;
+	public boolean isMounted = false;
+	public float mountedValue = 0F;
 
 	public int regenTimer = 0;
 
@@ -121,6 +127,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			}
 
 			changeInYaw = 0;
+			totalChangeInYaw = 0;
 
 			for(int i = 0; i < previousHeight.length; i++)
 			{
@@ -156,6 +163,9 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		this.dataManager.register(BOOST_POWER, Byte.valueOf(Byte.valueOf((byte)0)));
 
 		this.dataManager.register(SPACE_SURVIVALBILITY, Byte.valueOf(Byte.valueOf((byte)0)));
+
+		this.dataManager.register(IS_AGGROED, Boolean.valueOf(false));
+		this.dataManager.register(IS_MOUNTED, Boolean.valueOf(false));		
 	}
 
 	public float getMaximumHealth()
@@ -297,7 +307,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			this.dataManager.set(TOXIN_IMMUNITY, (byte)0);
 		}
 	}
-	
+
 	public int hasSpaceSurvivabilityEssence()
 	{
 		return (int)this.dataManager.get(SPACE_SURVIVALBILITY).byteValue();
@@ -403,7 +413,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
@@ -411,9 +421,17 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 		this.headRotationCourseOld = this.headRotationCourse;
 
-		if(this.world.isRemote)
+		if(!this.world.isRemote)
+		{
+			checkAggro();
+			checkMounted();
+		}
+		else
 		{
 			incrementPartClocks();
+
+			calculateAggroValue();
+			calculateMountedValue();
 		}
 	}
 
@@ -446,6 +464,8 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			float averagePreviousYaw = 1.0F * sum / previousYaw.length;
 
 			changeInYaw = (currentYaw - averagePreviousYaw) / 50F;
+
+			totalChangeInYaw =+ Math.abs(currentYaw) * 0.2F;
 
 			for(int i = previousYaw.length - 1; i > 0; i--)
 			{
@@ -511,7 +531,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 				this.heal(healAmount);
 				regenTimer = 0;
 
-				spawnHealParticles(healAmount);
+				if(this.world.isRemote)
+				{
+					spawnHealParticles(healAmount);
+				}
 			}
 		}
 		else
@@ -523,7 +546,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		{
 			if(this.getBoostPowerType() == this.SPICE_MELANGE_POWER_ID)
 			{
-				if(this.rand.nextInt(15) == 1)
+				if(this.rand.nextInt(15) == 1 && this.world.isRemote)
 				{
 					spawnAngerParticles(1);
 				}
@@ -537,6 +560,120 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			}
 		}
 	}
+
+	public void checkAggro()
+	{
+		if(this.getAttackTarget() != null && this.getAttackTarget().isEntityAlive())
+		{
+			if(!getIsAggroed())
+			{
+				setAggro(true);
+			}
+		}
+		else
+		{
+			if(getIsAggroed())
+			{
+				setAggro(false);
+			}
+		}
+	}
+
+	public boolean getIsAggroed()
+	{
+		return this.dataManager.get(IS_AGGROED).booleanValue();
+	}
+
+	public void setAggro(boolean isAggroed)
+	{
+		this.dataManager.set(IS_AGGROED, isAggroed);
+	}
+
+	@Override
+	public float getAggroValue()
+	{
+		return this.targetingAggroValue;
+	}
+
+	public void calculateAggroValue()
+	{
+		if(getIsAggroed())
+		{
+			this.targetingAggroValue += 0.1F;
+
+			if(this.targetingAggroValue > 1F)
+				this.targetingAggroValue = 1F;
+		}
+		else
+		{
+			this.targetingAggroValue -= 0.1F;
+
+			if(this.targetingAggroValue < 0F)
+				this.targetingAggroValue = 0F;
+		}
+	}
+
+	public void checkMounted()
+	{
+		if(this.isBeingRidden())
+		{
+			if(!getIsMounted())
+			{
+				setMounted(true);
+				
+				removeAttackAITasks();
+			}
+		}
+		else
+		{
+			if(getIsMounted())
+			{
+				setMounted(false);
+				
+				addAttackAITasks();
+				
+				this.setAttackTarget(null);
+			}
+		}
+	}
+
+	public void setMounted(boolean isMounted)
+	{
+		this.dataManager.set(IS_MOUNTED, isMounted);
+	}
+
+	public boolean getIsMounted()
+	{
+		return this.dataManager.get(IS_MOUNTED).booleanValue();
+	}
+
+	@Override
+	public float getMountedValue()
+	{
+		return this.mountedValue;
+	}
+
+	public void calculateMountedValue()
+	{
+		if(getIsMounted())
+		{
+			this.mountedValue += 0.1F;
+
+			if(this.mountedValue > 1F)
+				this.mountedValue = 1F;
+		}
+		else
+		{
+			this.mountedValue -= 0.1F;
+
+			if(this.mountedValue < 0F)
+				this.mountedValue = 0F;
+		}
+	}
+
+	public void addAttackAITasks() 	{}
+
+	public void removeAttackAITasks() {}
 
 	public void teleportToOwner(EntityLivingBase theOwner)
 	{
@@ -607,7 +744,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			int b0 = nbt.getInteger("SpaceSurvivability");
 			this.setSpaceSurvivabilityEssence(b0);
 		}
-		
+
 		if (nbt.hasKey("RegenLevel", 99))
 		{
 			int b0 = nbt.getInteger("RegenLevel");
@@ -644,7 +781,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		nbt.setInteger("ToxinImmunity", (int)this.hasToxinImmunityEssence());
 
 		nbt.setInteger("SpaceSurvivability", (int)this.hasSpaceSurvivabilityEssence());
-		
+
 		nbt.setInteger("RegenLevel", (int)this.getRegenLevel());
 
 		nbt.setInteger("BoostPower", (int)this.getBoostPowerType());
@@ -808,6 +945,21 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
+	public void activateHealthRegen(EntityPlayer player, ItemStack itemstack)
+	{
+		int durationSeconds = 300;
+
+		this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, durationSeconds * 20, 0));
+
+		decreasePlayerItemStack(player, itemstack);
+
+		if(this.world.isRemote)
+		{
+			spawnHealParticles(4);
+			spawnHeartParticles(2);
+		}
+	}
+
 	public void applyLifeBoost(EntityPlayer player, ItemStack itemstack)
 	{
 		if(!this.world.isRemote)
@@ -910,7 +1062,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			spawnHeartParticles(1);
 		}
 	}
-	
+
 	public void applyCometEssence(EntityPlayer player, ItemStack itemstack)
 	{
 		this.setSpaceSurvivabilityEssence(1);
@@ -1296,6 +1448,12 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 
 		return angularVelocity;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getTotalAngularChange()
+	{
+		return totalChangeInYaw;
 	}
 
 	@SideOnly(Side.CLIENT)

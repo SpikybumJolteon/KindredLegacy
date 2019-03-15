@@ -27,12 +27,14 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityMuBuneary;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityRaptorZerglingNincada;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntitySnowSorceressBraixen;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntitySwordieMienshao;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityTiberiumGrowlithe;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityVoorstMightyena;
 import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityZerglingNincada;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFeywoodAbsol;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFirecrackerLitten;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxcraftFennekin;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityFoxfireZorua;
+import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityImmortalArcanine;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiEspeon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiSylveon;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityOkamiUmbreon;
@@ -76,6 +78,7 @@ public class KindredLegacyEntities
 	public static float raptorZerglingNincadaSpawnRate;
 	public static float snowSorceressBraixenSpawnRate;
 	public static float swordieMienshaoSpawnRate;
+	public static float tiberiumGrowlitheSpawnRate;
 	public static float voorstMightyenaSpawnRate;
 	public static float zerglingNincadaSpawnRate;
 
@@ -121,6 +124,7 @@ public class KindredLegacyEntities
 		raptorZerglingNincadaSpawnRate = config.getFloat("raptorZerglingNincadaSpawnRate", category, 1.0F, 0F, 10.0F, "Raptor Zergling Nincada Spawn Rate.");
 		snowSorceressBraixenSpawnRate = config.getFloat("snowSorceressBraixenSpawnRate", category, 1.0F, 0F, 10.0F, "Snow Sorceress Braixen Spawn Rate.");
 		swordieMienshaoSpawnRate = config.getFloat("swordieMienshaoSpawnRate", category, 1.0F, 0F, 10.0F, "Swordie Mienshao Spawn Rate.");
+		tiberiumGrowlitheSpawnRate = config.getFloat("tiberiumGrowlitheSpawnRate", category, 1.0F, 0F, 10.0F, "Tiberium Growlithe Spawn Rate.");
 		zerglingNincadaSpawnRate = config.getFloat("zerglingNincadaSpawnRate", category, 1.0F, 0F, 10.0F, "Zergling Nincada Spawn Rate.");
 
 		armoredLuxraySpawnRate = config.getFloat("armoredLuxraySpawnRate", category, 1.0F, 0F, 20.0F, "Armored Luxray Spawn Rate.");
@@ -184,6 +188,7 @@ public class KindredLegacyEntities
 		createEntity(EntityForcewindEelektrik.class, EntityForcewindEelektrik.getMobName(), LibraryEntityID.FORCEWIND_EELEKTRIK, 0x282954, 0xdbecff);
 		createEntity(EntityFoxcraftFennekin.class, EntityFoxcraftFennekin.getMobName(), LibraryEntityID.FOXCRAFT_FENNEKIN, 0x351e3b, 0xdf3c1c);
 		createEntity(EntityFoxfireZorua.class, EntityFoxfireZorua.getMobName(), LibraryEntityID.FOXFIRE_ZORUA, 0x000000, 0xcc7900);
+		createEntity(EntityImmortalArcanine.class, EntityImmortalArcanine.getMobName(), LibraryEntityID.IMMORTAL_ARCANINE, 0xf0c941, 0xeef0b0);
 		createEntity(EntityInfestedDeerling.class, EntityInfestedDeerling.getMobName(), LibraryEntityID.INFESTED_DEERLING, 0x857450, 0x8801aa);
 		createEntity(EntityMuBuneary.class, EntityMuBuneary.getMobName(), LibraryEntityID.MU_BUNEARY, 0x3e3833, 0xaaa39c);
 		createEntity(EntityOkamiEspeon.class, EntityOkamiEspeon.getMobName(), LibraryEntityID.OKAMI_ESPEON, 0xcab3d2, 0xff0000);
@@ -192,6 +197,7 @@ public class KindredLegacyEntities
 		createEntity(EntityRaptorZerglingNincada.class, EntityRaptorZerglingNincada.getMobName(), LibraryEntityID.RAPTOR_ZERGLING_NINCADA, 0x7f722a, 0x59b18e);
 		createEntity(EntitySnowSorceressBraixen.class, EntitySnowSorceressBraixen.getMobName(), LibraryEntityID.SNOW_SORCERESS_BRAIXEN, 0xbde9f5, 0xfff44b);
 		createEntity(EntitySwordieMienshao.class, EntitySwordieMienshao.getMobName(), LibraryEntityID.SWORDIE_MIENSHAO, 0x2b2e3f, 0x096859);
+		createEntity(EntityTiberiumGrowlithe.class, EntityTiberiumGrowlithe.getMobName(), LibraryEntityID.TIBERIUM_GROWLITHE, 0x4cff0d, 0x030303);
 		createEntity(EntityVastayaNinetales.class, EntityVastayaNinetales.getMobName(), LibraryEntityID.VASTAYA_NINETALES, 0xb7b6cc, 0xb60a0a);
 		createEntity(EntityVoorstMightyena.class, EntityVoorstMightyena.getMobName(), LibraryEntityID.VOORST_MIGHTYENA, 0xbba559, 0x46390e);
 		createEntity(EntityZerglingNincada.class, EntityZerglingNincada.getMobName(), LibraryEntityID.ZERGLING_NINCADA, 0x7f722a, 0xe0d9a8);
@@ -245,24 +251,24 @@ public class KindredLegacyEntities
 			{
 				if (types.contains(BiomeDictionary.Type.SAVANNA) || types.contains(BiomeDictionary.Type.PLAINS))
 				{
-					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 12, 1, 1);
+					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 14, 1, 1);
 					addSpawn(biome, EntityArmoredShinx.class, armoredShinxSpawnRate, 60, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.HOT)
 						&& (types.contains(BiomeDictionary.Type.DRY) || types.contains(BiomeDictionary.Type.WASTELAND)))
 				{
-					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 8, 1, 1);
 					addSpawn(biome, EntityArmoredShinx.class, armoredShinxSpawnRate, 40, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.SPARSE)
 						&& types.contains(BiomeDictionary.Type.SNOWY))
 				{
-					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 10, 1, 1);
+					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 12, 1, 1);
 					addSpawn(biome, EntityArmoredShinx.class, armoredShinxSpawnRate, 90, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.HILLS))
 				{
-					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 5, 1, 1);
+					addSpawn(biome, EntityArmoredLuxray.class, armoredLuxraySpawnRate, 7, 1, 1);
 					addSpawn(biome, EntityArmoredShinx.class, armoredShinxSpawnRate, 35, 1, 1);
 				}
 			}
@@ -297,23 +303,23 @@ public class KindredLegacyEntities
 			{
 				if(types.contains(BiomeDictionary.Type.SPARSE))
 				{
-					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 8, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.PLAINS))
 				{
-					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 8, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.MESA))
 				{
-					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 8, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.SANDY))
 				{
-					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 8, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.SAVANNA))
 				{
-					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityBloodmoonNinetales.class, bloodmoonNinetalesSpawnRate, 8, 1, 1);
 				}
 			}
 
@@ -324,7 +330,7 @@ public class KindredLegacyEntities
 			{
 				if (types.contains(BiomeDictionary.Type.JUNGLE))
 				{
-					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 12, 1, 1);
+					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 14, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
 					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 90, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 120, 3, 6);
@@ -333,7 +339,7 @@ public class KindredLegacyEntities
 				}
 				else if (types.contains(BiomeDictionary.Type.PLAINS))
 				{
-					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 9, 1, 1);
+					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 11, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
 					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 50, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 75, 3, 6);
@@ -342,7 +348,7 @@ public class KindredLegacyEntities
 				}
 				else if (types.contains(BiomeDictionary.Type.MESA))
 				{
-					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 7, 1, 1);
+					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 9, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
 					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 80, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 100, 3, 6);
@@ -351,7 +357,7 @@ public class KindredLegacyEntities
 				}
 				else if (types.contains(BiomeDictionary.Type.SANDY))
 				{
-					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 7, 1, 1);
+					addSpawn(biome, EntityClayCommanderDelcatty.class, clayCommanderDelcattySpawnRate, 9, 1, 1);
 					addSpawn(biome, EntityClayEspurr.class, clayEspurrSpawnRate, 60, 1, 1);
 					addSpawn(biome, EntityClayLuxio.class, clayLuxioSpawnRate, 75, 1, 1);
 					addSpawn(biome, EntityClayPurrloin.class, clayPurrloinSpawnRate, 120, 3, 6);
@@ -460,21 +466,48 @@ public class KindredLegacyEntities
 			}
 
 			/***************************
+			 * Tiberium Growlithe
+			 ***************************/
+			if(!types.contains(BiomeDictionary.Type.END) && !types.contains(BiomeDictionary.Type.NETHER))
+			{
+				if (types.contains(BiomeDictionary.Type.PLAINS))
+				{
+					addSpawn(biome, EntityTiberiumGrowlithe.class, tiberiumGrowlitheSpawnRate, 60, 1, 2);
+				}
+				else if (types.contains(BiomeDictionary.Type.MOUNTAIN))
+				{
+					addSpawn(biome, EntityTiberiumGrowlithe.class, tiberiumGrowlitheSpawnRate, 70, 1, 2);
+				}
+				else if (types.contains(BiomeDictionary.Type.SANDY))
+				{
+					addSpawn(biome, EntityTiberiumGrowlithe.class, tiberiumGrowlitheSpawnRate, 80, 1, 2);
+				}
+				else if (types.contains(BiomeDictionary.Type.WASTELAND))
+				{
+					addSpawn(biome, EntityTiberiumGrowlithe.class, tiberiumGrowlitheSpawnRate, 120, 1, 2);
+				}
+				else if (types.contains(BiomeDictionary.Type.DEAD))
+				{
+					addSpawn(biome, EntityTiberiumGrowlithe.class, tiberiumGrowlitheSpawnRate, 140, 1, 2);
+				}
+			}
+
+			/***************************
 			 * Voorst Mightyena
 			 ***************************/
 			if(!types.contains(BiomeDictionary.Type.END) && !types.contains(BiomeDictionary.Type.NETHER))
 			{
 				if(types.contains(BiomeDictionary.Type.SAVANNA))
 				{
-					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 8, 1, 1);
+					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 12, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.SWAMP))
 				{
-					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 4, 1, 1);
+					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 7, 1, 1);
 				}
 				else if (types.contains(BiomeDictionary.Type.FOREST))
 				{
-					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 6, 1, 1);
+					addSpawn(biome, EntityVoorstMightyena.class, voorstMightyenaSpawnRate, 9, 1, 1);
 				}
 			}
 

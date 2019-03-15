@@ -176,9 +176,9 @@ public class ModelClayEspurr extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{ 
-		animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		this.body.render(modelSize);
 	}
@@ -190,15 +190,15 @@ public class ModelClayEspurr extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
 
-		animateHead((EntityClayEspurr)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateArms((EntityClayEspurr)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateLegs((EntityClayEspurr)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
-		animateTail((EntityClayEspurr)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateHead((EntityClayEspurr)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateArms((EntityClayEspurr)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateLegs((EntityClayEspurr)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
+		animateTail((EntityClayEspurr)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 		deployAnimations();
 	}
@@ -227,7 +227,7 @@ public class ModelClayEspurr extends ModelBase
 		}
 	}
 
-	public void animateHead(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateHead(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		IdleAnimationClock currentIdleAnimationClock = entity.getIdleAnimationClockEars();
 
@@ -249,7 +249,7 @@ public class ModelClayEspurr extends ModelBase
 		earLftInfo.setNewRotateZ(earLftInfo.getNewRotateZ() + angleChangeZ);
 	}
 
-	public void animateArms(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateArms(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		IdleAnimationClock currentIdleAnimationClock = entity.getIdleAnimationClockArms();
 
@@ -271,7 +271,7 @@ public class ModelClayEspurr extends ModelBase
 		armLftInfo.setNewRotateZ(armLftInfo.getNewRotateZ() + angleChangeZ);
 	}
 
-	public void animateLegs(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateLegs(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float moveFrequency = 2.5F;
 		float moveAmplitude = 0.9F;
@@ -280,7 +280,7 @@ public class ModelClayEspurr extends ModelBase
 		legLftInfo.setNewRotateX(legLftInfo.getNewRotateX() + PartAnimate.posCosRotateAnimationAdjusted(distanceMoved, horzVelocity, moveFrequency, moveAmplitude));
 	}
 
-	public void animateTail(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animateTail(EntityClayEspurr entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		for(int i = 0; i < tail.length; i++)
 		{

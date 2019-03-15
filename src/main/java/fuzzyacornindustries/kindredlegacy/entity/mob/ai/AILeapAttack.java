@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
@@ -41,7 +42,7 @@ public class AILeapAttack extends EntityAIBase
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
-    @Override
+	@Override
 	public boolean shouldExecute()
 	{
 		this.leapTarget = this.leaper.getAttackTarget();
@@ -60,7 +61,7 @@ public class AILeapAttack extends EntityAIBase
 	/**
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
-    @Override
+	@Override
 	public boolean shouldContinueExecuting()
 	{
 		return !this.leaper.onGround;
@@ -69,31 +70,34 @@ public class AILeapAttack extends EntityAIBase
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
-    @Override
+	@Override
 	public void startExecuting()
 	{
-		double d0 = this.leapTarget.posX - this.leaper.posX;
-		double d1 = this.leapTarget.posZ - this.leaper.posZ;
-		float f = MathHelper.sqrt(d0 * d0 + d1 * d1);
-
-		if ((double)f >= 1.0E-4D)
+		if(!this.leaper.isPotionActive(MobEffects.SLOWNESS))
 		{
-			this.leaper.motionX += (d0 / (double)f * 0.5D * 0.800000011920929D + this.leaper.motionX * 0.20000000298023224D) * leapMotionHorzModifier;
-			this.leaper.motionZ += (d1 / (double)f * 0.5D * 0.800000011920929D + this.leaper.motionZ * 0.20000000298023224D) * leapMotionHorzModifier;
+			double d0 = this.leapTarget.posX - this.leaper.posX;
+			double d1 = this.leapTarget.posZ - this.leaper.posZ;
+			float f = MathHelper.sqrt(d0 * d0 + d1 * d1);
 
-			if(soundFX != null)
+			if ((double)f >= 1.0E-4D)
 			{
-				leaper.world.playSound((EntityPlayer)null, leaper.posX, leaper.posY, leaper.posZ, soundFX, SoundCategory.HOSTILE, 1.0F, 1.2F / (leaper.world.rand.nextFloat() * 0.4F + 0.8F));
-			}
-		}
+				this.leaper.motionX += (d0 / (double)f * 0.5D * 0.800000011920929D + this.leaper.motionX * 0.20000000298023224D) * leapMotionHorzModifier;
+				this.leaper.motionZ += (d1 / (double)f * 0.5D * 0.800000011920929D + this.leaper.motionZ * 0.20000000298023224D) * leapMotionHorzModifier;
 
-		if(this.leaper instanceof IGravityTracker)
-		{
-			this.leaper.motionY = (double)this.leapMotionY * ((IGravityTracker)this.leaper).getGravityFactor();
-		}
-		else
-		{
-			this.leaper.motionY = (double)this.leapMotionY;
+				if(soundFX != null)
+				{
+					leaper.world.playSound((EntityPlayer)null, leaper.posX, leaper.posY, leaper.posZ, soundFX, SoundCategory.HOSTILE, 1.0F, 1.2F / (leaper.world.rand.nextFloat() * 0.4F + 0.8F));
+				}
+			}
+
+			if(this.leaper instanceof IGravityTracker)
+			{
+				this.leaper.motionY = (double)this.leapMotionY * ((IGravityTracker)this.leaper).getGravityFactor();
+			}
+			else
+			{
+				this.leaper.motionY = (double)this.leapMotionY;
+			}
 		}
 	}
 }

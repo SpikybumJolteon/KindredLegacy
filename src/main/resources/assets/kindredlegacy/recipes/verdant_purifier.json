@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GVG",
+    "QCQ",
+    "OOO"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "kindredlegacy:xelnaga_circuit"
+    },
+    "V": {
+      "item": "kindredlegacy:verdant_charge"
+    },
+    "Q": [
+       {
+          "item": "minecraft:quartz_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:tiberium_casing"
+       }
+    ],
+    "O": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:verdant_purifier"
+  }
+}

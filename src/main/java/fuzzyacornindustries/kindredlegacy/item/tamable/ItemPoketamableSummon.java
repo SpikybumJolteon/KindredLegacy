@@ -206,7 +206,17 @@ public class ItemPoketamableSummon extends ItemBase
 
 		return new ActionResult(EnumActionResult.PASS, itemStack);
 	}
-
+	
+	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+    {
+		if(worldIn.getTotalWorldTime() % 2000 == 0)
+		{
+			if(stack.getItemDamage() > 0 && stack.getItemDamage() < maximumDamage)
+				stack.setItemDamage(stack.getItemDamage() - 1);
+		}
+    }
+	
     @Override
     public boolean getIsRepairable(ItemStack batStack, ItemStack repairStack)
     {

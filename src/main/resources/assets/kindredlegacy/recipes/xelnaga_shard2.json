@@ -6,9 +6,14 @@
     "QAQ"
   ],
   "key": {
-    "Q": {
-      "item": "minecraft:quartz"
-    },
+    "Q": [
+       {
+          "item": "minecraft:quartz"
+       },
+       {
+          "item": "kindredlegacy:tiberium_shard"
+       }
+    ],
     "G": {
       "item": "minecraft:glowstone_dust"
     },

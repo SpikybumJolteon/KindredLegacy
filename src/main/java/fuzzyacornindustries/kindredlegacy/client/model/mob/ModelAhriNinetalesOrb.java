@@ -9,7 +9,9 @@ import fuzzyacornindustries.kindredlegacy.animation.PartAnimate;
 import fuzzyacornindustries.kindredlegacy.animation.PartInfo;
 import fuzzyacornindustries.kindredlegacy.animation.Vector3f;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IAnimateAhriNinetales;
+import fuzzyacornindustries.kindredlegacy.entity.mob.IGravityTracker;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IMobMotionTracker;
+import fuzzyacornindustries.kindredlegacy.entity.mob.hostile.EntityBloodmoonNinetales;
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.EntityVastayaNinetales;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryAhriNinetalesAttackID;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryUniversalAttackID;
@@ -122,24 +124,16 @@ public class ModelAhriNinetalesOrb extends ModelBase
 	}
 
 	@Override
-	public void render(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
+	public void render(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize) 
 	{
 		if(!(entity instanceof EntityVastayaNinetales && ((EntityVastayaNinetales)entity).isSitting()))
 		{
-			animate(entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			animate(entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 
 			this.bodyJoint.render(modelSize);
 		}
 	}
-
-	public void render(Entity entity)
-	{
-		this.body.render(0.0625F);
-		/*
-		System.out.println( "Test Animation Tick Code Jade Glaive render class" );
-		System.out.println( Float.toString( ((EntityOkamiSylveon)entity).getAnimationTick() ) );*/
-	}
-
+	
 	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) 
 	{
 		modelRenderer.rotateAngleX = x;
@@ -147,15 +141,14 @@ public class ModelAhriNinetalesOrb extends ModelBase
 		modelRenderer.rotateAngleZ = z;
 	}
 
-	public void animate(Entity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public void animate(Entity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{	
-		/* Static references to array lengths in Entity class from Model class
-		 * makes the glow/normal models not animate in sync. */
 		this.animationDeployer.update((IAnimatedEntity)entity);
 		resetPartInfos();
 
 		float angularVelocity = ((IMobMotionTracker)entity).getAngularVelocity();
 		float verticalVelocity = (float)((IMobMotionTracker)entity).getHeightVelocity();
+		float gravityFactor = (float)((IGravityTracker)entity).getGravityFactor();
 
 		float idleDampener = 1F;
 
@@ -165,27 +158,37 @@ public class ModelAhriNinetalesOrb extends ModelBase
 				animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.FOXFIRE_STORM ||
 				(animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.FIREBLAST && tick <= 28)))
 		{
-			idleDampener = animateFoxfireSummon(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			idleDampener = animateFoxfireSummon(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
 		else if(animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.FIREBALL)
 		{
-			idleDampener = animateFireballAttack(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			idleDampener = animateFireballAttack(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
 		else if(((animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.JUMP_FIREBALL || 
 				(animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.FIREBLAST && tick > 28))))
 		{
 			if(animationDeployer.getEntity().getAnimationID() == LibraryAhriNinetalesAttackID.FIREBLAST) tick -= 28F;
-			idleDampener = animateJumpFireballAttack(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, tick);
+			idleDampener = animateJumpFireballAttack(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize, tick);
 		}
 		else if(animationDeployer.getEntity().getAnimationID() == LibraryUniversalAttackID.IGNITE)
 		{
-			idleDampener = animateIgnite(animationDeployer.getEntity(), distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize);
+			idleDampener = animateIgnite(animationDeployer.getEntity(), distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, modelSize);
 		}
 
+		float sizeModifier = 1F;;
 
-		animateBody((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity);
-		animateArms((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener, verticalVelocity);
-		animateOrb((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, yawRotationDifference, yawHeadOffsetDifference, pitchRotation, modelSize, idleDampener);
+		if(entity instanceof EntityVastayaNinetales)
+		{
+			sizeModifier = ((EntityVastayaNinetales) entity).defaultHeight / entity.height;
+		}
+		else if(entity instanceof EntityBloodmoonNinetales)
+		{
+			sizeModifier = ((EntityBloodmoonNinetales) entity).defaultHeight / entity.height;
+		}
+		
+		animateBody((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticalVelocity, gravityFactor);
+		animateArms((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener, verticalVelocity, gravityFactor);
+		animateOrb((IAnimateAhriNinetales)entity, distanceMoved, horzVelocity, ageInTicks, yawHeadOffsetDifference, pitchRotation, sizeModifier, idleDampener);
 
 		deployAnimations();
 	}
@@ -213,7 +216,7 @@ public class ModelAhriNinetalesOrb extends ModelBase
 		energyBallJointInfo.resetNewPnt();
 	}
 
-	public float animateFoxfireSummon(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateFoxfireSummon(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -323,7 +326,7 @@ public class ModelAhriNinetalesOrb extends ModelBase
 		return idleDampener;
 	}
 
-	public float animateJumpFireballAttack(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float tick)
+	public float animateJumpFireballAttack(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float tick)
 	{
 		float idleDampener = 1F;
 
@@ -441,7 +444,7 @@ public class ModelAhriNinetalesOrb extends ModelBase
 		return idleDampener;
 	}
 
-	public float animateFireballAttack(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateFireballAttack(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -504,7 +507,7 @@ public class ModelAhriNinetalesOrb extends ModelBase
 		return idleDampener;
 	}
 
-	public float animateIgnite(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
+	public float animateIgnite(IAnimatedEntity entity, float distanceMoved, float horzVelocity, float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize)
 	{
 		float idleDampener = 1F;
 
@@ -550,10 +553,10 @@ public class ModelAhriNinetalesOrb extends ModelBase
 	}
 
 	public void animateBody(IAnimateAhriNinetales entity, float distanceMoved, float horzVelocity, 
-			float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+			float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float gravityFactor)
 	{
-		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
-		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
+		float walkCycleInterval = (WALK_FREQUENCY * modelSize * distanceMoved % (2 * PI))/(2 * PI);
+		float runCycleInterval = (RUN_FREQUENCY * modelSize * distanceMoved % (2 * PI))/(2 * PI);
 
 		float walkMaximumChangeY = 0.75F;
 		float runMaximumChangeY = 1.1F;
@@ -584,12 +587,12 @@ public class ModelAhriNinetalesOrb extends ModelBase
 	}
 
 	public void animateArms(IAnimateAhriNinetales entity, float distanceMoved, float horzVelocity, 
-			float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity)
+			float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener, float verticalVelocity, float gravityFactor)
 	{
 		JointAnimation.reverseJointRotatesChange(bodyInfo, armRtJointInfo);
 
-		float walkCycleInterval = (WALK_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
-		float runCycleInterval = (RUN_FREQUENCY * distanceMoved % (2 * PI))/(2 * PI);
+		float walkCycleInterval = (WALK_FREQUENCY * modelSize * distanceMoved % (2 * PI))/(2 * PI);
+		float runCycleInterval = (RUN_FREQUENCY * modelSize * distanceMoved % (2 * PI))/(2 * PI);
 
 		float newVerticalVelocity = 2.5F * verticalVelocity;
 
@@ -633,7 +636,7 @@ public class ModelAhriNinetalesOrb extends ModelBase
 	}
 
 	public void animateOrb(IAnimateAhriNinetales entity, float distanceMoved, float horzVelocity, 
-			float yawRotationDifference, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
+			float ageInTicks, float yawHeadOffsetDifference, float pitchRotation, float modelSize, float idleDampener)
 	{
 		IdleAnimationClock currentIdleAnimationClock = entity.getIdleAnimationClockOrb();
 

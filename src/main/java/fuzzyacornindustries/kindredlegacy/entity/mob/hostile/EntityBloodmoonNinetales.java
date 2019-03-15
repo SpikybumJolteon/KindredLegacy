@@ -1,5 +1,7 @@
 package fuzzyacornindustries.kindredlegacy.entity.mob.hostile;
 
+import javax.annotation.Nullable;
+
 import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
@@ -19,6 +21,7 @@ import fuzzyacornindustries.kindredlegacy.entity.mob.ai.AIGeneralRangedAttack;
 import fuzzyacornindustries.kindredlegacy.entity.mob.ai.EntityAINearestAttackableZombieExcludingPigman;
 import fuzzyacornindustries.kindredlegacy.entity.projectile.EntityBloodmoonFireball;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
+import fuzzyacornindustries.kindredlegacy.item.KindredLegacyLootTables;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryAhriNinetalesAttackID;
 import fuzzyacornindustries.kindredlegacy.reference.action.LibraryUniversalAttackID;
 import net.minecraft.block.Block;
@@ -45,6 +48,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -71,10 +75,13 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 	public float maxFireballRange = 10.0F;
 	public float attackRange = 20F;
 
+	public float defaultHeight = 1.9F;
+	public float defaultWidth = 0.5F;
+
 	public EntityBloodmoonNinetales(World par1World)
 	{
 		super(par1World);
-		this.setSize(0.5F, 1.9F);
+		this.setSize(defaultWidth, defaultHeight);
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new AIBloodmoonNinetalesFoxfireSummon(this));
 		this.tasks.addTask(2, new AIBloodmoonNinetalesJumpFireball(this));
@@ -694,12 +701,18 @@ public class EntityBloodmoonNinetales extends HostilePokemon implements IRangedA
 	{
 		this.playSound(KindredLegacySoundEvents.BLOODMOON_NINETALES_LAUGH, 1.0F, 1.0F + this.world.rand.nextFloat() * 0.2F);
 	}
-	
+	/*
 	@Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         EntityItem entityitem = this.dropItem(KindredLegacyItems.BLESSING_OF_ARCEUS, 1);
-    }
+    }*/
+
+	@Nullable
+	protected ResourceLocation getLootTable()
+	{
+		return KindredLegacyLootTables.BLOODMOON_NINETALES_LOOT_TABLE;
+	}
 
 	/************************************
 	 * Animation dependent code follows.*

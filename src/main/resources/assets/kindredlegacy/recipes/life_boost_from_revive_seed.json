@@ -12,9 +12,15 @@
     "V": {
       "item": "kindredlegacy:verdant_charge"
     },
-    "B": {
-      "item": "minecraft:redstone_block"
-    }
+    "B": [
+       {
+          "item": "minecraft:redstone_block",
+          "data" : 0
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ]
   },
   "result": {
     "item": "kindredlegacy:life_boost"

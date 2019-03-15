@@ -9,6 +9,7 @@ public class KindredLegacyLootTables
 	public static final ResourceLocation ARMORED_LUXRAY_LOOT_TABLE = register("armored_luxray");
 	public static final ResourceLocation ARMORED_SHINX_LOOT_TABLE = register("armored_shinx");
 	public static final ResourceLocation BANDERSNATCH_FENNEKIN_LOOT_TABLE = register("bandersnatch_fennekin");
+	public static final ResourceLocation BLOODMOON_NINETALES_LOOT_TABLE = register("bloodmoon_ninetales");
 	public static final ResourceLocation CLAY_COMMANDER_DELCATTY_LOOT_TABLE = register("clay_commander_delcatty");
 	public static final ResourceLocation CLAY_ESPURR_LOOT_TABLE = register("clay_espurr");
 	public static final ResourceLocation CLAY_LUXIO_LOOT_TABLE = register("clay_luxio");
@@ -23,6 +24,7 @@ public class KindredLegacyLootTables
 	public static final ResourceLocation RAPTOR_ZERGLING_NINCADA_LOOT_TABLE = register("raptor_zergling_nincada");
 	public static final ResourceLocation SNOW_SORCERESS_BRAIXEN_LOOT_TABLE = register("snow_sorceress_braixen");
 	public static final ResourceLocation SWORDIE_MIENSHAO_LOOT_TABLE = register("swordie_mienshao");
+	public static final ResourceLocation TIBERIUM_GROWLITHE_LOOT_TABLE = register("tiberium_growlithe");
 	public static final ResourceLocation VOORST_MIGHTYENA_LOOT_TABLE = register("voorst_mightyena");
 	public static final ResourceLocation ZERGLING_NINCADA_LOOT_TABLE = register("zergling_nincada");
 

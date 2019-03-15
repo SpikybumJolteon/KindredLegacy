@@ -85,6 +85,12 @@ public class KindredLegacySoundEvents
 	public static final SoundEvent FOXFIRE_ZORUA_AMBIENT;
 	public static final SoundEvent FOXFIRE_ZORUA_WHINE;
 
+	public static final SoundEvent IMMORTAL_ARCANINE_DEATH;
+	public static final SoundEvent IMMORTAL_ARCANINE_HURT;
+	public static final SoundEvent IMMORTAL_ARCANINE_AMBIENT;
+	public static final SoundEvent IMMORTAL_ARCANINE_WHINE;
+	public static final SoundEvent IMMORTAL_ARCANINE_CANNONS_SHOOT;
+
 	public static final SoundEvent INFESTED_DEERLING_DEATH;
 	public static final SoundEvent INFESTED_DEERLING_HURT;
 	public static final SoundEvent INFESTED_DEERLING_AMBIENT;
@@ -115,6 +121,10 @@ public class KindredLegacySoundEvents
 	public static final SoundEvent SWORDIE_MIENSHAO_DEATH;
 	public static final SoundEvent SWORDIE_MIENSHAO_HURT;
 	public static final SoundEvent SWORDIE_MIENSHAO_AMBIENT;
+
+	public static final SoundEvent TIBERIUM_GROWLITHE_DEATH;
+	public static final SoundEvent TIBERIUM_GROWLITHE_HURT;
+	public static final SoundEvent TIBERIUM_GROWLITHE_AMBIENT;
 
 	public static final SoundEvent VASTAYA_NINETALES_DEATH;
 	public static final SoundEvent VASTAYA_NINETALES_HURT;
@@ -211,6 +221,12 @@ public class KindredLegacySoundEvents
 		FOXFIRE_ZORUA_AMBIENT = registerSound("foxfire_zorua.ambient");
 		FOXFIRE_ZORUA_WHINE = registerSound("foxfire_zorua.whine");
 
+		IMMORTAL_ARCANINE_DEATH = registerSound("immortal_arcanine.death");
+		IMMORTAL_ARCANINE_HURT = registerSound("immortal_arcanine.hurt");
+		IMMORTAL_ARCANINE_AMBIENT = registerSound("immortal_arcanine.ambient");
+		IMMORTAL_ARCANINE_WHINE = registerSound("immortal_arcanine.whine");
+		IMMORTAL_ARCANINE_CANNONS_SHOOT = registerSound("immortal_arcanine.cannons_shoot");
+
 		INFESTED_DEERLING_DEATH = registerSound("infested_deerling.death");
 		INFESTED_DEERLING_HURT = registerSound("infested_deerling.hurt");
 		INFESTED_DEERLING_AMBIENT = registerSound("infested_deerling.ambient");
@@ -241,6 +257,10 @@ public class KindredLegacySoundEvents
 		SWORDIE_MIENSHAO_DEATH = registerSound("swordie_mienshao.death");
 		SWORDIE_MIENSHAO_HURT = registerSound("swordie_mienshao.hurt");
 		SWORDIE_MIENSHAO_AMBIENT = registerSound("swordie_mienshao.ambient");
+
+		TIBERIUM_GROWLITHE_DEATH = registerSound("tiberium_growlithe.death");
+		TIBERIUM_GROWLITHE_HURT = registerSound("tiberium_growlithe.hurt");
+		TIBERIUM_GROWLITHE_AMBIENT = registerSound("tiberium_growlithe.ambient");
 
 		VASTAYA_NINETALES_DEATH = registerSound("vastaya_ninetales.death");
 		VASTAYA_NINETALES_HURT = registerSound("vastaya_ninetales.hurt");
@@ -316,6 +336,9 @@ public class KindredLegacySoundEvents
 					CLAY_ESPURR_DEATH,
 					CLAY_ESPURR_HURT,
 					CLAY_ESPURR_AMBIENT,
+					CLAY_LUXIO_DEATH,
+					CLAY_LUXIO_HURT,
+					CLAY_LUXIO_AMBIENT,
 					CLAY_PURRLOIN_DEATH,
 					CLAY_PURRLOIN_HURT,
 					CLAY_PURRLOIN_AMBIENT,
@@ -343,6 +366,15 @@ public class KindredLegacySoundEvents
 					FOXCRAFT_FENNEKIN_HURT,
 					FOXCRAFT_FENNEKIN_AMBIENT,
 					FOXCRAFT_FENNEKIN_WHINE,
+					FOXFIRE_ZORUA_DEATH,
+					FOXFIRE_ZORUA_HURT,
+					FOXFIRE_ZORUA_AMBIENT,
+					FOXFIRE_ZORUA_WHINE,
+					IMMORTAL_ARCANINE_DEATH,
+					IMMORTAL_ARCANINE_HURT,
+					IMMORTAL_ARCANINE_AMBIENT,
+					IMMORTAL_ARCANINE_WHINE,
+					IMMORTAL_ARCANINE_CANNONS_SHOOT,
 					INFESTED_DEERLING_DEATH,
 					INFESTED_DEERLING_HURT,
 					INFESTED_DEERLING_AMBIENT,
@@ -367,6 +399,9 @@ public class KindredLegacySoundEvents
 					SWORDIE_MIENSHAO_DEATH,
 					SWORDIE_MIENSHAO_HURT,
 					SWORDIE_MIENSHAO_AMBIENT,
+					TIBERIUM_GROWLITHE_DEATH,
+					TIBERIUM_GROWLITHE_HURT,
+					TIBERIUM_GROWLITHE_AMBIENT,
 					VASTAYA_NINETALES_DEATH,
 					VASTAYA_NINETALES_HURT,
 					VASTAYA_NINETALES_AMBIENT,

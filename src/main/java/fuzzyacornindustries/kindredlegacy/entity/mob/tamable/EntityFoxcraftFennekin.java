@@ -5,6 +5,7 @@ import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
 import fuzzyacornindustries.kindredlegacy.entity.ability.EntitySubstituteDoll;
 import fuzzyacornindustries.kindredlegacy.item.BerryItem;
+import fuzzyacornindustries.kindredlegacy.item.ItemRegenCream;
 import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IBoostItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.IEssenceItem;
@@ -388,6 +389,12 @@ public class EntityFoxcraftFennekin extends TamablePokemon
 						return true;
 					}
 				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+					
+					return true;
+				}
 			}
 
 			if (this.isOwner(player) && !this.world.isRemote && !player.isSneaking() && itemstack.getItem() != KindredLegacyItems.ATTACK_ORDERER)
@@ -404,7 +411,7 @@ public class EntityFoxcraftFennekin extends TamablePokemon
 	{
 		if (targetEntity instanceof EntityLivingBase)
 		{
-			byte durationSeconds = 15;
+			byte durationSeconds = 20;
 
 			((EntityLivingBase)targetEntity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, durationSeconds * 20, 0));
 			((EntityLivingBase)targetEntity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, durationSeconds * 20, 0));

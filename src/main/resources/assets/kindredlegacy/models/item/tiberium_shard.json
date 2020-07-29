@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/tiberium_shard"
+        "layer0": "kindredlegacy:item/tiberium_shard"
     }
 }

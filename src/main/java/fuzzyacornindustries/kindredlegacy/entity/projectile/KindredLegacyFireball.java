@@ -1,24 +1,26 @@
 package fuzzyacornindustries.kindredlegacy.entity.projectile;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class KindredLegacyFireball extends Entity
+public class KindredLegacyFireball extends DamagingProjectileEntity
 {
-    public EntityLivingBase shootingEntity;
+    public LivingEntity shootingEntity;
     private int ticksAlive;
     private int ticksInAir;
     public double accelerationX;
@@ -27,23 +29,19 @@ public class KindredLegacyFireball extends Entity
 
     public float fireballSpeedModifier;
 
-    public KindredLegacyFireball(World worldIn)
+    public KindredLegacyFireball(EntityType<? extends KindredLegacyFireball> fireballEntity, World worldIn)
     {
-        super(worldIn);
-        this.setSize(1.0F, 1.0F);
-    }
-
-    protected void entityInit()
-    {
+        super(fireballEntity, worldIn);
     }
 
     /**
      * Checks if the entity is in range to render.
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
+    @Override
     public boolean isInRangeToRenderDist(double distance)
     {
-        double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0D;
+        double d0 = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
 
         if (Double.isNaN(d0))
         {
@@ -54,10 +52,9 @@ public class KindredLegacyFireball extends Entity
         return distance < d0 * d0;
     }
 
-    public KindredLegacyFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
+    public KindredLegacyFireball(EntityType<? extends KindredLegacyFireball> fireballEntity, World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
     {
-        super(worldIn);
-        this.setSize(1.0F, 1.0F);
+        super(fireballEntity, worldIn);
         this.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
         this.setPosition(x, y, z);
         double d0 = (double)MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
@@ -67,16 +64,13 @@ public class KindredLegacyFireball extends Entity
         this.fireballSpeedModifier = fireballSpeedModifier;
     }
 
-    public KindredLegacyFireball(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
+    public KindredLegacyFireball(EntityType<? extends KindredLegacyFireball> fireballEntity, World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
     {
-        super(worldIn);
+        super(fireballEntity, worldIn);
         this.shootingEntity = shooter;
-        this.setSize(1.0F, 1.0F);
-        this.setLocationAndAngles(shooter.posX, shooter.posY, shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-        this.setPosition(this.posX, this.posY, this.posZ);
-        this.motionX = 0.0D;
-        this.motionY = 0.0D;
-        this.motionZ = 0.0D;
+        this.setLocationAndAngles(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ(), shooter.rotationYaw, shooter.rotationPitch);
+        this.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
+        this.setMotion(Vec3d.ZERO);
         accelX = accelX + this.rand.nextGaussian() * 0.4D;
         accelY = accelY + this.rand.nextGaussian() * 0.4D;
         accelZ = accelZ + this.rand.nextGaussian() * 0.4D;
@@ -88,16 +82,13 @@ public class KindredLegacyFireball extends Entity
     }
 
 
-    public KindredLegacyFireball(World worldIn, EntityLivingBase shooter, double x, double y, double z, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
+    public KindredLegacyFireball(EntityType<? extends KindredLegacyFireball> fireballEntity, World worldIn, LivingEntity shooter, double x, double y, double z, double accelX, double accelY, double accelZ, float fireballSpeedModifier)
     {
-        super(worldIn);
+        super(fireballEntity, worldIn);
         this.shootingEntity = shooter;
-        this.setSize(1.0F, 1.0F);
         this.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
         this.setPosition(x, y, z);
-        this.motionX = 0.0D;
-        this.motionY = 0.0D;
-        this.motionZ = 0.0D;
+        this.setMotion(Vec3d.ZERO);
         //accelX = accelX + this.rand.nextGaussian() * 0.1D;
         //accelY = accelY + this.rand.nextGaussian() * 0.1D;
         //accelZ = accelZ + this.rand.nextGaussian() * 0.1D;
@@ -112,56 +103,50 @@ public class KindredLegacyFireball extends Entity
      * Called to update the entity's position/logic.
      */
     @Override
-    public void onUpdate()
+    public void tick()
     {
-        if (this.world.isRemote || (this.shootingEntity == null || !this.shootingEntity.isDead) && this.world.isBlockLoaded(new BlockPos(this)))
+        if (this.world.isRemote || (this.shootingEntity == null || this.shootingEntity.isAlive()) && this.world.isBlockLoaded(new BlockPos(this)))
         {
-            super.onUpdate();
+            super.tick();
 
             ++this.ticksInAir;
-            RayTraceResult raytraceresult = ProjectileHelper.forwardsRaycast(this, true, this.ticksInAir >= 25, this.shootingEntity);
-
-            if (raytraceresult != null)
+            RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, true, this.ticksInAir >= 25, this.shootingEntity, RayTraceContext.BlockMode.COLLIDER);
+            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) 
             {
-                this.onImpact(raytraceresult);
+               this.onImpact(raytraceresult);
             }
 
-            this.posX += this.motionX;
-            this.posY += this.motionY;
-            this.posZ += this.motionZ;
+            Vec3d vec3d = this.getMotion();
+            double d0 = this.getPosX() + vec3d.x;
+            double d1 = this.getPosY() + vec3d.y;
+            double d2 = this.getPosZ() + vec3d.z;
             ProjectileHelper.rotateTowardsMovement(this, 0.2F);
             float f = this.getMotionFactor() * fireballSpeedModifier;
 
-            if (this.isInWater())
+            if (this.isInWater()) 
             {
-                for (int i = 0; i < 4; ++i)
+                for(int i = 0; i < 4; ++i) 
                 {
-                    float f1 = 0.25F;
-                    this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+                   this.world.addParticle(ParticleTypes.BUBBLE, d0 - vec3d.x * 0.25D, d1 - vec3d.y * 0.25D, d2 - vec3d.z * 0.25D, vec3d.x, vec3d.y, vec3d.z);
                 }
 
                 f = 0.8F;
-            }
+             }
 
-            this.motionX += this.accelerationX;
-            this.motionY += this.accelerationY;
-            this.motionZ += this.accelerationZ;
-            this.motionX *= (double)f;
-            this.motionY *= (double)f;
-            this.motionZ *= (double)f;
-            this.world.spawnParticle(this.getParticleType(), this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
-            this.setPosition(this.posX, this.posY, this.posZ);
+            this.setMotion(vec3d.add(this.accelerationX, this.accelerationY, this.accelerationZ).scale((double)f));
+            this.world.addParticle(this.getParticle(), d0, d1 + 0.5D, d2, 0.0D, 0.0D, 0.0D);
+            this.setPosition(d0, d1, d2);
         }
         else
         {
-            this.setDead();
+            this.remove();
         }
     }
 
-    protected EnumParticleTypes getParticleType()
+    protected IParticleData getParticle() 
     {
-        return EnumParticleTypes.SMOKE_NORMAL;
-    }
+        return ParticleTypes.SMOKE;
+     }
 
     /**
      * Return the motion factor for this projectile. The factor is multiplied by the original motion.
@@ -176,53 +161,39 @@ public class KindredLegacyFireball extends Entity
      */
     protected void onImpact(RayTraceResult result){};
 
-    public static void registerFixesFireball(DataFixer fixer, String name)
-    {
-    }
-
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound)
-    {
-        compound.setTag("direction", this.newDoubleNBTList(new double[] {this.motionX, this.motionY, this.motionZ}));
-        compound.setTag("power", this.newDoubleNBTList(new double[] {this.accelerationX, this.accelerationY, this.accelerationZ}));
-        compound.setInteger("life", this.ticksAlive);
-    }
+    public void writeAdditional(CompoundNBT compound) {
+        Vec3d vec3d = this.getMotion();
+        compound.put("direction", this.newDoubleNBTList(new double[]{vec3d.x, vec3d.y, vec3d.z}));
+        compound.put("power", this.newDoubleNBTList(new double[]{this.accelerationX, this.accelerationY, this.accelerationZ}));
+        compound.putInt("life", this.ticksAlive);
+     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
-        if (compound.hasKey("power", 9))
+     public void readAdditional(CompoundNBT compound) 
+     {
+        if (compound.contains("power", 9)) 
         {
-            NBTTagList nbttaglist = compound.getTagList("power", 6);
-
-            if (nbttaglist.tagCount() == 3)
-            {
-                this.accelerationX = nbttaglist.getDoubleAt(0);
-                this.accelerationY = nbttaglist.getDoubleAt(1);
-                this.accelerationZ = nbttaglist.getDoubleAt(2);
-            }
+           ListNBT listnbt = compound.getList("power", 6);
+           if (listnbt.size() == 3) 
+           {
+              this.accelerationX = listnbt.getDouble(0);
+              this.accelerationY = listnbt.getDouble(1);
+              this.accelerationZ = listnbt.getDouble(2);
+           }
         }
 
-        this.ticksAlive = compound.getInteger("life");
-
-        if (compound.hasKey("direction", 9) && compound.getTagList("direction", 6).tagCount() == 3)
+        this.ticksAlive = compound.getInt("life");
+        if (compound.contains("direction", 9) && compound.getList("direction", 6).size() == 3)
         {
-            NBTTagList nbttaglist1 = compound.getTagList("direction", 6);
-            this.motionX = nbttaglist1.getDoubleAt(0);
-            this.motionY = nbttaglist1.getDoubleAt(1);
-            this.motionZ = nbttaglist1.getDoubleAt(2);
-        }
+           ListNBT listnbt1 = compound.getList("direction", 6);
+           this.setMotion(listnbt1.getDouble(0), listnbt1.getDouble(1), listnbt1.getDouble(2));
+        } 
         else
         {
-            this.setDead();
+           this.remove();
         }
-    }
+     }
 
     /**
      * Returns true if other Entities should be prevented from moving through this Entity.
@@ -243,43 +214,35 @@ public class KindredLegacyFireball extends Entity
      * Called when the entity is attacked.
      */
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount)
+    public boolean attackEntityFrom(DamageSource source, float amount) 
     {
-        if (this.isEntityInvulnerable(source))
+        if (this.isInvulnerableTo(source)) 
         {
-            return false;
-        }
-        else
+           return false;
+        } 
+        else 
         {
-            this.markVelocityChanged();
+           this.markVelocityChanged();
+           if (source.getTrueSource() != null) 
+           {
+              Vec3d vec3d = source.getTrueSource().getLookVec();
+              this.setMotion(vec3d);
+              this.accelerationX = vec3d.x * 0.1D;
+              this.accelerationY = vec3d.y * 0.1D;
+              this.accelerationZ = vec3d.z * 0.1D;
+              if (source.getTrueSource() instanceof LivingEntity) 
+              {
+                 this.shootingEntity = (LivingEntity)source.getTrueSource();
+              }
 
-            if (source.getTrueSource() != null)
-            {
-                Vec3d vec3d = source.getTrueSource().getLookVec();
-
-                if (vec3d != null)
-                {
-                    this.motionX = vec3d.x;
-                    this.motionY = vec3d.y;
-                    this.motionZ = vec3d.z;
-                    this.accelerationX = this.motionX * 0.1D;
-                    this.accelerationY = this.motionY * 0.1D;
-                    this.accelerationZ = this.motionZ * 0.1D;
-                }
-
-                if (source.getTrueSource() instanceof EntityLivingBase)
-                {
-                    this.shootingEntity = (EntityLivingBase)source.getTrueSource();
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+              return true;
+           } 
+           else 
+           {
+              return false;
+           }
         }
-    }
+     }
 
     /**
      * Gets how bright this entity is.
@@ -288,12 +251,5 @@ public class KindredLegacyFireball extends Entity
     public float getBrightness()
     {
         return 1.0F;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getBrightnessForRender()
-    {
-        return 15728880;
     }
 }

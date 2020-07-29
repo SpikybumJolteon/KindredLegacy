@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:attack_boost"
+    ]
+  },
+  "criteria": {
+    "has_strength_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:strength_powder"
+          }
+        ]
+      }
+    },
+    "has_swiftness_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:swiftness_powder"
+          }
+        ]
+      }
+    },
+    "has_hunters_charge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:hunters_charge"
+          }
+        ]
+      }
+    },
+    "has_chargestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:chargestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:attack_boost"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_strength_powder",
+      "has_swiftness_powder",
+      "has_hunters_charge",
+      "has_chargestone",
+      "has_the_recipe"
+    ]
+  ]
+}

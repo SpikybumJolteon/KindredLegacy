@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/regen_cream"
+        "layer0": "kindredlegacy:item/regen_cream"
     }
 }

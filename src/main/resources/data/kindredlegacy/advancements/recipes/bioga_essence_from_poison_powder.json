@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:bioga_essence_from_poison_powder"
+    ]
+  },
+  "criteria": {
+    "has_poison_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:poison_powder"
+          }
+        ]
+      }
+    },
+    "has_life_boost": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:life_boost"
+          }
+        ]
+      }
+    },
+    "has_chargestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:chargestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:bioga_essence_from_poison_powder"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_poison_powder",
+      "has_life_boost",
+      "has_chargestone",
+      "has_the_recipe"
+    ]
+  ]
+}

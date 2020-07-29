@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/tamables/okami_umbreon_summon"
+        "layer0": "kindredlegacy:item/tamables/okami_umbreon_summon"
     }
 }

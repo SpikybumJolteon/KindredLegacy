@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/void_scissors"
+        "layer0": "kindredlegacy:item/void_scissors"
     }
 }

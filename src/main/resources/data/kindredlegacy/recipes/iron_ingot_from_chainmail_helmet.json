@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:void_scissors",
+      "data": 32767
+    },
+    {
+      "item": "minecraft:chainmail_helmet"
+    }
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot",
+    "count": 4
+  }
+}

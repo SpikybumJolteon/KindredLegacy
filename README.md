@@ -1,2 +1,2 @@
 # KindredLegacy
-Kindred Legacy-Minecraft Forge 1.12.2 gaming crossover mod with Pokemon as its focus
+Kindred Legacy-Minecraft Forge 1.15.2 gaming crossover mod with Pokemon as its focus

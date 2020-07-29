@@ -1,12 +1,12 @@
 {
     "variants": {
-        "age=0": { "model": "kindredlegacy:oranian_berry_stage_0" },
-        "age=1": { "model": "kindredlegacy:oranian_berry_stage_0" },
-        "age=2": { "model": "kindredlegacy:oranian_berry_stage_1" },
-        "age=3": { "model": "kindredlegacy:oranian_berry_stage_1" },
-        "age=4": { "model": "kindredlegacy:oranian_berry_stage_2" },
-        "age=5": { "model": "kindredlegacy:oranian_berry_stage_2" },
-        "age=6": { "model": "kindredlegacy:oranian_berry_stage_2" },
-        "age=7": { "model": "kindredlegacy:oranian_berry_stage_3" }
+        "age=0": { "model": "kindredlegacy:block/oranian_berry_stage_0" },
+        "age=1": { "model": "kindredlegacy:block/oranian_berry_stage_0" },
+        "age=2": { "model": "kindredlegacy:block/oranian_berry_stage_1" },
+        "age=3": { "model": "kindredlegacy:block/oranian_berry_stage_1" },
+        "age=4": { "model": "kindredlegacy:block/oranian_berry_stage_2" },
+        "age=5": { "model": "kindredlegacy:block/oranian_berry_stage_2" },
+        "age=6": { "model": "kindredlegacy:block/oranian_berry_stage_2" },
+        "age=7": { "model": "kindredlegacy:block/oranian_berry_stage_3" }
     }
 }

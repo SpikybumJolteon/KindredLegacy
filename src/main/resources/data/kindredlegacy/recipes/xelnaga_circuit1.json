@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "QDQ",
+    "GXG",
+    "QDQ"
+  ],
+  "key": {
+    "Q": [
+       {
+          "item": "minecraft:quartz"
+       },
+       {
+          "item": "kindredlegacy:tiberium_shard"
+       }
+    ],
+    "D": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "X": {
+      "item": "kindredlegacy:xelnaga_shard"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:xelnaga_circuit"
+  }
+}

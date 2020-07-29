@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AOA",
+    "AAA"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:melon_slice"
+    },
+    "A": {
+      "item": "kindredlegacy:aurum_dust"
+    }
+  },
+  "result": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}

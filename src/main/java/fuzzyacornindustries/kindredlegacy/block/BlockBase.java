@@ -1,44 +1,14 @@
 package fuzzyacornindustries.kindredlegacy.block;
 
-import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
-import fuzzyacornindustries.kindredlegacy.creativetab.KindredLegacyCreativeTabs;
-import fuzzyacornindustries.kindredlegacy.item.KindredLegacyItems;
-import fuzzyacornindustries.kindredlegacy.utility.IHasModel;
+import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 
-public class BlockBase extends Block implements IHasModel
+public class BlockBase extends Block
 {
-	public BlockBase(String name, Material material)
+	public BlockBase(Block.Properties propertiesBlock)
 	{
-		super(material);
-
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(KindredLegacyCreativeTabs.tabMain);
+		super(propertiesBlock);
 
 		KindredLegacyBlocks.BLOCKS.add(this);
-	}
-
-	public BlockBase(String name, Material material, SoundType sound)
-	{
-		super(material);
-
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(KindredLegacyCreativeTabs.tabMain);
-		
-		this.setSoundType(sound);
-
-		KindredLegacyBlocks.BLOCKS.add(this);
-	}
-
-	@Override
-	public void registerModels() 
-	{
-		KindredLegacyMain.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
 	}
 }

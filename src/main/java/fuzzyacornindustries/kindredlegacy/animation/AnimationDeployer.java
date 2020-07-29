@@ -2,26 +2,22 @@ package fuzzyacornindustries.kindredlegacy.animation;
 
 import java.util.HashMap;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class AnimationDeployer
 {
-	private ModelBase mainModel;
-
 	private IAnimatedEntity animatedEntity;
 
 	private HashMap<ModelRenderer, PartInfo> partInfoMap;
 
 	public static final float PI = (float)Math.PI;
 
-	public AnimationDeployer(ModelBase model) 
+	public AnimationDeployer(Model model) 
 	{
-		mainModel = model;
-
 		partInfoMap = new HashMap<ModelRenderer, PartInfo>();
 	}
 

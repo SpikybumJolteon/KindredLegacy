@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/pokemon_exploration_kit"
+        "layer0": "kindredlegacy:item/pokemon_exploration_kit"
     }
 }

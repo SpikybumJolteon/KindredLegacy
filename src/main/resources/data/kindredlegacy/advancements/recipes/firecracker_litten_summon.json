@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:firecracker_litten_summon"
+    ]
+  },
+  "criteria": {
+    "has_blessing_of_arceus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:blessing_of_arceus"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:firecracker_litten_summon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blessing_of_arceus",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/life_boost"
+        "layer0": "kindredlegacy:item/life_boost"
     }
 }

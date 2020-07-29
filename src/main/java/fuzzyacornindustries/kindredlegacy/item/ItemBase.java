@@ -1,24 +1,14 @@
 package fuzzyacornindustries.kindredlegacy.item;
 
-import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
-import fuzzyacornindustries.kindredlegacy.creativetab.KindredLegacyCreativeTabs;
-import fuzzyacornindustries.kindredlegacy.utility.IHasModel;
+import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyItems;
 import net.minecraft.item.Item;
 
-public class ItemBase extends Item implements IHasModel
+public class ItemBase extends Item
 {
-	public ItemBase(String name)
+	public ItemBase(Item.Properties properties)
 	{
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(KindredLegacyCreativeTabs.tabMain);
-
+		super(properties);
+		
 		KindredLegacyItems.ITEMS.add(this);
-	}
-
-	@Override
-	public void registerModels() 
-	{
-		KindredLegacyMain.proxy.registerItemRenderer(this, 0, "inventory");
 	}
 }

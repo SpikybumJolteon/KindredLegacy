@@ -1,6 +1,6 @@
 package fuzzyacornindustries.kindredlegacy.animation;
 
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
 public class PartAnimate

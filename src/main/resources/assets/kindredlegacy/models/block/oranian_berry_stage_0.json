@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "kindredlegacy:blocks/oranian_berry/oranian_berry_stage_0"
+        "cross": "kindredlegacy:block/oranian_berry/oranian_berry_stage_0"
     }
 }

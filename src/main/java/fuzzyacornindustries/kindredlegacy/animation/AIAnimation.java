@@ -1,22 +1,31 @@
 package fuzzyacornindustries.kindredlegacy.animation;
 
-import fuzzyacornindustries.kindredlegacy.KindredLegacyMain;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIBase;
+import java.util.EnumSet;
 
-public abstract class AIAnimation extends EntityAIBase 
+import fuzzyacornindustries.kindredlegacy.KindredLegacy;
+import fuzzyacornindustries.kindredlegacy.network.ActionAnimationMessage;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraftforge.fml.network.PacketDistributor;
+
+public abstract class AIAnimation extends Goal 
 {	
 	private IAnimatedEntity animatedEntity;
+	private MobEntity mobEntity;
+	//private int entityID;
 	
-	public AIAnimation(IAnimatedEntity entity, int mutexBits) 
+	public AIAnimation(MobEntity mobEntity, IAnimatedEntity entity, int entityID, EnumSet<Goal.Flag> mutexFlag) 
 	{
 		animatedEntity = entity;
-		setMutexBits(mutexBits);
+		this.mobEntity = mobEntity;
+		//this.entityID = entityID;
+		setMutexFlags(mutexFlag);
 	}
 	
 	public abstract int getAnimationID();
 	
-	public <T extends EntityLiving> T getEntity() 
+	public <T extends LivingEntity> T getEntity() 
 	{
 		return (T)animatedEntity;
 	}
@@ -40,7 +49,9 @@ public abstract class AIAnimation extends EntityAIBase
 	@Override
 	public void startExecuting() 
 	{
-		if(!isAutomatic()) KindredLegacyMain.sendAnimationPacket(animatedEntity, getAnimationID());
+		//if(!isAutomatic()) KindredLegacyMain.sendAnimationPacket(mobEntity, animatedEntity, getAnimationID());
+		if(!isAutomatic()) KindredLegacy.network.send(PacketDistributor.TRACKING_ENTITY.with(() -> mobEntity), new ActionAnimationMessage((byte)getAnimationID(), mobEntity.getEntityId()));
+		//animatedEntity.setAnimationTick(getAnimationID());
 		animatedEntity.setAnimationTick(0);
 	}
 
@@ -53,6 +64,8 @@ public abstract class AIAnimation extends EntityAIBase
 	@Override
 	public void resetTask() 
 	{
-		KindredLegacyMain.sendAnimationPacket(animatedEntity, 0);
+		KindredLegacy.network.send(PacketDistributor.TRACKING_ENTITY.with(() -> mobEntity), new ActionAnimationMessage((byte)0, mobEntity.getEntityId()));
+		animatedEntity.setAnimationID(0);
+		//KindredLegacyMain.sendAnimationPacket(mobEntity, animatedEntity, 0);
 	}
 }

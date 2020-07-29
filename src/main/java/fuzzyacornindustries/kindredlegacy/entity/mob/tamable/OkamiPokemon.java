@@ -1,27 +1,25 @@
 package fuzzyacornindustries.kindredlegacy.entity.mob.tamable;
 
 import fuzzyacornindustries.kindredlegacy.animation.IdleAnimationClock;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 public class OkamiPokemon extends TamablePokemon implements IRangedAttackMob
 {
 	public IdleAnimationClock bodyIdleAnimationClock;
 
-	public OkamiPokemon(World par1World)
+	public OkamiPokemon(EntityType<? extends OkamiPokemon> type, World world)
 	{
-		super(par1World);
+		super(type, world);
 	}
 	
 	@Override
-	public void attackEntityWithRangedAttack(EntityLivingBase entityLivingBasePar, float p_82196_2_) 
+	public void attackEntityWithRangedAttack(LivingEntity entityLivingBasePar, float distanceFactor) 
 	{
 		
 	}
-
-	@Override
-	public void setSwingingArms(boolean swingingArms) {}
 
 	public IdleAnimationClock getIdleAnimationClockBody()
 	{

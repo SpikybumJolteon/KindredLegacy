@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/tamables/feywood_absol_summon"
+        "layer0": "kindredlegacy:item/tamables/feywood_absol_summon"
     }
 }

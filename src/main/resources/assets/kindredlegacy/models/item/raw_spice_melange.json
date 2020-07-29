@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/raw_spice_melange"
+        "layer0": "kindredlegacy:item/raw_spice_melange"
     }
 }

@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:speed_boost"
+    ]
+  },
+  "criteria": {
+    "has_leaping_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:leaping_powder"
+          }
+        ]
+      }
+    },
+    "has_swiftness_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:swiftness_powder"
+          }
+        ]
+      }
+    },
+    "has_raw_spice_melange": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:raw_spice_melange"
+          }
+        ]
+      }
+    },
+    "has_chargestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:chargestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:speed_boost"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leaping_powder",
+      "has_swiftness_powder",
+      "has_raw_spice_melange",
+      "has_chargestone",
+      "has_the_recipe"
+    ]
+  ]
+}

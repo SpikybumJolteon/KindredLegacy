@@ -3,26 +3,28 @@ package fuzzyacornindustries.kindredlegacy.entity.mob.hostile;
 import fuzzyacornindustries.kindredlegacy.animation.IAdvAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.client.KindredLegacySoundEvents;
-import fuzzyacornindustries.kindredlegacy.entity.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IGravityTracker;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IMobMotionTracker;
-import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAnimatedEntity, IMobMotionTracker, IGravityTracker
+public class HostilePokemon extends MonsterEntity implements IAnimatedEntity, IAdvAnimatedEntity, IMobMotionTracker, IGravityTracker
 {
-	protected static final DataParameter<Boolean> IS_AGGROED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
-	protected static final DataParameter<Boolean> IS_MOUNTED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
-	
+	protected static final DataParameter<Boolean> IS_AGGROED = EntityDataManager.<Boolean>createKey(HostilePokemon.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> IS_MOUNTED = EntityDataManager.<Boolean>createKey(HostilePokemon.class, DataSerializers.BOOLEAN);
+
 	public float previousYaw[] = new float[6];
 	public float changeInYaw;
 	public float totalChangeInYaw;
@@ -37,14 +39,14 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 	public float targetingAggroValue = 0F;
 	public boolean isMounted = false;
 	public float mountedValue = 0F;
-	
+
 	public double worldGravity;
 
 	public static final int actionIDNone = 0;
 
-	public HostilePokemon(World world)
+	public HostilePokemon(EntityType<? extends MonsterEntity> type, World world)
 	{
-		super(world);
+		super(type, world);
 
 		animationID = actionIDNone;
 		animationTick = 0;
@@ -61,26 +63,25 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 
 			for(int i = 0; i < previousHeight.length; i++)
 			{
-				previousHeight[i] = (float)this.posY;
+				previousHeight[i] = (float)this.getPosY();
 			}
 
 			changeInHeight = 0;
 		}
 	}
-	
-	@Override
-	protected void entityInit()
-	{
-		super.entityInit();
 
-		this.dataManager.register(IS_AGGROED, Boolean.valueOf(false));
-		this.dataManager.register(IS_MOUNTED, Boolean.valueOf(false));		
-	}
-	
 	@Override
-	public void onUpdate()
+	protected void registerData() 
 	{
-		super.onUpdate();
+		super.registerData();
+		this.getDataManager().register(IS_AGGROED, Boolean.valueOf(false));
+		this.getDataManager().register(IS_MOUNTED, Boolean.valueOf(false));
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
 
 		if(!this.world.isRemote)
 		{
@@ -97,9 +98,9 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 	}
 
 	@Override
-	public void onLivingUpdate()
+	public void livingTick()
 	{
-		super.onLivingUpdate();
+		super.livingTick();
 
 		if(this.world.isRemote)
 		{
@@ -140,7 +141,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 			//System.out.println( Float.toString( averagePreviousYaw ) );
 			//System.out.println( Float.toString( changeInYaw ) );
 
-			float currentHeight = (float)this.posY;
+			float currentHeight = (float)this.getPosY();
 
 			float sum2 = 0;
 			for (float d : previousHeight) sum2 += d;
@@ -156,7 +157,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 			previousHeight[0] = currentHeight;
 		}
 	}
-	
+
 	public void checkAggro()
 	{
 		if(this.getAttackTarget() != null)
@@ -174,7 +175,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 			}
 		}
 	}
-	
+
 	public boolean getIsAggroed()
 	{
 		return this.dataManager.get(IS_AGGROED).booleanValue();
@@ -184,7 +185,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 	{
 		this.dataManager.set(IS_AGGROED, isAggroed);
 	}
-	
+
 	@Override
 	public float getAggroValue()
 	{
@@ -208,7 +209,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 				this.targetingAggroValue = 0F;
 		}
 	}
-	
+
 	public void checkMounted()
 	{
 		if(this.isBeingRidden())
@@ -231,18 +232,18 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 	{
 		this.dataManager.set(IS_MOUNTED, isMounted);
 	}
-	
+
 	public boolean getIsMounted()
 	{
 		return this.dataManager.get(IS_MOUNTED).booleanValue();
 	}
-	
+
 	@Override
 	public float getMountedValue()
 	{
 		return this.mountedValue;
 	}
-	
+
 	public void calculateMountedValue()
 	{
 		if(this.isMounted)
@@ -261,46 +262,46 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 		}
 	}
 	
-	public void playIgniteSound(EntityLivingBase targetEntity)
+	public void playIgniteSound(LivingEntity targetEntity)
 	{
-		this.world.playSound((EntityPlayer)null, targetEntity.posX, targetEntity.posY, targetEntity.posZ, KindredLegacySoundEvents.IGNITE, SoundCategory.HOSTILE, 1.2F, 1.0F / (this.world.rand.nextFloat() * 0.4F + 0.8F));
+		this.world.playSound((PlayerEntity)null, targetEntity.getPosX(), targetEntity.getPosY(), targetEntity.getPosZ(), KindredLegacySoundEvents.IGNITE, SoundCategory.AMBIENT, 1.2F, 1.0F / (this.world.rand.nextFloat() * 0.4F + 0.8F));
 	}
 
-	public void playBioSound(EntityLivingBase targetEntity)
+	public void playBioSound(LivingEntity targetEntity)
 	{
-		this.world.playSound((EntityPlayer)null, targetEntity.posX, targetEntity.posY, targetEntity.posZ, KindredLegacySoundEvents.BIO, SoundCategory.HOSTILE, 1.0F, 1.2F / (this.world.rand.nextFloat() * 0.4F + 0.8F));
+		this.world.playSound((PlayerEntity)null, targetEntity.getPosX(), targetEntity.getPosY(), targetEntity.getPosZ(), KindredLegacySoundEvents.BIO, SoundCategory.AMBIENT, 1.0F, 1.2F / (this.world.rand.nextFloat() * 0.4F + 0.8F));
 	}
 
 	@Override
-	public boolean getCanSpawnHere()
+	public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) 
 	{
-		if(this.world.provider.getDimension() == 0)
+		//if(MonsterEntity.isValidLightLevel(worldIn, getPosition(), this.rand))
+		if(MonsterEntity.func_223325_c((EntityType<? extends MonsterEntity>) this.getType(), worldIn, spawnReasonIn, getPosition(), this.rand))
 		{
-			return super.getCanSpawnHere();
+			if(this.world.getDimension().getType() == DimensionType.OVERWORLD)
+			{
+				return super.canSpawn(worldIn, spawnReasonIn);
+			}
+			else if(cancelNetherSpawns())
+			{
+				return false;
+			}
+			else if(cancelEndSpawns())
+			{
+				return false;
+			}
+			else
+			{
+				return super.canSpawn(worldIn, spawnReasonIn);
+			}
 		}
-		else if(cancelNetherSpawns())
-		{
-			return false;
-		}
-		else if(cancelEndSpawns())
-		{
-			return false;
-		}
-		else if(cancelOtherDimensionSpawns())
-		{
-			return false;
-		}
-		else
-		{
-			return super.getCanSpawnHere();
-		}
+
+		return false;
 	}
 
 	public boolean cancelNetherSpawns()
 	{
-		int dimensionNumber = this.world.provider.getDimension();
-
-		if(dimensionNumber == -1)
+		if(this.world.getDimension().getType() == DimensionType.THE_NETHER)
 		{
 			return true;
 		}
@@ -310,9 +311,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 
 	public boolean cancelEndSpawns()
 	{
-		int dimensionNumber = this.world.provider.getDimension();
-
-		if(dimensionNumber == 1)
+		if(this.world.getDimension().getType() == DimensionType.THE_END)
 		{
 			return true;
 		}
@@ -320,6 +319,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 		return false;
 	}
 
+	/*
 	public boolean cancelOtherDimensionSpawns()
 	{
 		if(KindredLegacyEntities.dimensionSpawnsDisablerList != null)
@@ -332,7 +332,7 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 		}
 
 		return false;
-	}
+	}*/
 
 	@Override
 	public float getGravityFactor()
@@ -363,10 +363,10 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 	/************************************
 	 * Animation dependent code follows.*
 	 ************************************/
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void incrementPartClocks() {}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getAngularVelocity()
 	{	
 		float angularVelocity = changeInYaw;
@@ -382,13 +382,13 @@ public class HostilePokemon extends EntityMob implements IAnimatedEntity, IAdvAn
 		return angularVelocity;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getTotalAngularChange()
 	{
 		return totalChangeInYaw;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getHeightVelocity()
 	{	
 		float verticalVelocity = changeInHeight;

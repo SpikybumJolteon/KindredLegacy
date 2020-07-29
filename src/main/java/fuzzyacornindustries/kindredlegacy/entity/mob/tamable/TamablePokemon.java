@@ -4,45 +4,45 @@ import fuzzyacornindustries.kindredlegacy.animation.IAdvAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.animation.IAnimatedEntity;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IGravityTracker;
 import fuzzyacornindustries.kindredlegacy.entity.mob.IMobMotionTracker;
-import fuzzyacornindustries.kindredlegacy.item.BerryItem;
-import io.netty.buffer.ByteBuf;
-import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLivingBase;
+import fuzzyacornindustries.kindredlegacy.item.tamable.BerryItem;
+import fuzzyacornindustries.kindredlegacy.item.tamable.IBoostItem;
+import fuzzyacornindustries.kindredlegacy.item.tamable.IEssenceItem;
+import fuzzyacornindustries.kindredlegacy.item.tamable.IPowerUp;
+import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyItems;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.monster.GhastEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.Optional.Method;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Optional.Interface(iface="micdoodle8.mods.galacticraft.api.entity.IEntityBreathable", modid="galacticraftcore", striprefs=true)
-public class TamablePokemon extends EntityTameable implements IEntityAdditionalSpawnData, IAnimatedEntity, IAdvAnimatedEntity, IMobMotionTracker, IGravityTracker, IEntityBreathable
+public class TamablePokemon extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity, IAdvAnimatedEntity, IMobMotionTracker, IGravityTracker
 {	
 	protected static final DataParameter<Float> CURRENT_HEALTH = EntityDataManager.<Float>createKey(TamablePokemon.class, DataSerializers.FLOAT);
 
@@ -68,10 +68,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	protected static final DataParameter<Boolean> IS_AGGROED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
 	protected static final DataParameter<Boolean> IS_MOUNTED = EntityDataManager.<Boolean>createKey(TamablePokemon.class, DataSerializers.BOOLEAN);
 
-	protected static final int NO_BOOST_POWER_ID = 0;
-	protected static final int SPICE_MELANGE_POWER_ID = 1;
+	protected final int NO_BOOST_POWER_ID = 0;
+	protected final int SPICE_MELANGE_POWER_ID = 1;
 
-	private EntityAINearestAttackableTarget<EntityMob> beserkAIMobs;
+	private NearestAttackableTargetGoal<MonsterEntity> beserkAIMobs;
 
 	private String poketamableName;
 
@@ -108,9 +108,21 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	private float headRotationCourse;
 	private float headRotationCourseOld;
 
-	public TamablePokemon(World par1World)
+	public static float defaultBaseAttackPower;
+	public static float defaultBaseMaxHealth;
+	public static float defaultBaseSpeed;
+
+	public static int defaultRegenLevel;
+
+	public static float defaultMaximumAttackBoost;
+	public static float defaultMaximumHealthBoost;
+	public static float defaultMaximumSpeedBoost;
+
+	public static int defaultArmor;
+	
+	public TamablePokemon(EntityType<? extends TameableEntity> type, World world)
 	{
-		super(par1World);
+		super(type, world);
 
 		poketamableName = "";
 
@@ -131,38 +143,51 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 			for(int i = 0; i < previousHeight.length; i++)
 			{
-				previousHeight[i] = (float)this.posY;
+				previousHeight[i] = (float)this.getPosY();
 			}
 
 			changeInHeight = 0;
 		}
 	}
+	
+	public void setDefaultStats() {}
 
 	@Override
-	protected void entityInit()
+	protected void registerAttributes()
 	{
-		super.entityInit();
+		super.registerAttributes();
+		
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getDefaultBaseSpeed());
+		this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
+	}
+	
+	@Override
+	protected void registerData() 
+	{
+		super.registerData();
 
+		setDefaultStats();
+		
 		this.dataManager.register(CURRENT_HEALTH, Float.valueOf(this.getHealth()));
 
-		this.dataManager.register(TEXTURE, Byte.valueOf(Byte.valueOf((byte)0)));
-		this.dataManager.register(SOUND, Byte.valueOf(Byte.valueOf((byte)0)));
+		this.dataManager.register(TEXTURE, Byte.valueOf((byte)0));
+		this.dataManager.register(SOUND, Byte.valueOf((byte)0));
 
 		this.dataManager.register(MAX_HEALTH, Float.valueOf((float)0));
 		this.dataManager.register(ATTACK_POWER, Float.valueOf((float)0));
 		this.dataManager.register(SPEED, Float.valueOf((float)0));
 
-		this.dataManager.register(FIRE_IMMUNITY, Byte.valueOf(Byte.valueOf((byte)0)));
-		this.dataManager.register(DROWNING_IMMUNITY, Byte.valueOf(Byte.valueOf((byte)0)));
-		this.dataManager.register(FALL_DAMAGE_IMMUNITY, Byte.valueOf(Byte.valueOf((byte)0)));
-		this.dataManager.register(BLOCK_SUFFOCATION_AVOIDANCE, Byte.valueOf(Byte.valueOf((byte)0)));
-		this.dataManager.register(TOXIN_IMMUNITY, Byte.valueOf(Byte.valueOf((byte)0)));
+		this.dataManager.register(FIRE_IMMUNITY, Byte.valueOf((byte)0));
+		this.dataManager.register(DROWNING_IMMUNITY, Byte.valueOf((byte)0));
+		this.dataManager.register(FALL_DAMAGE_IMMUNITY, Byte.valueOf((byte)0));
+		this.dataManager.register(BLOCK_SUFFOCATION_AVOIDANCE, Byte.valueOf((byte)0));
+		this.dataManager.register(TOXIN_IMMUNITY, Byte.valueOf((byte)0));
 
-		this.dataManager.register(REGEN_LEVEL, Byte.valueOf(Byte.valueOf((byte)0)));
+		this.dataManager.register(REGEN_LEVEL, Byte.valueOf((byte)0));
 
-		this.dataManager.register(BOOST_POWER, Byte.valueOf(Byte.valueOf((byte)0)));
+		this.dataManager.register(BOOST_POWER, Byte.valueOf((byte)0));
 
-		this.dataManager.register(SPACE_SURVIVALBILITY, Byte.valueOf(Byte.valueOf((byte)0)));
+		this.dataManager.register(SPACE_SURVIVALBILITY, Byte.valueOf((byte)0));
 
 		this.dataManager.register(IS_AGGROED, Boolean.valueOf(false));
 		this.dataManager.register(IS_MOUNTED, Boolean.valueOf(false));		
@@ -177,7 +202,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	{
 		this.dataManager.set(MAX_HEALTH, Float.valueOf(newMaxHealth));
 
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)newMaxHealth);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)newMaxHealth);
 	}
 
 	public float getAttackPower()
@@ -211,7 +236,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	{
 		this.dataManager.set(SPEED, Float.valueOf(newMaxSpeed));
 
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)newMaxSpeed);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)newMaxSpeed);
 	}
 
 	public int hasFireImmunityEssence()
@@ -225,14 +250,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		if(activateFireImmunityEssence == 1)
 		{
 			this.dataManager.set(FIRE_IMMUNITY, (byte)1);
-
-			this.isImmuneToFire = true;
 		}
 		else
 		{
 			this.dataManager.set(FIRE_IMMUNITY, (byte)0);
-
-			this.isImmuneToFire = false;
 		}
 	}
 
@@ -347,37 +368,123 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	}
 
 	@Override
-	public void writeSpawnData(ByteBuf data)
+	public void writeSpawnData(PacketBuffer buffer)
 	{
-		ByteBufUtils.writeUTF8String(data, poketamableName);
+		buffer.writeString(poketamableName);
 	}
 
 	@Override
-	public void readSpawnData(ByteBuf data)
+	public void readSpawnData(PacketBuffer buffer)
 	{
-		poketamableName = ByteBufUtils.readUTF8String(data);
+		poketamableName = buffer.readString();
 	}
-
+/*
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return new TextComponentTranslation(poketamableName);
+		return new StringTextComponent(poketamableName);
 	}
 
 	/**
 	 * Used by Renderer to display Poketamable Name
-	 */
+	 *//*
 	@Override
-	public String getName()
+	public ITextComponent getName()
 	{
-		return poketamableName;
-	}
+		return new StringTextComponent(poketamableName);
+	}*/
 
 	public void setMobName(String name)
 	{
 		this.poketamableName = name;
 	}
+	
+	public String getTamableName()
+	{
+		return this.poketamableName;
+	}
 
+	public void setDefaultBaseAttackPower(float value)
+	{
+		defaultBaseAttackPower = value;
+	}
+	
+	public static float getDefaultBaseAttackPower()
+	{
+		return defaultBaseAttackPower;
+	}
+
+	public void setDefaultBaseMaxHealth(float value)
+	{
+		defaultBaseMaxHealth = value;
+	}
+	
+	public static float getDefaultBaseMaxHealth()
+	{
+		return defaultBaseMaxHealth;
+	}
+
+	public void setDefaultBaseSpeed(float value)
+	{
+		defaultBaseSpeed = value;
+	}
+	
+	public static float getDefaultBaseSpeed()
+	{
+		return defaultBaseSpeed;
+	}
+
+	public void setDefaultRegenLevel(int value)
+	{
+		defaultRegenLevel = value;
+	}
+	
+	public static int getDefaultRegenLevel()
+	{
+		return defaultRegenLevel;
+	}
+
+	public void setDefaultMaximumAttackBoost(float value)
+	{
+		defaultMaximumAttackBoost = value;
+	}
+	
+	public float getDefaultMaximumAttackBoost()
+	{
+		return defaultMaximumAttackBoost;
+	}
+
+	public void setDefaultMaximumHealthBoost(float value)
+	{
+		defaultMaximumHealthBoost = value;
+	}
+	
+	public float getDefaultMaximumHealthBoost()
+	{
+		return defaultMaximumHealthBoost;
+	}
+
+	public void setDefaultMaximumSpeedBoost(float value)
+	{
+		defaultMaximumSpeedBoost = value;
+	}
+	
+	public float getDefaultMaximumSpeedBoost()
+	{
+		return defaultMaximumSpeedBoost;
+	}
+
+	public void setDefaultArmor(int value)
+	{
+		defaultArmor = value;
+	}
+	
+	@Override
+	public int getTotalArmorValue()
+	{
+		return defaultArmor;
+	}
+	
 	@Override
 	protected int decreaseAirSupply(int currentAirSupply)
 	{
@@ -392,32 +499,20 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	}
 
 	@Override
-	public void fall(float distance, float damageMultiplier)
+	public boolean onLivingFall(float distance, float damageMultiplier)
 	{
 		if(this.hasFallImmunityEssence() != 1)
 		{
-			super.fall(distance, damageMultiplier);
+			return super.onLivingFall(distance, damageMultiplier);
 		}
-	}
 
-	@Method(modid="galacticraftcore")
-	@Override
-	public boolean canBreath()
-	{
-		if(this.hasSpaceSurvivabilityEssence() == 1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	@Override
-	public void onUpdate()
+	public void tick()
 	{
-		super.onUpdate();
+		super.tick();
 
 		this.headRotationCourseOld = this.headRotationCourse;
 
@@ -433,12 +528,16 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			calculateAggroValue();
 			calculateMountedValue();
 		}
+
+		if(animationID != 0) animationTick++;
+
+		toggleHappiness();
 	}
 
 	@Override
-	public void onLivingUpdate()
+	public void livingTick()
 	{
-		super.onLivingUpdate();
+		super.livingTick();
 
 		if(this.world.isRemote)
 		{
@@ -479,7 +578,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			//System.out.println( Float.toString( averagePreviousYaw ) );
 			//System.out.println( Float.toString( changeInYaw ) );
 
-			float currentHeight = (float)this.posY;
+			float currentHeight = (float)this.getPosY();
 
 			float sum2 = 0;
 			for (float d : previousHeight) sum2 += d;
@@ -493,13 +592,15 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			}
 
 			previousHeight[0] = currentHeight;
+
+			applyCurrentTexture();
 		}
 
 		if (!this.world.isRemote)
 		{
-			if(this.isEntityAlive() && this.isEntityInsideOpaqueBlock() && this.hasBlockSuffocationAvoidanceEssence() == 1)
+			if(this.isAlive() && this.isEntityInsideOpaqueBlock() && this.hasBlockSuffocationAvoidanceEssence() == 1)
 			{
-				EntityLivingBase theOwner = this.getOwner();
+				LivingEntity theOwner = this.getOwner();
 
 				if (theOwner != null)
 				{
@@ -513,7 +614,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			handleBeserkAI();
 		}
 
-		if(this.getHealth() < (float)this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue())
+		if(this.getHealth() < (float)this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue())
 		{
 			if(this.isSitting() == true)
 			{
@@ -563,7 +664,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 	public void checkAggro()
 	{
-		if(this.getAttackTarget() != null && this.getAttackTarget().isEntityAlive())
+		if(this.getAttackTarget() != null && this.getAttackTarget().isAlive())
 		{
 			if(!getIsAggroed())
 			{
@@ -620,7 +721,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			if(!getIsMounted())
 			{
 				setMounted(true);
-				
+
 				removeAttackAITasks();
 			}
 		}
@@ -629,9 +730,9 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			if(getIsMounted())
 			{
 				setMounted(false);
-				
+
 				addAttackAITasks();
-				
+
 				this.setAttackTarget(null);
 			}
 		}
@@ -675,117 +776,117 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 	public void removeAttackAITasks() {}
 
-	public void teleportToOwner(EntityLivingBase theOwner)
+	public void teleportToOwner(LivingEntity theOwner)
 	{
-		double i = MathHelper.floor(theOwner.posX);
-		double j = MathHelper.floor(theOwner.posZ);
-		double k = MathHelper.floor(theOwner.getEntityBoundingBox().minY);
+		double i = MathHelper.floor(theOwner.getPosX());
+		double j = MathHelper.floor(theOwner.getPosZ());
+		double k = MathHelper.floor(theOwner.getBoundingBox().minY);
 
-		boolean flag = this.attemptTeleport(i, k, j);
+		this.attemptTeleport(i, k, j, true);
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt)
+	public void read(CompoundNBT nbt)
 	{
-		super.readEntityFromNBT(nbt);
+		super.read(nbt);
 
 		this.poketamableName = nbt.getString("petName");
 
-		if (nbt.hasKey("MaximumHealth", 99))
+		if (nbt.contains("MaximumHealth", 99))
 		{
 			float b0 = nbt.getFloat("MaximumHealth");
 			this.setMaximumHealth(b0);
 		}
 
-		if (nbt.hasKey("AttackPower", 99))
+		if (nbt.contains("AttackPower", 99))
 		{
 			float b0 = nbt.getFloat("AttackPower");
 			this.setAttackPower(b0);
 		}
 
-		if (nbt.hasKey("Speed", 99))
+		if (nbt.contains("Speed", 99))
 		{
 			float b0 = nbt.getFloat("Speed");
 			this.setSpeed(b0);
 		}
 
-		if (nbt.hasKey("FireImmunity", 99))
+		if (nbt.contains("FireImmunity", 99))
 		{
-			int b0 = nbt.getInteger("FireImmunity");
+			int b0 = nbt.getInt("FireImmunity");
 			this.setFireImmunityEssence(b0);
 		}
 
-		if (nbt.hasKey("DrowningImmunity", 99))
+		if (nbt.contains("DrowningImmunity", 99))
 		{
-			int b0 = nbt.getInteger("DrowningImmunity");
+			int b0 = nbt.getInt("DrowningImmunity");
 			this.setDrowningImmunityEssence(b0);
 		}
 
-		if (nbt.hasKey("FallImmunity", 99))
+		if (nbt.contains("FallImmunity", 99))
 		{
-			int b0 = nbt.getInteger("FallImmunity");
+			int b0 = nbt.getInt("FallImmunity");
 			this.setFallImmunityEssence(b0);
 		}
 
-		if (nbt.hasKey("BlockSuffacationAvoidance", 99))
+		if (nbt.contains("BlockSuffacationAvoidance", 99))
 		{
-			int b0 = nbt.getInteger("BlockSuffacationAvoidance");
+			int b0 = nbt.getInt("BlockSuffacationAvoidance");
 			this.setBlockSuffocationAvoidanceEssence(b0);
 		}
 
-		if (nbt.hasKey("ToxinImmunity", 99))
+		if (nbt.contains("ToxinImmunity", 99))
 		{
-			int b0 = nbt.getInteger("ToxinImmunity");
+			int b0 = nbt.getInt("ToxinImmunity");
 			this.setToxinImmunityEssence(b0);
 		}
 
-		if (nbt.hasKey("SpaceSurvivability", 99))
+		if (nbt.contains("SpaceSurvivability", 99))
 		{
-			int b0 = nbt.getInteger("SpaceSurvivability");
+			int b0 = nbt.getInt("SpaceSurvivability");
 			this.setSpaceSurvivabilityEssence(b0);
 		}
 
-		if (nbt.hasKey("RegenLevel", 99))
+		if (nbt.contains("RegenLevel", 99))
 		{
-			int b0 = nbt.getInteger("RegenLevel");
+			int b0 = nbt.getInt("RegenLevel");
 			this.setRegenLevel(b0);
 		}
 
-		if (nbt.hasKey("BoostPower", 99))
+		if (nbt.contains("BoostPower", 99))
 		{
-			int b0 = nbt.getInteger("BoostPower");
+			int b0 = nbt.getInt("BoostPower");
 			this.setBoostPowerType(b0);
 		}
 
-		if (nbt.hasKey("BoostPowerTime", 99))
+		if (nbt.contains("BoostPowerTime", 99))
 		{
-			int b0 = nbt.getInteger("BoostPowerTime");
+			int b0 = nbt.getInt("BoostPowerTime");
 			this.boostPowerTimer = b0;
 		}
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt)
+	public void writeAdditional(CompoundNBT nbt)
 	{
-		super.writeEntityToNBT(nbt);
+		super.writeAdditional(nbt);
 
-		nbt.setString("petName", this.poketamableName);
+		nbt.putString("petName", this.poketamableName);
 
-		nbt.setFloat("MaximumHealth", (float)this.getMaximumHealth());
-		nbt.setFloat("AttackPower", (float)this.getAttackPower());
-		nbt.setFloat("Speed", (float)this.getSpeed());
-		nbt.setInteger("FireImmunity", (int)this.hasFireImmunityEssence());
-		nbt.setInteger("DrowningImmunity", (int)this.hasDrowningImmunityEssence());
-		nbt.setInteger("FallImmunity", (int)this.hasFallImmunityEssence());
-		nbt.setInteger("BlockSuffacationAvoidance", (int)this.hasBlockSuffocationAvoidanceEssence());
-		nbt.setInteger("ToxinImmunity", (int)this.hasToxinImmunityEssence());
+		nbt.putFloat("MaximumHealth", (float)this.getMaximumHealth());
+		nbt.putFloat("AttackPower", (float)this.getAttackPower());
+		nbt.putFloat("Speed", (float)this.getSpeed());
+		nbt.putInt("FireImmunity", (int)this.hasFireImmunityEssence());
+		nbt.putInt("DrowningImmunity", (int)this.hasDrowningImmunityEssence());
+		nbt.putInt("FallImmunity", (int)this.hasFallImmunityEssence());
+		nbt.putInt("BlockSuffacationAvoidance", (int)this.hasBlockSuffocationAvoidanceEssence());
+		nbt.putInt("ToxinImmunity", (int)this.hasToxinImmunityEssence());
 
-		nbt.setInteger("SpaceSurvivability", (int)this.hasSpaceSurvivabilityEssence());
+		nbt.putInt("SpaceSurvivability", (int)this.hasSpaceSurvivabilityEssence());
 
-		nbt.setInteger("RegenLevel", (int)this.getRegenLevel());
+		nbt.putInt("RegenLevel", (int)this.getRegenLevel());
 
-		nbt.setInteger("BoostPower", (int)this.getBoostPowerType());
-		nbt.setInteger("BoostPowerTime", this.boostPowerTimer);
+		nbt.putInt("BoostPower", (int)this.getBoostPowerType());
+		nbt.putInt("BoostPowerTime", this.boostPowerTimer);
 	}
 
 	public int getMainTextureType()
@@ -804,7 +905,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		{
 			setMainTextureType(0);
 		}
-		else if(this.getHealth() < ((float)this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() / 4))
+		else if(this.getHealth() < ((float)this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() / 4))
 		{
 			setMainTextureType(1);
 		}
@@ -841,7 +942,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	}
 
 	@Override
-	protected void playStepSound(BlockPos pos, Block blockIn)
+	protected void playStepSound(BlockPos pos, BlockState blockIn) 
 	{
 		this.playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
 	}
@@ -880,13 +981,13 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		return this.isSitting() ? 20 : super.getVerticalFaceSpeed();
 	}
 
-	public boolean berryHeal(EntityPlayer par1EntityPlayer, float healthMaximum, BerryItem berry)
+	public boolean berryHeal(PlayerEntity par1EntityPlayer, float healthMaximum, BerryItem berry)
 	{
 		boolean decreaseBerryItemstack = false;
 
 		float oldHealthAmount = this.getHealth();
 
-		if (!par1EntityPlayer.capabilities.isCreativeMode)
+		if (!par1EntityPlayer.abilities.isCreativeMode)
 		{
 			decreaseBerryItemstack = true;
 		}
@@ -937,19 +1038,19 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		return decreaseBerryItemstack;
 	}
 
-	public void decreasePlayerItemStack(EntityPlayer player, ItemStack itemstack)
+	public void decreasePlayerItemStack(PlayerEntity player, ItemStack itemstack)
 	{
-		if (!player.capabilities.isCreativeMode)
+		if (!player.abilities.isCreativeMode)
 		{
 			itemstack.shrink(1); // Decrease itemStack by 1
 		}
 	}
 
-	public void activateHealthRegen(EntityPlayer player, ItemStack itemstack)
+	public void activateHealthRegen(PlayerEntity player, ItemStack itemstack)
 	{
 		int durationSeconds = 300;
 
-		this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, durationSeconds * 20, 0));
+		this.addPotionEffect(new EffectInstance(Effects.REGENERATION, durationSeconds * 20, 0));
 
 		decreasePlayerItemStack(player, itemstack);
 
@@ -960,13 +1061,13 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyLifeBoost(EntityPlayer player, ItemStack itemstack)
+	public void applyLifeBoost(PlayerEntity player, ItemStack itemstack)
 	{
 		if(!this.world.isRemote)
 		{
 			this.setMaximumHealth(this.getMaximumHealth() + 1F);
 
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)this.getMaximumHealth());
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue((double)this.getMaximumHealth());
 		}
 
 		this.heal(1F);
@@ -983,7 +1084,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		isHappy = true;
 	}
 
-	public void applyFiragaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyFiragaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setFireImmunityEssence(1);
 
@@ -999,7 +1100,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyWatergaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyWatergaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setDrowningImmunityEssence(1);
 
@@ -1015,7 +1116,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyGravigaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyGravigaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setFallImmunityEssence(1);
 
@@ -1031,7 +1132,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyQuakagaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyQuakagaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setBlockSuffocationAvoidanceEssence(1);
 
@@ -1047,7 +1148,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyBiogaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyBiogaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setToxinImmunityEssence(1);
 
@@ -1063,7 +1164,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyCometEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyCometEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setSpaceSurvivabilityEssence(1);
 
@@ -1079,7 +1180,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyCuragaEssence(EntityPlayer player, ItemStack itemstack)
+	public void applyCuragaEssence(PlayerEntity player, ItemStack itemstack)
 	{
 		this.setRegenLevel(this.getRegenLevel() + 1);
 
@@ -1095,7 +1196,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	public void applyAttackBoost(EntityPlayer player, ItemStack itemstack)
+	public void applyAttackBoost(PlayerEntity player, ItemStack itemstack)
 	{
 		if(!this.world.isRemote)
 		{
@@ -1104,7 +1205,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 
 		if(this.world.isRemote)
 		{
-			spawnAttackChargeParticles(4);
+			spawnFlameParticles(4);
 
 			spawnHeartParticles(1);
 		}
@@ -1114,7 +1215,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		isHappy = true;
 	}
 
-	public void applySpeedBoost(EntityPlayer player, ItemStack itemstack)
+	public void applySpeedBoost(PlayerEntity player, ItemStack itemstack)
 	{
 		if(!this.world.isRemote)
 		{
@@ -1133,107 +1234,98 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		isHappy = true;
 	}
 
-	@SideOnly(Side.CLIENT)
-	private void spawnParticles(EnumParticleTypes particleType)
+	@OnlyIn(Dist.CLIENT)
+	private void spawnParticles(BasicParticleType particle)
 	{
 		double d0 = this.rand.nextGaussian() * 0.02D;
 		double d1 = this.rand.nextGaussian() * 0.02D;
 		double d2 = this.rand.nextGaussian() * 0.02D;
 
-		this.world.spawnParticle(particleType, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2, new int[0]);
+		this.world.addParticle(particle, this.getPosX() + (double)(this.rand.nextFloat() * this.getWidth() * 2.0F) - (double)this.getWidth(), this.getPosY() + (double)(this.rand.nextFloat() * this.getHeight()), this.getPosZ() + (double)(this.rand.nextFloat() * this.getWidth() * 2.0F) - (double)this.getWidth(), d0, d1, d2);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnHealParticles(float healAmount)
 	{
 		for (int i = 0; i < (int)healAmount; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.VILLAGER_HAPPY);
+			this.spawnParticles(ParticleTypes.HAPPY_VILLAGER);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void spawnAttackChargeParticles(int numOfParticles)
-	{
-		for (int i = 0; i < numOfParticles; ++i)
-		{
-			this.spawnParticles(EnumParticleTypes.REDSTONE);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnHeartParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.HEART);
+			this.spawnParticles(ParticleTypes.HEART);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnFlameParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.FLAME);
+			this.spawnParticles(ParticleTypes.FLAME);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnBubbleParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.WATER_SPLASH);
+			this.spawnParticles(ParticleTypes.SPLASH);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnPortalParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.PORTAL);
+			this.spawnParticles(ParticleTypes.PORTAL);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnMagicCritParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.CRIT_MAGIC);
+			this.spawnParticles(ParticleTypes.CRIT);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void spawnAngerParticles(int numOfParticles)
 	{
 		for (int i = 0; i < numOfParticles; ++i)
 		{
-			this.spawnParticles(EnumParticleTypes.VILLAGER_ANGRY);
+			this.spawnParticles(ParticleTypes.ANGRY_VILLAGER);
 		}
 	}
 
 	public void applySit()
 	{
-		this.aiSit.setSitting(!this.isSitting());
+		this.sitGoal.setSitting(!this.isSitting());
 		this.isJumping = false;
 		this.navigator.clearPath();
-		this.setAttackTarget((EntityLivingBase)null);
+		this.setAttackTarget((LivingEntity)null);
 	}
 
 	/**
 	 * Returns true if this entity can attack entities of the specified class.
 	 */
 	@Override
-	public boolean canAttackClass(Class par1Class)
+	public boolean canAttack(EntityType<?> typeIn)
 	{
-		return EntityCreeper.class != par1Class && EntityGhast.class != par1Class && EntityVillager.class != par1Class && EntityPlayer.class != par1Class && TamablePokemon.class != par1Class;
+		return EntityType.GHAST != typeIn && EntityType.VILLAGER != typeIn && EntityType.PLAYER != typeIn;// && typeIn.getClass().isInstance(TamablePokemon.class);//EntityType.CREEPER != typeIn && 
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void handleStatusUpdate(byte id)
 	{
 		if (id == 8)
@@ -1248,7 +1340,7 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getHealthPercent()
 	{
 		float healthAmount = this.getHealth();
@@ -1258,36 +1350,180 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 			return 0;
 		}
 
-		return healthAmount / (float)this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue();
+		return healthAmount / (float)this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue();
 	}
 
 	/**
 	 * Determines if an entity can be despawned, used on idle far away entities
 	 */
 	@Override
-	protected boolean canDespawn()
+	public boolean canDespawn(double distanceToClosestPlayer)
 	{
 		return !this.isTamed() && this.ticksExisted > 2400;
 	}
 
 	public void returnToItem() {};
+	public void returnToItemOnDeath() {};
 
 	@Override
-	public boolean shouldAttackEntity(EntityLivingBase par1EntityLivingBase, EntityLivingBase par2EntityLivingBase)
+	public void onDeath(DamageSource cause) 
 	{
-		if (!(par1EntityLivingBase instanceof EntityGhast))
-		{
-			if (par1EntityLivingBase instanceof TamablePokemon)
-			{
-				TamablePokemon entityPokemon = (TamablePokemon)par1EntityLivingBase;
+		returnToItemOnDeath();
 
-				if (entityPokemon.isTamed() && entityPokemon.getOwner() == par2EntityLivingBase)
+		super.onDeath(cause);
+	}
+	
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	@Override
+	public boolean processInteract(PlayerEntity player, Hand hand)
+	{
+		ItemStack itemstack = player.inventory.getCurrentItem();
+
+		if (this.isTamed())
+		{
+			if(player.isCrouching() && hand == Hand.MAIN_HAND && !this.world.isRemote)
+			{
+				this.toggleIdleSounds();
+			}
+
+			if (itemstack != null)
+			{
+				if (itemstack.getItem() instanceof BerryItem)
+				{
+					BerryItem berry = (BerryItem)itemstack.getItem();
+
+					boolean decreaseBerryItemstack = false;
+
+					if(this.getHealth() < ((float)this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()))
+					{	
+						decreaseBerryItemstack = berryHeal(player, ((float)this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue()), berry);
+
+						if(decreaseBerryItemstack == true)
+						{
+							decreasePlayerItemStack(player, itemstack);
+						}
+
+						return true;
+					}
+				}
+				else if(itemstack.getItem() instanceof IBoostItem)
+				{
+					if(itemstack.getItem() == KindredLegacyItems.LIFE_BOOST && this.getMaximumHealth() < this.getDefaultMaximumHealthBoost())
+					{
+						applyLifeBoost(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.ATTACK_BOOST && this.getAttackPower() < this.getDefaultMaximumAttackBoost())
+					{
+						applyAttackBoost(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.SPEED_BOOST && this.getSpeed() < this.getDefaultMaximumSpeedBoost())
+					{
+						applySpeedBoost(player, itemstack);
+
+						return true;
+					}
+				}
+				else if(itemstack.getItem() instanceof IEssenceItem)
+				{
+					if(itemstack.getItem() == KindredLegacyItems.FIRAGA_ESSENCE && this.hasFireImmunityEssence() != 1)
+					{
+						applyFiragaEssence(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.WATERGA_ESSENCE && this.hasDrowningImmunityEssence() != 1)
+					{
+						applyWatergaEssence(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.GRAVIGA_ESSENCE && this.hasFallImmunityEssence() != 1)
+					{
+						applyGravigaEssence(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.QUAKAGA_ESSENCE && this.hasBlockSuffocationAvoidanceEssence() != 1)
+					{
+						applyQuakagaEssence(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.BIOGA_ESSENCE && this.hasToxinImmunityEssence() != 1)
+					{
+						applyBiogaEssence(player, itemstack);
+
+						return true;
+					}
+					else if(itemstack.getItem() == KindredLegacyItems.CURAGA_ESSENCE && this.getRegenLevel() < 3)
+					{
+						applyCuragaEssence(player, itemstack);
+
+						return true;
+					}/*
+					else if(KindredLegacyMain.isGalacticraftEnabled)
+					{
+						if(itemstack.getItem() == KindredLegacyItems.COMET_ESSENCE && this.hasSpaceSurvivabilityEssence() != 1)
+						{		
+							applyCometEssence(player, itemstack);
+
+							return true;
+						}
+					}*/
+				}
+				else if(itemstack.getItem() instanceof IPowerUp)
+				{
+					if(itemstack.getItem() == KindredLegacyItems.RAW_SPICE_MELANGE)
+					{
+						this.setBoostPowerType(this.SPICE_MELANGE_POWER_ID);
+
+						decreasePlayerItemStack(player, itemstack);
+
+						this.boostPowerTimer = 5000;
+
+						return true;
+					}
+				}
+				else if(itemstack.getItem() == KindredLegacyItems.REGEN_CREAM)
+				{
+					activateHealthRegen(player, itemstack);
+
+					return true;
+				}
+			}
+
+			if (this.isOwner(player) && !this.world.isRemote && !player.isCrouching())// && itemstack.getItem()) != KindredLegacyItems.ATTACK_ORDERER)
+			{
+				applySit();
+			}
+		}
+
+		return super.processInteract(player, hand);
+	}
+	
+	
+	@Override
+	public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner)
+	{
+		if (!(target instanceof GhastEntity))
+		{
+			if (target instanceof TamablePokemon)
+			{
+				TamablePokemon entityPokemon = (TamablePokemon)target;
+
+				if (entityPokemon.isTamed() && entityPokemon.getOwner() == owner)
 				{
 					return false;
 				}
 			}
 
-			return par1EntityLivingBase instanceof EntityPlayer && par2EntityLivingBase instanceof EntityPlayer && !((EntityPlayer)par2EntityLivingBase).canAttackPlayer((EntityPlayer)par1EntityLivingBase) ? false : !(par1EntityLivingBase instanceof EntityHorse) || !((EntityHorse)par1EntityLivingBase).isTame();
+			return target instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity)owner).canAttackPlayer((PlayerEntity)target) ? false : !(target instanceof HorseEntity) || !((HorseEntity)target).isTame();
 		}
 		else
 		{
@@ -1299,14 +1535,14 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	 * Required function to implement.
 	 */
 	@Override
-	public EntityAgeable createChild(EntityAgeable var1)
+	public AgeableEntity createChild(AgeableEntity var1)
 	{
 		return null;
 	}
 
 	public void setDeadWithoutRecall()
 	{
-		super.setDead();
+		this.remove(false);
 	}
 
 	/**
@@ -1315,33 +1551,38 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if (this.isEntityInvulnerable(source))
+		if (this.isInvulnerableTo(source))
+		{
+			return false;
+		}
+		else if ((source == DamageSource.LAVA || source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE)
+				&& this.hasFireImmunityEssence() == 1)
 		{
 			return false;
 		}
 		else
 		{
-			if (this.aiSit != null)
+			if (this.sitGoal != null)
 			{
-				this.aiSit.setSitting(false);
+				this.sitGoal.setSitting(false);
 			}
 
 			if (source.getTrueSource() != null)
 			{
-				if(this.isTamed() && this.getOwner() instanceof EntityPlayer)
+				if(this.isTamed() && this.getOwner() instanceof PlayerEntity)
 				{
-					if(source.getTrueSource() instanceof EntityPlayer)
+					if(source.getTrueSource() instanceof PlayerEntity)
 					{
-						EntityPlayer entityPlayer = (EntityPlayer)this.getOwner();
+						PlayerEntity entityPlayer = (PlayerEntity)this.getOwner();
 
-						if(!entityPlayer.capabilities.isCreativeMode)
+						if(!entityPlayer.abilities.isCreativeMode)
 						{
 							return false;
 						}
 					}
 					else if(source.getTrueSource() instanceof TamablePokemon)
 					{
-						if(((TamablePokemon)source.getTrueSource()).getOwner() instanceof EntityPlayer)
+						if(((TamablePokemon)source.getTrueSource()).getOwner() instanceof PlayerEntity)
 						{
 							return false;
 						}
@@ -1353,17 +1594,11 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getInterestedAngle(float p_70917_1_)
 	{
 		return (this.headRotationCourseOld + (this.headRotationCourse - this.headRotationCourseOld) * p_70917_1_) * 0.15F * (float)Math.PI;
 	}
-	/*
-	@Override
-	public String getCommandSenderName()
-	{
-		return poketamableName;
-	}*/
 
 	@Override
 	public boolean isBreedingItem(ItemStack par1ItemStack)
@@ -1372,33 +1607,35 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	}
 
 	@Override
-	public boolean isPotionApplicable(PotionEffect potioneffectIn)
+	public boolean isPotionApplicable(EffectInstance potioneffectIn)
 	{
-		if(potioneffectIn.getPotion() == MobEffects.POISON || potioneffectIn.getPotion() == MobEffects.WITHER)
+		if (potioneffectIn.getPotion() == Effects.POISON || potioneffectIn.getPotion() == Effects.WITHER) 
 		{
 			if(this.hasToxinImmunityEssence() == 1)
-				return false;
+			{
+				net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent event = new net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent(this, potioneffectIn);
+				net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
+				return event.getResult() == net.minecraftforge.eventbus.api.Event.Result.ALLOW;
+			}
 		}
 
-		super.isPotionApplicable(potioneffectIn);
-
-		return true;
+		return super.isPotionApplicable(potioneffectIn);
 	}
 
 	protected void handleBeserkAI()
 	{
 		if (this.beserkAIMobs == null)
 		{
-			this.beserkAIMobs = new EntityAINearestAttackableTarget(this, EntityMob.class, false);
+			this.beserkAIMobs = new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false);
 		}
 
 		if (this.getBoostPowerType() != this.SPICE_MELANGE_POWER_ID)
 		{
-			this.targetTasks.removeTask(this.beserkAIMobs);
+			this.goalSelector.removeGoal(this.beserkAIMobs);
 		}
 		else
 		{
-			this.targetTasks.addTask(4, this.beserkAIMobs);
+			this.goalSelector.addGoal(4, this.beserkAIMobs);
 		}
 	}
 
@@ -1431,10 +1668,10 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 	/************************************
 	 * Animation dependent code follows.*
 	 ************************************/
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void incrementPartClocks() {}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getAngularVelocity()
 	{	
 		float angularVelocity = changeInYaw;
@@ -1450,13 +1687,13 @@ public class TamablePokemon extends EntityTameable implements IEntityAdditionalS
 		return angularVelocity;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getTotalAngularChange()
 	{
 		return totalChangeInYaw;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public float getHeightVelocity()
 	{	
 		float verticalVelocity = changeInHeight;

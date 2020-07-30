@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import fuzzyacornindustries.kindredlegacy.item.tamable.IPowerUp;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,9 +14,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RawSpiceMelangeItem extends ItemBase implements IPowerUp
+public class RawSpiceMelangeItem extends Item implements IPowerUp
 {
-	public RawSpiceMelangeItem(Properties properties)
+	public RawSpiceMelangeItem(Item.Properties properties)
 	{
 		super(properties);
 	}

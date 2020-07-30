@@ -7,12 +7,10 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AttackOrdererItem extends ItemBase
+public class AttackOrdererItem extends Item
 {
 	public AttackOrdererItem(Item.Properties properties)
 	{

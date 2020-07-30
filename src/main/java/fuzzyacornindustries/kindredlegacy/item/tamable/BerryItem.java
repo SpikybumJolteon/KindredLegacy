@@ -1,9 +1,8 @@
 package fuzzyacornindustries.kindredlegacy.item.tamable;
 
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import net.minecraft.item.Item;
 
-public class BerryItem extends ItemBase
+public class BerryItem extends Item
 {
 	private float poketamableHealAmount;
 

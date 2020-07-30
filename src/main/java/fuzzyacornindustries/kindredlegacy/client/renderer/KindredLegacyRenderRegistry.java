@@ -22,9 +22,12 @@ import fuzzyacornindustries.kindredlegacy.client.renderer.entity.SnowSorceressBr
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.VoorstMightyenaRenderer;
 import fuzzyacornindustries.kindredlegacy.client.renderer.entity.ZerglingNincadaRenderer;
 import fuzzyacornindustries.kindredlegacy.client.renderer.projectile.FireworkMissileRenderer;
+import fuzzyacornindustries.kindredlegacy.client.renderer.tileentity.XelNagaPylonRenderer;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyEntities;
+import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyTileEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 @OnlyIn(Dist.CLIENT)
@@ -57,7 +60,10 @@ public class KindredLegacyRenderRegistry
 		//RenderingRegistry.registerEntityRenderingHandler(KindredLegacyEntities.FIREWORK_MISSILE, new FireworkMissileRenderer.RenderFactory());
 		//RenderingRegistry.registerEntityRenderingHandler(KindredLegacyEntities.FIREWORK_MISSILE, renderManager -> new FireworkMissileRenderer(renderManager));
 		RenderingRegistry.registerEntityRenderingHandler(KindredLegacyEntities.FIREWORK_MISSILE, new FireworkMissileRenderer.RenderFactory());
-		
-		
+	}
+
+	public static void registryTileEntityRenders()
+	{
+		ClientRegistry.bindTileEntityRenderer(KindredLegacyTileEntities.XELNAGA_PYLON, XelNagaPylonRenderer::new);
 	}
 }

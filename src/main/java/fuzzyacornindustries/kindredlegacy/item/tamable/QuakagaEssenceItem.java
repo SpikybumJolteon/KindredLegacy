@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class QuakagaEssenceItem extends ItemBase implements IEssenceItem
+public class QuakagaEssenceItem extends Item implements IEssenceItem
 {
-	public QuakagaEssenceItem(Properties properties)
+	public QuakagaEssenceItem(Item.Properties properties)
 	{
 		super(properties);
 	}

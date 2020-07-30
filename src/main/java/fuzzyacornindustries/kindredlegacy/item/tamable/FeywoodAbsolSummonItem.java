@@ -5,6 +5,7 @@ import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 
 public class FeywoodAbsolSummonItem extends PoketamableSummonItem
 {
-	public FeywoodAbsolSummonItem(Properties properties)
+	public FeywoodAbsolSummonItem(Item.Properties properties)
 	{
 		super(properties);
 	}

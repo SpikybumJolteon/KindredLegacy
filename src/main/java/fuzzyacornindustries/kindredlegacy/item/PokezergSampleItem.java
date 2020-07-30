@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -12,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PokezergSampleItem extends ItemBase
+public class PokezergSampleItem extends Item
 {
-	public PokezergSampleItem(Properties properties) 
+	public PokezergSampleItem(Item.Properties properties) 
 	{
 		super(properties);
 	}

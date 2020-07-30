@@ -1,6 +1,5 @@
 package fuzzyacornindustries.kindredlegacy.block;
 
-import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyBlocks;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,8 +17,6 @@ public class OranianBerryBlock extends CropsBlock
 	public OranianBerryBlock(Block.Properties properties) 
 	{
 		super(properties);
-
-		KindredLegacyBlocks.BLOCKS.add(this);
 	}
 
 	@Override

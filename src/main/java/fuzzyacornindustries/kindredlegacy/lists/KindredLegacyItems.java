@@ -1,10 +1,5 @@
 package fuzzyacornindustries.kindredlegacy.lists;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fuzzyacornindustries.kindredlegacy.block.BlockItemBase;
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import fuzzyacornindustries.kindredlegacy.item.PokezergSampleItem;
 import fuzzyacornindustries.kindredlegacy.item.PotionPowderItem;
 import fuzzyacornindustries.kindredlegacy.item.RawSpiceMelangeItem;
@@ -12,6 +7,9 @@ import fuzzyacornindustries.kindredlegacy.item.RegenCreamItem;
 import fuzzyacornindustries.kindredlegacy.item.TiberiumShardItem;
 import fuzzyacornindustries.kindredlegacy.item.VerdantizerItem;
 import fuzzyacornindustries.kindredlegacy.item.VoidScissorsItem;
+import fuzzyacornindustries.kindredlegacy.item.XelNagaCircuitItem;
+import fuzzyacornindustries.kindredlegacy.item.XelNagaDynamoItem;
+import fuzzyacornindustries.kindredlegacy.item.XelNagaShardItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.AttackBoostItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.AttackOrdererItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.BiogaEssenceItem;
@@ -36,28 +34,30 @@ import fuzzyacornindustries.kindredlegacy.item.tamable.SpeedBoostItem;
 import fuzzyacornindustries.kindredlegacy.item.tamable.WatergaEssenceItem;
 import fuzzyacornindustries.kindredlegacy.utility.UtilityFunctions;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
 public class KindredLegacyItems 
 {
-	public static final List<Item> ITEMS = new ArrayList<Item>();
+	//public static final List<Item> ITEMS = new ArrayList<Item>();
 
 	//================ MATERIALS ITEMS ================//
-	public static Item AURUM_DUST = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("aurum_dust"));
-	public static Item CHARGESTONE = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("chargestone"));
-	public static Item HUNTERS_CHARGE = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("hunters_charge"));
+	public static Item AURUM_DUST = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("aurum_dust"));
+	public static Item CHARGESTONE = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("chargestone"));
+	public static Item HUNTERS_CHARGE = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("hunters_charge"));
 	public static Item POKEZERG_SAMPLE = new PokezergSampleItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("pokezerg_sample"));
 	public static Item RAW_SPICE_MELANGE = new RawSpiceMelangeItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("raw_spice_melange"));
 	public static Item REGEN_CREAM = new RegenCreamItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("regen_cream"));
-	public static Item SILKSCREEN_MESH = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("silkscreen_mesh"));
-	public static Item TIBERIUM_CASING = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("tiberium_casing"));
+	public static Item SILKSCREEN_MESH = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("silkscreen_mesh"));
+	public static Item TIBERIUM_CASING = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("tiberium_casing"));
 	public static Item TIBERIUM_SHARD = new TiberiumShardItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("tiberium_shard"));
-	public static Item VERDANT_CHARGE = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("verdant_charge"));
-	public static Item VERDANT_POWDER = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("verdant_powder"));
-	public static Item XELNAGA_CIRCUIT = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("xelnaga_circuit"));
-	public static Item XELNAGA_SHARD = new ItemBase(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("xelnaga_shard"));
+	public static Item VERDANT_CHARGE = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("verdant_charge"));
+	public static Item VERDANT_POWDER = new Item(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("verdant_powder"));
+	public static Item XELNAGA_CIRCUIT = new XelNagaCircuitItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("xelnaga_circuit"));
+	public static Item XELNAGA_DYNAMO = new XelNagaDynamoItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("xelnaga_dynamo"));
+	public static Item XELNAGA_SHARD = new XelNagaShardItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("xelnaga_shard"));
 	
 	public static Item VERDANTIZER = new VerdantizerItem(new Item.Properties().group(ItemGroup.MISC)).setRegistryName(UtilityFunctions.location("verdantizer"));
 	public static Item VOID_SCISSORS = new VoidScissorsItem(new Item.Properties().group(ItemGroup.MISC).maxDamage(128)).setRegistryName(UtilityFunctions.location("void_scissors"));
@@ -124,7 +124,8 @@ public class KindredLegacyItems
 	public static Item PHOENIX_HEARTHSTONE = new PhoenixHearthstoneItem(new Item.Properties().group(ItemGroup.MISC).maxStackSize(1)).setRegistryName(UtilityFunctions.location("phoenix_hearthstone"));
 	
 	//================ BLOCK ITEMS ================//
-	public static Item PACKED_AURUM_DUST = new BlockItemBase(KindredLegacyBlocks.PACKED_AURUM_DUST, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(KindredLegacyBlocks.PACKED_AURUM_DUST.getRegistryName());
+	public static Item PACKED_AURUM_DUST = new BlockItem(KindredLegacyBlocks.PACKED_AURUM_DUST, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(KindredLegacyBlocks.PACKED_AURUM_DUST.getRegistryName());
+	public static Item XELNAGA_PYLON = new BlockItem(KindredLegacyBlocks.XELNAGA_PYLON, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(KindredLegacyBlocks.XELNAGA_PYLON.getRegistryName());
 
 	public static boolean grantBonusGear(PlayerEntity player) 
 	{

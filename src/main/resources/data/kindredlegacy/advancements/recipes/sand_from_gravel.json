@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:sand_from_gravel"
+    ]
+  },
+  "criteria": {
+    "has_verdant_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdant_powder"
+          }
+        ]
+      }
+    },
+    "has_gravel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:gravel"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:sand_from_gravel"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdant_powder",
+      "has_gravel",
+      "has_the_recipe"
+    ]
+  ]
+}

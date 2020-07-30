@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:verdant_powder_from_sugar_cane"
+    ]
+  },
+  "criteria": {
+    "has_verdantizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdantizer"
+          }
+        ]
+      }
+    },
+    "has_sugar_cane": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:sugar_cane"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:verdant_powder_from_sugar_cane"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdantizer",
+      "has_sugar_cane",
+      "has_the_recipe"
+    ]
+  ]
+}

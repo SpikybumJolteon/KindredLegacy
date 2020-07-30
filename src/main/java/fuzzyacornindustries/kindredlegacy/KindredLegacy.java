@@ -11,6 +11,7 @@ import fuzzyacornindustries.kindredlegacy.handler.KindredLegacyEntityEvents;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyBlocks;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyEntities;
 import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyItems;
+import fuzzyacornindustries.kindredlegacy.lists.KindredLegacyTileEntities;
 import fuzzyacornindustries.kindredlegacy.network.ClientProxy;
 import fuzzyacornindustries.kindredlegacy.network.IProxy;
 import fuzzyacornindustries.kindredlegacy.network.KindredLegacyNetwork;
@@ -21,10 +22,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -106,8 +107,10 @@ public class KindredLegacy
 	private void doClientSetup(final FMLClientSetupEvent event) 
 	{
 		KindredLegacyRenderRegistry.registryEntityRenders();
+		KindredLegacyRenderRegistry.registryTileEntityRenders();
 
 		RenderTypeLookup.setRenderLayer(KindredLegacyBlocks.ORANIAN_BERRIES, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(KindredLegacyBlocks.XELNAGA_PYLON, RenderType.getCutout());
 
 		LOGGER.info("ClientSetup method registered");
 	}
@@ -141,8 +144,56 @@ public class KindredLegacy
 		@SubscribeEvent
 		public static void registerItems(final RegistryEvent.Register<Item> event)
 		{
-			event.getRegistry().registerAll(KindredLegacyItems.ITEMS.toArray(new Item[0]));
-
+			event.getRegistry().registerAll(
+					KindredLegacyItems.ATTACK_BOOST,
+					KindredLegacyItems.ATTACK_ORDERER,
+					KindredLegacyItems.AURUM_DUST,
+					KindredLegacyItems.BIOGA_ESSENCE,
+					KindredLegacyItems.BLESSING_OF_ARCEUS,
+					KindredLegacyItems.CHARGESTONE,
+					KindredLegacyItems.CURAGA_ESSENCE,
+					KindredLegacyItems.ESSENCE_RECALLER,
+					KindredLegacyItems.FEYWOOD_ABSOL_SUMMON,
+					KindredLegacyItems.FIRAGA_ESSENCE,
+					KindredLegacyItems.FIRE_RESISTANCE_POWDER,
+					KindredLegacyItems.FIRECRACKER_LITTEN_SUMMON,
+					KindredLegacyItems.GRAVIGA_ESSENCE,
+					KindredLegacyItems.HEALING_POWDER,
+					KindredLegacyItems.HUNTERS_CHARGE,
+					KindredLegacyItems.INVISIBILITY_POWDER,
+					KindredLegacyItems.LEAPING_POWDER,
+					KindredLegacyItems.LIFE_BOOST,
+					KindredLegacyItems.OKAMI_ESPEON_SUMMON,
+					KindredLegacyItems.OKAMI_SYLVEON_SUMMON,
+					KindredLegacyItems.OKAMI_UMBREON_SUMMON,
+					KindredLegacyItems.ORANIAN_BERRY,
+					KindredLegacyItems.PACKED_AURUM_DUST,
+					KindredLegacyItems.PHOENIX_HEARTHSTONE,
+					KindredLegacyItems.POISON_POWDER,
+					KindredLegacyItems.POKEMON_EXPLORATION_KIT,
+					KindredLegacyItems.POKEZERG_SAMPLE,
+					KindredLegacyItems.QUAKAGA_ESSENCE,
+					KindredLegacyItems.RAW_SPICE_MELANGE,
+					KindredLegacyItems.REGEN_CREAM,
+					KindredLegacyItems.REGENERATION_POWDER,
+					KindredLegacyItems.REVIVE_SEED,
+					KindredLegacyItems.SILKSCREEN_MESH,
+					KindredLegacyItems.SPEED_BOOST,
+					KindredLegacyItems.STRENGTH_POWDER,
+					KindredLegacyItems.SWIFTNESS_POWDER,
+					KindredLegacyItems.TIBERIUM_CASING,
+					KindredLegacyItems.TIBERIUM_SHARD,
+					KindredLegacyItems.VERDANT_CHARGE,
+					KindredLegacyItems.VERDANT_POWDER,
+					KindredLegacyItems.VERDANTIZER,
+					KindredLegacyItems.VOID_SCISSORS,
+					KindredLegacyItems.WATER_BREATHING_POWDER,
+					KindredLegacyItems.WATERGA_ESSENCE,
+					KindredLegacyItems.XELNAGA_CIRCUIT,
+					KindredLegacyItems.XELNAGA_DYNAMO,
+					KindredLegacyItems.XELNAGA_PYLON,
+					KindredLegacyItems.XELNAGA_SHARD
+					);
 			KindredLegacyEntities.registerEntitySpawnEggs(event);
 
 			LOGGER.info("Items registered");
@@ -151,8 +202,12 @@ public class KindredLegacy
 		@SubscribeEvent
 		public static void registryBlocks(final RegistryEvent.Register<Block> event) 
 		{
-			event.getRegistry().registerAll(KindredLegacyBlocks.BLOCKS.toArray(new Block[0]));
-
+			event.getRegistry().registerAll(
+					KindredLegacyBlocks.ORANIAN_BERRIES,
+					KindredLegacyBlocks.PACKED_AURUM_DUST,
+					KindredLegacyBlocks.XELNAGA_PYLON
+					);
+			
 			LOGGER.info("Blocks registered");
 		}
 
@@ -187,6 +242,16 @@ public class KindredLegacy
 			KindredLegacyEntities.registerEntityWorldSpawns();
 			
 			LOGGER.info("Entities registered");
+		}
+		
+		@SubscribeEvent
+		public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) 
+		{
+			event.getRegistry().registerAll(
+					KindredLegacyTileEntities.XELNAGA_PYLON
+					);
+			
+			LOGGER.info("Tile Entities registered");
 		}
 
 		@SubscribeEvent

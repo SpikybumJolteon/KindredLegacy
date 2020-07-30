@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class WatergaEssenceItem extends ItemBase implements IEssenceItem
+public class WatergaEssenceItem extends Item implements IEssenceItem
 {
-	public WatergaEssenceItem(Properties properties)
+	public WatergaEssenceItem(Item.Properties properties)
 	{
 		super(properties);
 	}

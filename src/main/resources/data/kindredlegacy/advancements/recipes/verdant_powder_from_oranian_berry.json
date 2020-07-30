@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:verdant_powder_from_oranian_berry"
+    ]
+  },
+  "criteria": {
+    "has_verdantizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdantizer"
+          }
+        ]
+      }
+    },
+    "has_oranian_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:oranian_berry"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:verdant_powder_from_oranian_berry"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdantizer",
+      "has_oranian_berry",
+      "has_the_recipe"
+    ]
+  ]
+}

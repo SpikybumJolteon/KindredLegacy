@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import fuzzyacornindustries.kindredlegacy.entity.mob.tamable.TamablePokemon;
-import fuzzyacornindustries.kindredlegacy.item.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EssenceRecallerItem extends ItemBase
+public class EssenceRecallerItem extends Item
 {
 	public EssenceRecallerItem(Item.Properties properties)
 	{

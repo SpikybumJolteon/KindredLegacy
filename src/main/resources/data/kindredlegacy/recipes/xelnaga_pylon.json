@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "ODO",
+    "QCQ"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "kindredlegacy:xelnaga_circuit"
+    },
+    "Q": [
+       {
+          "item": "minecraft:quartz_block"
+       },
+       {
+          "item": "kindredlegacy:tiberium_casing"
+       }
+    ],
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "D": {
+      "item": "kindredlegacy:xelnaga_dynamo"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:xelnaga_pylon"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:mossy_cobblestone"
+    ]
+  },
+  "criteria": {
+    "has_verdant_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdant_powder"
+          }
+        ]
+      }
+    },
+    "has_cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:mossy_cobblestone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdant_powder",
+      "has_cobblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:xelnaga_pylon"
+    ]
+  },
+  "criteria": {
+    "has_xelnaga_dynamo": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:xelnaga_dynamo"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:xelnaga_pylon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_xelnaga_dynamo",
+      "has_the_recipe"
+    ]
+  ]
+}

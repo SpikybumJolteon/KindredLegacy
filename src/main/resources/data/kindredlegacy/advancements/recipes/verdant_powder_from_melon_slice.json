@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:verdant_powder_from_melon_slice"
+    ]
+  },
+  "criteria": {
+    "has_verdantizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdantizer"
+          }
+        ]
+      }
+    },
+    "has_melon_slice": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:melon_slice"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:verdant_powder_from_melon_slice"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdantizer",
+      "has_melon_slice",
+      "has_the_recipe"
+    ]
+  ]
+}

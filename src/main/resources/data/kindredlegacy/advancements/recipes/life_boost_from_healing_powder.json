@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:life_boost_from_healing_powder"
+    ]
+  },
+  "criteria": {
+    "has_healing_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:healing_powder"
+          }
+        ]
+      }
+    },
+    "has_verdant_charge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdant_charge"
+          }
+        ]
+      }
+    },
+    "has_chargestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:chargestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:life_boost_from_healing_powder"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_healing_powder",
+      "has_verdant_charge",
+      "has_chargestone",
+      "has_the_recipe"
+    ]
+  ]
+}

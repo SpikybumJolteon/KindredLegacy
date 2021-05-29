@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/potion_powders/regeneration_powder"
+        "layer0": "kindredlegacy:item/potion_powders/regeneration_powder"
     }
 }

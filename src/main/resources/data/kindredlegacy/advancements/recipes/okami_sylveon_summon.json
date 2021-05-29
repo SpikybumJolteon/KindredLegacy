@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:okami_sylveon_summon"
+    ]
+  },
+  "criteria": {
+    "has_blessing_of_arceus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:blessing_of_arceus"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:okami_sylveon_summon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blessing_of_arceus",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "VRV",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "kindredlegacy:healing_powder"
+    },
+    "R": [
+       {
+          "item": "minecraft:redstone_block"
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ],
+    "V": {
+      "item": "kindredlegacy:verdant_charge"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:life_boost",
+    "count": 2
+  }
+}

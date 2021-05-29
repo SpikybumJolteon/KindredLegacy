@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/graviga_essence"
+        "layer0": "kindredlegacy:item/graviga_essence"
     }
 }

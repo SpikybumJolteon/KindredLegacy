@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/xelnaga_shard"
+        "layer0": "kindredlegacy:item/xelnaga_shard"
     }
 }

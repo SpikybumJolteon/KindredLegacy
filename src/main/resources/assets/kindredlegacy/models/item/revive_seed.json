@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/revive_seed"
+        "layer0": "kindredlegacy:item/revive_seed"
     }
 }

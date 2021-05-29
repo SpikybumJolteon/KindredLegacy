@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "QOQ",
+    "CXC",
+    "QOQ"
+  ],
+  "key": {
+    "C": {
+      "item": "kindredlegacy:xelnaga_circuit"
+    },
+    "X": {
+      "item": "kindredlegacy:xelnaga_shard"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "Q": [
+       {
+          "item": "minecraft:quartz_block"
+       },
+       {
+          "item": "kindredlegacy:tiberium_casing"
+       }
+    ]
+  },
+  "result": {
+    "item": "kindredlegacy:xelnaga_dynamo"
+  }
+}

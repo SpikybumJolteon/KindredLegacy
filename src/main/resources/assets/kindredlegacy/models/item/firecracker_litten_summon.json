@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/tamables/firecracker_litten_summon"
+        "layer0": "kindredlegacy:item/tamables/firecracker_litten_summon"
     }
 }

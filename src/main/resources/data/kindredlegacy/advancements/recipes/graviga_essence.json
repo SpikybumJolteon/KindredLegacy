@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:graviga_essence"
+    ]
+  },
+  "criteria": {
+    "has_leaping_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:leaping_powder"
+          }
+        ]
+      }
+    },
+    "has_life_boost": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:life_boost"
+          }
+        ]
+      }
+    },
+    "has_chargestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:chargestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:graviga_essence"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leaping_powder",
+      "has_life_boost",
+      "has_chargestone",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "kindredlegacy:items/firaga_essence"
+        "layer0": "kindredlegacy:item/firaga_essence"
     }
 }

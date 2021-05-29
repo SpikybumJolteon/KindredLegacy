@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": {"model": "kindredlegacy:packed_aurum_dust"}
+        "": { "model": "kindredlegacy:block/packed_aurum_dust" }
     }
 }

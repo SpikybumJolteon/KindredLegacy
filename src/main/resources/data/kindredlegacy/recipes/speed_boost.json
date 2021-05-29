@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "RSR",
+    "YYY"
+  ],
+  "key": {
+    "X": {
+      "item": "kindredlegacy:leaping_powder"
+    },
+    "Y": {
+      "item": "kindredlegacy:swiftness_powder"
+    },
+    "R": [
+       {
+          "item": "minecraft:redstone_block"
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ],
+    "S": {
+      "item": "kindredlegacy:raw_spice_melange"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:speed_boost"
+  }
+}

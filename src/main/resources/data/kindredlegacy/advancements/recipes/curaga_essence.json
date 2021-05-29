@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:curaga_essence"
+    ]
+  },
+  "criteria": {
+    "has_regeneration_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:regeneration_powder"
+          }
+        ]
+      }
+    },
+    "has_life_boost": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:life_boost"
+          }
+        ]
+      }
+    },
+    "has_diamond": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:diamond"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:curaga_essence"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_regeneration_powder",
+      "has_life_boost",
+      "has_diamond",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "QAQ",
+    "GOG",
+    "QAQ"
+  ],
+  "key": {
+    "Q": [
+       {
+          "item": "minecraft:quartz"
+       },
+       {
+          "item": "kindredlegacy:tiberium_shard"
+       }
+    ],
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "A": {
+      "item": "kindredlegacy:aurum_dust"
+    }
+  },
+  "result": {
+    "item": "kindredlegacy:xelnaga_shard"
+  }
+}

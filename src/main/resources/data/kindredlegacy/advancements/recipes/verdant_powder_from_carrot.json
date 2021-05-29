@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:verdant_powder_from_carrot"
+    ]
+  },
+  "criteria": {
+    "has_verdantizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:verdantizer"
+          }
+        ]
+      }
+    },
+    "has_carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:carrot"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:verdant_powder_from_carrot"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_verdantizer",
+      "has_carrot",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "kindredlegacy:blocks/packed_aurum_dust"
+        "all": "kindredlegacy:block/packed_aurum_dust"
     }
 }

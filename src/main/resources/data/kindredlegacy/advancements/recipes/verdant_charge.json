@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "kindredlegacy:verdant_charge"
+    ]
+  },
+  "criteria": {
+    "has_aurum_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "kindredlegacy:aurum_dust"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "kindredlegacy:verdant_charge"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aurum_dust",
+      "has_the_recipe"
+    ]
+  ]
+}

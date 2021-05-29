@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "kindredlegacy:verdant_powder"
+    },
+    {
+      "item": "kindredlegacy:tiberium_shard"
+    }
+  ],
+  "result": {
+    "item": "minecraft:quartz"
+  }
+}

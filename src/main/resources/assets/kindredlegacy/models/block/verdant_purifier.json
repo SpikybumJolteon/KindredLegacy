@@ -1,0 +1,7 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "particle": "kindredlegacy:item/verdant_purifier",
+        "all": "kindredlegacy:block/verdant_purifier"
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RRR",
+    "BVB",
+    "RRR"
+  ],
+  "key": {
+    "R": {
+      "item": "kindredlegacy:revive_seed"
+    },
+    "V": {
+      "item": "kindredlegacy:verdant_charge"
+    },
+    "B": [
+       {
+          "item": "minecraft:redstone_block"
+       },
+       {
+          "item": "kindredlegacy:chargestone"
+       }
+    ]
+  },
+  "result": {
+    "item": "kindredlegacy:life_boost"
+  }
+}

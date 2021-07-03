@@ -594,6 +594,44 @@
 		    {"name":"kindredlegacy:mob/snow_sorceress_braixen/death2", "stream": true}
 			]
 	},
+	"entity.vastaya_ninetales.ambient":
+	{
+		"category": "entity",
+		"subtitle": "kindredlegacy.subtitle.entity.vastaya_ninetales.ambient",
+		"sounds": [
+			{"name":"kindredlegacy:mob/vastaya_ninetales/ambient1", "stream": true},
+		    {"name":"kindredlegacy:mob/vastaya_ninetales/ambient2", "stream": true},
+			{"name":"kindredlegacy:mob/vastaya_ninetales/ambient3", "stream": true},
+			{"name":"kindredlegacy:mob/vastaya_ninetales/ambient4", "stream": true},
+			{"name":"kindredlegacy:mob/vastaya_ninetales/ambient5", "stream": true}
+			]
+	},
+	"entity.vastaya_ninetales.hurt":
+	{
+		"category": "entity",
+		"subtitle": "kindredlegacy.subtitle.entity.vastaya_ninetales.hurt",
+		"sounds": [
+			{"name":"kindredlegacy:mob/vastaya_ninetales/hurt1", "stream": true},
+		    {"name":"kindredlegacy:mob/vastaya_ninetales/hurt2", "stream": true},
+			{"name":"kindredlegacy:mob/vastaya_ninetales/hurt3", "stream": true}
+			]
+	},
+	"entity.vastaya_ninetales.death":
+	{
+		"category": "entity",
+		"subtitle": "kindredlegacy.subtitle.entity.vastaya_ninetales.death",
+		"sounds": [
+			{"name":"kindredlegacy:mob/vastaya_ninetales/death1", "stream": true}
+			]
+	},
+	"entity.vastaya_ninetales.whine":
+	{
+		"category": "entity",
+		"subtitle": "kindredlegacy.subtitle.entity.vastaya_ninetales.whine",
+		"sounds": [
+			{"name":"kindredlegacy:mob/vastaya_ninetales/whine1", "stream": true}
+			]
+	},
 	"entity.voorst_mightyena.ambient":
 	{
 		"category": "entity",

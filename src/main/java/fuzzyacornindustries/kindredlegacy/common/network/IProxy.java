@@ -16,7 +16,7 @@ public interface IProxy
 
     void displayRenameGui(ItemStack itemStack);
 
-//    void displayExplorationKitGui();
+    void displayExplorationKitGui();
 
     File getMcFolder();
 }

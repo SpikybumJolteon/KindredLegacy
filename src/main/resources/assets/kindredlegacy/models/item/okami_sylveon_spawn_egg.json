@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "kindredlegacy:item/spawn_eggs/okami_sylveon_spawn_egg"
+    }
+}

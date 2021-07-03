@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import fuzzyacornindustries.kindredlegacy.common.network.GuiSynced;
 import fuzzyacornindustries.kindredlegacy.common.network.NetworkHandler;
 import fuzzyacornindustries.kindredlegacy.common.network.NetworkUtilities;
-import fuzzyacornindustries.kindredlegacy.common.network.PacketUpdateGui;
+import fuzzyacornindustries.kindredlegacy.common.network.UpdateGuiPacket;
 import fuzzyacornindustries.kindredlegacy.common.network.SyncedField;
 import fuzzyacornindustries.kindredlegacy.common.tileentity.TileEntityBase;
 import net.minecraft.entity.player.PlayerEntity;
@@ -107,7 +107,7 @@ public abstract class ContainerBase<T extends TileEntityBase> extends RecipeBook
 		{
 			if (syncedFields.get(i).update() || firstTick) 
 			{
-				sendToContainerListeners(new PacketUpdateGui(i, syncedFields.get(i)));
+				sendToContainerListeners(new UpdateGuiPacket(i, syncedFields.get(i)));
 			}
 		}
 		firstTick = false;

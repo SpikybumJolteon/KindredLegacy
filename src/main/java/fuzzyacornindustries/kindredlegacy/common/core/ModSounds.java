@@ -127,10 +127,10 @@ public class ModSounds
 	//	public static SoundEvent TIBERIUM_GROWLITHE_HURT;
 	//	public static SoundEvent TIBERIUM_GROWLITHE_AMBIENT;
 
-	//	public static SoundEvent VASTAYA_NINETALES_DEATH;
-	//	public static SoundEvent VASTAYA_NINETALES_HURT;
-	//	public static SoundEvent VASTAYA_NINETALES_AMBIENT;
-	//	public static SoundEvent VASTAYA_NINETALES_WHINE;
+	public static final RegistryObject<SoundEvent> VASTAYA_NINETALES_DEATH = register("entity.vastaya_ninetales.death");
+	public static final RegistryObject<SoundEvent> VASTAYA_NINETALES_HURT = register("entity.vastaya_ninetales.hurt");
+	public static final RegistryObject<SoundEvent> VASTAYA_NINETALES_AMBIENT = register("entity.vastaya_ninetales.ambient");
+	public static final RegistryObject<SoundEvent> VASTAYA_NINETALES_WHINE = register("entity.vastaya_ninetales.whine");
 
 	public static final RegistryObject<SoundEvent> VOORST_MIGHTYENA_DEATH = register("entity.voorst_mightyena.death");
 	public static final RegistryObject<SoundEvent> VOORST_MIGHTYENA_HURT = register("entity.voorst_mightyena.hurt");

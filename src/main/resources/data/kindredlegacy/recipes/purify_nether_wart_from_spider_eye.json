@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:spider_eye"
+	},
+	"result": 
+	{
+		"item": "minecraft:nether_wart"	
+	},
+	"duration": 200
+}

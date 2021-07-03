@@ -8,6 +8,7 @@ import fuzzyacornindustries.kindredlegacy.utility.UtilityFunctions;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -40,14 +41,16 @@ public class NetworkHandler
 	 */
 	public static void init() 
 	{
-    	registerMessage(PoketamableNameMessage.class,
-    			PoketamableNameMessage::encode, PoketamableNameMessage::decode, PoketamableNameMessage::handle);
     	registerMessage(ActionAnimationMessage.class,
     			ActionAnimationMessage::encode, ActionAnimationMessage::decode, ActionAnimationMessage::handle);
-//    	registerMessage(PokemonExplorationKitMessage.class,
-//    			PokemonExplorationKitMessage::encode, PokemonExplorationKitMessage::decode, PokemonExplorationKitMessage::handle);
-    	registerMessage(PacketUpdateGui.class,
-				PacketUpdateGui::toBytes, PacketUpdateGui::new, PacketUpdateGui::handle);
+    	registerMessage(PoketamableNameMessage.class,
+    			PoketamableNameMessage::encode, PoketamableNameMessage::decode, PoketamableNameMessage::handle);
+    	registerMessage(PokemonExplorationKitMessage.class,
+    			PokemonExplorationKitMessage::encode, PokemonExplorationKitMessage::decode, PokemonExplorationKitMessage::handle);
+		registerMessage(SpawnParticlePacket.class,
+				SpawnParticlePacket::toBytes, SpawnParticlePacket::new, SpawnParticlePacket::handle);
+    	registerMessage(UpdateGuiPacket.class,
+    			UpdateGuiPacket::toBytes, UpdateGuiPacket::new, UpdateGuiPacket::handle);
 	}
 
 	public static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, PacketBuffer> encoder, Function<PacketBuffer, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) 
@@ -65,20 +68,20 @@ public class NetworkHandler
 		NETWORK.send(PacketDistributor.PLAYER.with(() -> player), message);
 	}
 
-//	public static void sendToAllAround(LocationIntPacket message, World world, double distance) 
-//	{
-//		sendToAllAround(message, message.getTargetPoint(world, distance));
-//	}
-//
-//	public static void sendToAllAround(LocationIntPacket message, World world) 
-//	{
-//		sendToAllAround(message, message.getTargetPoint(world));
-//	}
-//
-//	public static void sendToAllAround(LocationDoublePacket message, World world) 
-//	{
-//		sendToAllAround(message, message.getTargetPoint(world));
-//	}
+	public static void sendToAllAround(LocationIntPacket message, World world, double distance) 
+	{
+		sendToAllAround(message, message.getTargetPoint(world, distance));
+	}
+
+	public static void sendToAllAround(LocationIntPacket message, World world) 
+	{
+		sendToAllAround(message, message.getTargetPoint(world));
+	}
+
+	public static void sendToAllAround(LocationDoublePacket message, World world) 
+	{
+		sendToAllAround(message, message.getTargetPoint(world));
+	}
 
 	public static void sendToTarget(Object message, PacketTarget packetTarget) 
 	{

@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:stone"
+	},
+	"result": 
+	{
+		"item": "minecraft:gravel"	
+	},
+	"duration": 200
+}

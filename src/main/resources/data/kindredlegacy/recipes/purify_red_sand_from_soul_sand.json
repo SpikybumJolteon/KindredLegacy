@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:soul_sand"
+	},
+	"result": 
+	{
+		"item": "minecraft:red_sand"	
+	},
+	"duration": 200
+}

@@ -9,12 +9,14 @@ import fuzzyacornindustries.kindredlegacy.common.item.BerryItem;
 import fuzzyacornindustries.kindredlegacy.common.item.IBoostItem;
 import fuzzyacornindustries.kindredlegacy.common.item.IEssenceItem;
 import fuzzyacornindustries.kindredlegacy.common.item.IPowerUp;
+import fuzzyacornindustries.kindredlegacy.common.item.PoketamableSummonItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.GhastEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -75,7 +77,8 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 
 	public String default_name;
 	public String default_summon_item_name;
-	
+	protected ItemStack summonItem;
+
 	public double worldGravity;
 
 	public float previousYaw[] = new float[6];
@@ -120,7 +123,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	public static float defaultMaximumSpeedBoost;
 
 	public static int defaultArmor;
-	
+
 	public TamablePokemon(EntityType<? extends TameableEntity> type, World world)
 	{
 		super(type, world);
@@ -150,16 +153,16 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 			changeInHeight = 0;
 		}
 	}
-	
+
 	public void setDefaultStats() {}
-	
+
 	public String defaultNameCheck(String name)
 	{
 		if (name.equals("") || name.equals(default_summon_item_name))
 		{
 			name = default_name;
 		}
-		
+
 		return name;
 	}
 
@@ -172,18 +175,18 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	protected void registerAttributes()
 	{
 		super.registerAttributes();
-		
+
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getDefaultBaseSpeed());
 		this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
 	}
-	
+
 	@Override
 	protected void registerData() 
 	{
 		super.registerData();
 
 		setDefaultStats();
-		
+
 		this.dataManager.register(CURRENT_HEALTH, Float.valueOf(this.getHealth()));
 
 		this.dataManager.register(TEXTURE, Byte.valueOf((byte)0));
@@ -399,7 +402,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		this.poketamableName = name;
 	}
-	
+
 	public String getTamableName()
 	{
 		return this.poketamableName;
@@ -409,7 +412,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultBaseAttackPower = value;
 	}
-	
+
 	public static float getDefaultBaseAttackPower()
 	{
 		return defaultBaseAttackPower;
@@ -419,7 +422,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultBaseMaxHealth = value;
 	}
-	
+
 	public static float getDefaultBaseMaxHealth()
 	{
 		return defaultBaseMaxHealth;
@@ -429,7 +432,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultBaseSpeed = value;
 	}
-	
+
 	public static float getDefaultBaseSpeed()
 	{
 		return defaultBaseSpeed;
@@ -439,7 +442,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultRegenLevel = value;
 	}
-	
+
 	public static int getDefaultRegenLevel()
 	{
 		return defaultRegenLevel;
@@ -449,7 +452,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultMaximumAttackBoost = value;
 	}
-	
+
 	public float getDefaultMaximumAttackBoost()
 	{
 		return defaultMaximumAttackBoost;
@@ -459,7 +462,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultMaximumHealthBoost = value;
 	}
-	
+
 	public float getDefaultMaximumHealthBoost()
 	{
 		return defaultMaximumHealthBoost;
@@ -469,7 +472,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultMaximumSpeedBoost = value;
 	}
-	
+
 	public float getDefaultMaximumSpeedBoost()
 	{
 		return defaultMaximumSpeedBoost;
@@ -479,13 +482,13 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 	{
 		defaultArmor = value;
 	}
-	
+
 	@Override
 	public int getTotalArmorValue()
 	{
 		return defaultArmor;
 	}
-	
+
 	@Override
 	protected int decreaseAirSupply(int currentAirSupply)
 	{
@@ -883,6 +886,76 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 
 		nbt.putInt("BoostPower", (int)this.getBoostPowerType());
 		nbt.putInt("BoostPowerTime", this.boostPowerTimer);
+	}
+
+
+	public void returnToItem()
+	{
+		if(!world.isRemote)
+		{
+			PlayerEntity owner = (PlayerEntity)this.getOwner();
+
+			ItemStack poketamableStack = PoketamableSummonItem.fromPoketamableEntity(this, summonItem);
+
+			if (poketamableStack != null)
+			{
+				if (owner.getHealth() > 0 && owner.inventory.addItemStackToInventory(poketamableStack))
+				{
+					//world.playSoundAtEntity(owner, "mob.slime.big", 1F, 1F);
+				}
+				else
+				{
+					//world.playSoundAtEntity(owner, "mob.slime.big", 1F, 1F);
+					ItemEntity itementity = owner.entityDropItem(poketamableStack);
+					if (itementity != null) 
+					{
+						itementity.setNoDespawn();
+					}
+				}
+			}
+
+			this.remove();
+		}
+	}
+
+	public void returnToItemOnDeath()
+	{
+		if(!world.isRemote)
+		{
+			ItemStack poketamableStack = PoketamableSummonItem.fromPoketamableEntity(this, summonItem);
+
+			if (this.getOwner() != null && this.getOwner() instanceof PlayerEntity && this.getHealth() <= 0F)
+			{
+				PlayerEntity owner = (PlayerEntity)this.getOwner();
+
+				if (poketamableStack != null)
+				{
+					if (owner.getHealth() > 0 && owner.inventory.addItemStackToInventory(poketamableStack))
+					{
+						//world.playSoundAtEntity(owner, "mob.slime.big", 1F, 1F);
+					}
+					else
+					{
+						//world.playSoundAtEntity(owner, "mob.slime.big", 1F, 1F);
+						//world.addEntity(new ItemEntity(world, owner.getPosX(), owner.getPosY(), owner.getPosZ(), poketamableStack));
+						ItemEntity itementity = owner.entityDropItem(poketamableStack);
+						if (itementity != null) 
+						{
+							itementity.setNoDespawn();
+						}
+					}
+				}
+			}
+			else
+			{
+				ItemEntity itementity = this.entityDropItem(poketamableStack);
+				if (itementity != null) 
+				{
+					itementity.setNoDespawn();
+				}
+				//world.addEntity(new ItemEntity(world, this.getPosX(), this.getPosY(), this.getPosZ(), poketamableStack));	
+			}
+		}
 	}
 
 	public int getMainTextureType()
@@ -1358,9 +1431,6 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 		return !this.isTamed() && this.ticksExisted > 2400;
 	}
 
-	public void returnToItem() {};
-	public void returnToItemOnDeath() {};
-
 	@Override
 	public void onDeath(DamageSource cause) 
 	{
@@ -1368,7 +1438,7 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 
 		super.onDeath(cause);
 	}
-	
+
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
 	 */
@@ -1493,8 +1563,8 @@ public class TamablePokemon extends TameableEntity implements IEntityAdditionalS
 
 		return super.processInteract(player, hand);
 	}
-	
-	
+
+
 	@Override
 	public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner)
 	{

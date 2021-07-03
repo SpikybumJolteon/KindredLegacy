@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:sugar"
+	},
+	"result": 
+	{
+		"item": "minecraft:sugar_cane"	
+	},
+	"duration": 200
+}

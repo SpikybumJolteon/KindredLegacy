@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:apple"
+	},
+	"result": 
+	{
+		"item": "kindredlegacy:oranian_berry"	
+	},
+	"duration": 200
+}

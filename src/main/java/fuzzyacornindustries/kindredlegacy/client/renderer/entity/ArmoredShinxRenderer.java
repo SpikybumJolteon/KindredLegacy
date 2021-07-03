@@ -6,8 +6,11 @@ import fuzzyacornindustries.kindredlegacy.utility.UtilityFunctions;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
+@OnlyIn(Dist.CLIENT)
 public class ArmoredShinxRenderer<T extends ArmoredShinxEntity> extends MobRenderer<T, ArmoredShinxModel<T>>
 {
 	public static final IRenderFactory<ArmoredShinxEntity> RENDER_FACTORY = manager -> new ArmoredShinxRenderer<>(manager);
@@ -15,7 +18,7 @@ public class ArmoredShinxRenderer<T extends ArmoredShinxEntity> extends MobRende
 	
 	public ArmoredShinxRenderer(EntityRendererManager rendererManager) 
 	{
-		super(rendererManager, new ArmoredShinxModel<T>(), 0.2F);
+		super(rendererManager, new ArmoredShinxModel<>(), 0.2F);
 	}
 
 	@Override

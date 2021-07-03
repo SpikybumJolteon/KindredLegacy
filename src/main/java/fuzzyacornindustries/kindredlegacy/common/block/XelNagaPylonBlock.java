@@ -21,7 +21,7 @@ public class XelNagaPylonBlock extends Block
 {
 	public XelNagaPylonBlock()
 	{
-		super(Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(10F).notSolid().lightValue(10));
+		super(Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(5.0F, 1200.0F).notSolid().lightValue(10));
 	}
 
 	@Override

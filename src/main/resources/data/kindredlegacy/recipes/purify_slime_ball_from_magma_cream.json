@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:magma_cream"
+	},
+	"result": 
+	{
+		"item": "minecraft:slime_ball"	
+	},
+	"duration": 200
+}

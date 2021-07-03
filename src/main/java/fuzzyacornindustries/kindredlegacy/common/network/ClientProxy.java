@@ -2,6 +2,7 @@ package fuzzyacornindustries.kindredlegacy.common.network;
 
 import java.io.File;
 
+import fuzzyacornindustries.kindredlegacy.client.gui.PokemonExplorationKitGui;
 import fuzzyacornindustries.kindredlegacy.client.gui.PoketamableRenameGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -36,11 +37,11 @@ public class ClientProxy implements IProxy
         Minecraft.getInstance().displayGuiScreen(new PoketamableRenameGui(itemStack));
     }
 
-//    @Override
-//    public void displayExplorationKitGui()
-//    {
-//    	Minecraft.getInstance().displayGuiScreen(new GuiPokemonExplorationKit());
-//    }
+    @Override
+    public void displayExplorationKitGui()
+    {
+    	Minecraft.getInstance().displayGuiScreen(new PokemonExplorationKitGui());
+    }
     
     @Override
     public File getMcFolder() 

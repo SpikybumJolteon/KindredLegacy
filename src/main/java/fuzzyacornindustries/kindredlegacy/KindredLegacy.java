@@ -1,13 +1,17 @@
 package fuzzyacornindustries.kindredlegacy;
 
-import fuzzyacornindustries.kindredlegacy.client.renderer.ModRenderRegistry;
+import fuzzyacornindustries.kindredlegacy.client.renderer.ClientSetup;
+import fuzzyacornindustries.kindredlegacy.common.capability.InventoryRestoreCapability;
 import fuzzyacornindustries.kindredlegacy.common.core.ModBlocks;
+import fuzzyacornindustries.kindredlegacy.common.core.ModCapabilities;
 import fuzzyacornindustries.kindredlegacy.common.core.ModContainers;
 import fuzzyacornindustries.kindredlegacy.common.core.ModEntities;
 import fuzzyacornindustries.kindredlegacy.common.core.ModItems;
+import fuzzyacornindustries.kindredlegacy.common.core.ModParticleTypes;
 import fuzzyacornindustries.kindredlegacy.common.core.ModRecipes;
 import fuzzyacornindustries.kindredlegacy.common.core.ModSounds;
 import fuzzyacornindustries.kindredlegacy.common.core.ModTileEntities;
+import fuzzyacornindustries.kindredlegacy.common.handler.ConfigHandler;
 import fuzzyacornindustries.kindredlegacy.common.handler.ModEntityEvents;
 import fuzzyacornindustries.kindredlegacy.common.network.ClientProxy;
 import fuzzyacornindustries.kindredlegacy.common.network.IProxy;
@@ -18,10 +22,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Names.MOD_ID)
@@ -54,7 +61,7 @@ public class KindredLegacy
 	    ModTileEntities.TILE_ENTITIES.register(modBus);
 	    ModEntities.ENTITIES.register(modBus);
 	    ModContainers.CONTAINERS.register(modBus);
-//	    ModParticleTypes.PARTICLES.register(modBus);
+	    ModParticleTypes.PARTICLES.register(modBus);
 	    ModRecipes.RECIPES.register(modBus);
 //	    ModDecorators.DECORATORS.register(modBus);
 //	    ModVillagers.POI.register(modBus);
@@ -62,7 +69,7 @@ public class KindredLegacy
 		
 		//instance = this;
 
-		//ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.SERVER_CONFIG);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHandler.SERVER_CONFIG);
 		//ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHandler.CLIENT_CONFIG);
 
 		// Register the setup method for modloading
@@ -74,13 +81,14 @@ public class KindredLegacy
 		// Register the doClientStuff method for modloading
 		//modBus.addListener(this::doClientSetup);
 
-		//ConfigHandler.loadConfig(ConfigHandler.SERVER_CONFIG, FMLPaths.CONFIGDIR.get().resolve("kindredlegacy-server.toml").toString());
+		ConfigHandler.loadConfig(ConfigHandler.SERVER_CONFIG, FMLPaths.CONFIGDIR.get().resolve("kindredlegacy-server.toml").toString());
 		//ConfigHandler.loadConfig(ConfigHandler.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve("kindredlegacy-client.toml").toString());
 
 		// Register ourselves for server and other game events we are interested in
 		//MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new ModEntityEvents());
-		//MinecraftForge.EVENT_BUS.register(new InventoryRestoreCapability());
+		MinecraftForge.EVENT_BUS.register(new ModCapabilities());
+		MinecraftForge.EVENT_BUS.register(new InventoryRestoreCapability());
 	}
 
 	private void commonSetup(FMLCommonSetupEvent event)
@@ -99,6 +107,8 @@ public class KindredLegacy
 
 		//proxy.preInit();
 
+		ModEntities.registerEntityWorldSpawns();
+		
 		proxy.initTimer();
 	}
 
@@ -106,8 +116,7 @@ public class KindredLegacy
 	{
         static void clientSetup(FMLClientSetupEvent event) 
         {
-        	ModRenderRegistry.init();
+        	ClientSetup.init();
         }
     }
-
 }

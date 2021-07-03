@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:rotten_flesh"
+	},
+	"result": 
+	{
+		"item": "minecraft:porkchop"	
+	},
+	"duration": 200
+}

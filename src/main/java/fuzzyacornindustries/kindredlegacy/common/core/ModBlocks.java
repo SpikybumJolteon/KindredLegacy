@@ -22,12 +22,15 @@ public class ModBlocks
 	public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Names.MOD_ID);
 	public static final DeferredRegister<Item> ITEMS = ModItems.ITEMS;
 
+	//================ FARM BLOCKS ================//
 	public static final RegistryObject<OranianBerryBlock> ORANIAN_BERRIES = registerNoItem("oranian_berry_plant",
 			() -> new OranianBerryBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0).sound(SoundType.CROP)));
 
+	//================ MATERIALS BLOCKS ================//
 	public static final RegistryObject<Block> PACKED_AURUM_DUST = register("packed_aurum_dust",
 			() -> new Block(Block.Properties.create(Material.SAND).sound(SoundType.SAND).hardnessAndResistance(0.5F)));
 
+	//================ MYSTIC TECH BLOCKS ================//
 	public static final RegistryObject<XelNagaPylonBlock> XELNAGA_PYLON = register("xelnaga_pylon", XelNagaPylonBlock::new);
 	public static final RegistryObject<VerdantPurifierBlock> VERDANT_PURIFIER = register("verdant_purifier", VerdantPurifierBlock::new);
 	/* -----------------------*/

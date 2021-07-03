@@ -22,8 +22,8 @@ public class ServerProxy implements IProxy
 	@Override
 	public void displayRenameGui(ItemStack itemStack) {}
 
-//	@Override
-//	public void displayExplorationKitGui() {}
+	@Override
+	public void displayExplorationKitGui() {}
 
     @Override
     public void onModPreInit() {}

@@ -5,38 +5,47 @@ import java.util.List;
 import fuzzyacornindustries.kindredlegacy.common.core.ModItems;
 import fuzzyacornindustries.kindredlegacy.common.entity.mob.tamable.TamablePokemon;
 import fuzzyacornindustries.kindredlegacy.common.item.PoketamableSummonItem;
+import fuzzyacornindustries.kindredlegacy.lib.Names;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityEvents 
 {
-	//	@SubscribeEvent
-	//	public void playerLoggedIn(PlayerLoggedInEvent event) 
-	//	{
-	//		final PlayerEntity player = event.getPlayer();
-	//
-	//		final CompoundNBT entityData = player.getPersistentData();
-	//		final CompoundNBT persistedData = entityData.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-	//		entityData.put(PlayerEntity.PERSISTED_NBT_TAG, persistedData);
-	//
-	//		final String key = Names.MOD_ID + ":startingitems";
-	//
-	//		if (!persistedData.getBoolean(key)) 
-	//		{
-	//			persistedData.putBoolean(key, true);
-	//
-	//			ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.POKEMON_EXPLORATION_KIT.get()));
-	//
-	//			final ITextComponent textComponent = new StringTextComponent("A new Pokemon adventure awaits...");
-	//			textComponent.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-	//			player.sendMessage(textComponent);
-	//		}
-	//	}
+		@SubscribeEvent
+		public void playerLoggedIn(PlayerLoggedInEvent event) 
+		{
+			final PlayerEntity player = event.getPlayer();
+	
+			final CompoundNBT entityData = player.getPersistentData();
+			final CompoundNBT persistedData = entityData.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+			entityData.put(PlayerEntity.PERSISTED_NBT_TAG, persistedData);
+	
+			final String key = Names.MOD_ID + ":startingitems";
+	
+			if (!persistedData.getBoolean(key)) 
+			{
+				persistedData.putBoolean(key, true);
+	
+				ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.POKEMON_EXPLORATION_KIT.get()));
+	
+				final ITextComponent textComponent = new StringTextComponent("A new Pokemon adventure awaits...");
+				textComponent.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+				player.sendMessage(textComponent);
+			}
+		}
 
 	@SubscribeEvent
 	public void onItemToss(ItemTossEvent event)

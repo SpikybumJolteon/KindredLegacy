@@ -1,0 +1,11 @@
+{
+	"type": "kindredlegacy:verdant_purifying",
+	"input": {
+		"item": "minecraft:cobblestone"
+	},
+	"result": 
+	{
+		"item": "minecraft:mossy_cobblestone"	
+	},
+	"duration": 200
+}

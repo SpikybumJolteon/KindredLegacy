@@ -1,10 +1,17 @@
 package fuzzyacornindustries.kindredlegacy.common.network;
 
+import static fuzzyacornindustries.kindredlegacy.common.network.ILargePayload.MAX_PAYLOAD_SIZE;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import fuzzyacornindustries.kindredlegacy.utility.UtilityFunctions;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
@@ -47,6 +54,10 @@ public class NetworkHandler
     			PoketamableNameMessage::encode, PoketamableNameMessage::decode, PoketamableNameMessage::handle);
     	registerMessage(PokemonExplorationKitMessage.class,
     			PokemonExplorationKitMessage::encode, PokemonExplorationKitMessage::decode, PokemonExplorationKitMessage::handle);
+    	registerMessage(PacketMultiHeader.class,
+				PacketMultiHeader::toBytes, PacketMultiHeader::new, PacketMultiHeader::handle);
+		registerMessage(PacketMultiPart.class,
+				PacketMultiPart::toBytes, PacketMultiPart::new, PacketMultiPart::handle);
 		registerMessage(SpawnParticlePacket.class,
 				SpawnParticlePacket::toBytes, SpawnParticlePacket::new, SpawnParticlePacket::handle);
     	registerMessage(UpdateGuiPacket.class,
@@ -90,8 +101,20 @@ public class NetworkHandler
 
 	public static void sendToAllAround(Object message, PacketDistributor.TargetPoint point) 
 	{
-		NETWORK.send(PacketDistributor.NEAR.with(() -> point), message);
+		if (message instanceof ILargePayload) 
+		{
+			getSplitMessages((ILargePayload) message).forEach(part -> NETWORK.send(PacketDistributor.NEAR.with(() -> point), part));
+		} 
+		else 
+		{
+			NETWORK.send(PacketDistributor.NEAR.with(() -> point), message);
+		}
 	}
+	
+    public static void sendPacketToTrakingEntity(Object packetIn, Entity trackingEntityIn) 
+    {
+    	NETWORK.send(PacketDistributor.TRACKING_ENTITY.with(() -> trackingEntityIn), packetIn);
+    }
 
 	public static void sendToDimension(Object message, DimensionType type) 
 	{
@@ -138,4 +161,27 @@ public class NetworkHandler
 			sendToPlayer(packet, player);
 		}
 	}
+	
+	private static List<Object> getSplitMessages(ILargePayload message) 
+	{
+		// see PacketMultiHeader#receivePayload for message reassembly
+		PacketBuffer buf = message.dumpToBuffer();
+        byte[] bytes = buf.array();
+        if (buf.writerIndex() < MAX_PAYLOAD_SIZE) 
+        {
+            return Collections.singletonList(message);
+        } 
+        else 
+        {
+            List<Object> messages = new ArrayList<>();
+            messages.add(new PacketMultiHeader(buf.writerIndex(), message.getClass().getName()));
+            int offset = 0;
+            while (offset < buf.writerIndex()) 
+            {
+                messages.add(new PacketMultiPart(Arrays.copyOfRange(bytes, offset, Math.min(offset + MAX_PAYLOAD_SIZE, buf.writerIndex()))));
+                offset += MAX_PAYLOAD_SIZE;
+            }
+            return messages;
+        }
+    }
 }

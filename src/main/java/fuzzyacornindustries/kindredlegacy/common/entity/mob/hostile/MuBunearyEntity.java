@@ -117,7 +117,7 @@ public class MuBunearyEntity extends HostilePokemon implements IAnimatedEntity, 
 	{
 		super.tick();
 
-		if(this.getAnimationID() == MuBunearyEntity.actionIDCastConfuse)// && this.world.isRemote)
+		if(this.getAnimationID() == MuBunearyEntity.actionIDCastConfuse && !this.world.isRemote)
 		{
 			if(this.world.rand.nextInt(3) == 0)
 			{
@@ -161,8 +161,7 @@ public class MuBunearyEntity extends HostilePokemon implements IAnimatedEntity, 
 		double yPos = this.getPosY() + this.world.rand.nextFloat() * this.getHeight() - 0.5F;
 		double zPos = this.getPosZ() + (this.world.rand.nextFloat() - 0.5D) * this.getWidth();
 
-		NetworkHandler.sendToAllAround(new SpawnParticlePacket(ConfuseParticleData.NORMAL, xPos, yPos, zPos, motionX, motionY, motionZ), world);
-		//this.getEntityWorld().addParticle(ModParticleTypes.CONFUSE_PARTICLE, xPos, yPos, zPos, motionX, motionY, motionZ);
+		NetworkHandler.sendPacketToTrakingEntity(new SpawnParticlePacket(ConfuseParticleData.NORMAL, xPos, yPos, zPos, motionX, motionY, motionZ), this);
 	}
 
 	public void addMeleeAITasks()

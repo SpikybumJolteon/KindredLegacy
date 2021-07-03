@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:tiberium_shard"
+            "item": "kindredlegacy:tiberium_shard"
           }
         ]
       }
